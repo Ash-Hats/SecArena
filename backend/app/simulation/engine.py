@@ -25,7 +25,11 @@ def execute(state: dict, action_input: str) -> dict:
     state.setdefault("history", []).append(action_input)
     if not command:
         return {"command": "unsupported", "success": False, "output": "Command not supported in this simulation.", "score": 0, "rule": None, "flag_found": False}
-    files, cwd = LINUX_RECON["files"], state["cwd"]
+    files = dict(LINUX_RECON["files"])
+    if "fs" in state:
+        for p, d in state["fs"].items():
+            files[p] = d.get("content", d) if isinstance(d, dict) else d
+    cwd = state["cwd"]
     score = 0; rule = None; flag_found = False; output = ""
     if command == "pwd":
         output = cwd; rule = "pwd"

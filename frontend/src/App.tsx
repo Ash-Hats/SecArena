@@ -121,6 +121,10 @@ function AppContent() {
               setSelectedLabSlug(slug);
               navigateTo(`/student/labs/${slug}`);
             }}
+            onJoinPvp={(id) => {
+              setSimulationId(id);
+              navigateTo(`/student/simulations/${id}`);
+            }}
           />
         </ProtectedRoute>
       )}

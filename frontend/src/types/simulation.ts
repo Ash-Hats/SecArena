@@ -1,4 +1,4 @@
 export interface Scenario { slug: string; title: string; difficulty: string; objective: string; host: string; services: { port: number; name: string }[]; supported_commands: string[]; }
 export interface SimulationEvent { event_type: string; severity: string; description: string; detected: string; created_at: string; }
-export interface SimulationSession { id: string; scenario_slug: string; status: 'RUNNING' | 'STOPPED' | 'COMPLETED'; score: number; progress: number; started_at: string; completed_at: string | null; stopped_at: string | null; cwd: string; discovered_flags: string[]; }
+export interface SimulationSession { id: string; scenario_slug: string; status: 'RUNNING' | 'STOPPED' | 'COMPLETED'; score: number; progress: number; started_at: string; completed_at: string | null; stopped_at: string | null; cwd: string; discovered_flags: string[]; is_pvp?: boolean; join_code?: string; participants?: { user_id: string; team: string }[]; }
 export interface SimulationAction { success: boolean; command: string; output: string; score_contribution: number; session: SimulationSession; detections: SimulationEvent[]; }

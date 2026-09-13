@@ -3,17 +3,47 @@ import { BookOpen, Search, Clock, ArrowRight, Loader2, AlertCircle } from 'lucid
 import { getStudentCatalogApi } from '../../services/lab';
 import { LabStudentView, LabCategory, Difficulty } from '../../types/lab';
 
+import { createPvpSession, joinPvpSession } from '../../services/simulation';
+
 interface StudentLabCatalogPageProps {
   onSelectLab: (slug: string) => void;
+  onJoinPvp?: (sessionId: string) => void;
 }
 
-export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ onSelectLab }) => {
+export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ onSelectLab, onJoinPvp }) => {
   const [labs, setLabs] = useState<LabStudentView[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<LabCategory | ''>('');
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | ''>('');
+  
+  const [pvpJoinCode, setPvpJoinCode] = useState('');
+  const [pvpTeam, setPvpTeam] = useState('RED');
+  const [pvpTimeLimit, setPvpTimeLimit] = useState('');
+  const [pvpError, setPvpError] = useState('');
+
+  const handleCreatePvp = async () => {
+    try {
+      setPvpError('');
+      const limit = pvpTimeLimit ? parseInt(pvpTimeLimit) : undefined;
+      const session = await createPvpSession('linux-reconnaissance-beginner', pvpTeam, limit);
+      if (onJoinPvp) onJoinPvp(session.id);
+    } catch (err: any) {
+      setPvpError(err.message || 'Failed to create PvP match');
+    }
+  };
+
+  const handleJoinPvp = async () => {
+    try {
+      setPvpError('');
+      if (!pvpJoinCode) throw new Error("Enter a join code");
+      const session = await joinPvpSession(pvpJoinCode, pvpTeam);
+      if (onJoinPvp) onJoinPvp(session.id);
+    } catch (err: any) {
+      setPvpError(err.message || 'Failed to join PvP match');
+    }
+  };
 
   const categories: LabCategory[] = ['WEB', 'LINUX', 'NETWORK', 'API'];
 
@@ -66,6 +96,47 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
         <p className="text-xs text-slate-400 mt-1">
           Explore cybersecurity exercise blueprints across web, network, linux, and API topographies.
         </p>
+      </div>
+
+      {/* PvP Matchmaking Panel */}
+      <div className="bg-[#0d1322] border border-purple-500/30 rounded-xl p-6 shadow-[0_0_15px_rgba(168,85,247,0.1)]">
+        <h2 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
+          <span className="text-purple-400">⚔️ PvP Mode (Red vs Blue)</span>
+        </h2>
+        {pvpError && (
+          <div className="mb-4 p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs">
+            {pvpError}
+          </div>
+        )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-slate-300">Create Match</h3>
+            <div className="flex gap-2 text-xs">
+              <select value={pvpTeam} onChange={(e) => setPvpTeam(e.target.value)} className="bg-slate-900 border border-slate-800 rounded px-3 py-2 text-slate-200 focus:outline-none">
+                <option value="RED">Join as RED</option>
+                <option value="BLUE">Join as BLUE</option>
+              </select>
+              <input type="number" value={pvpTimeLimit} onChange={(e) => setPvpTimeLimit(e.target.value)} placeholder="Time (mins, opt)" className="w-32 bg-slate-900 border border-slate-800 rounded px-3 py-2 text-slate-200 focus:outline-none" />
+            </div>
+            <button onClick={handleCreatePvp} className="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg text-xs transition-colors">
+              Create PvP Lobby
+            </button>
+          </div>
+          
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-slate-300">Join Match</h3>
+            <div className="flex gap-2 text-xs">
+              <select value={pvpTeam} onChange={(e) => setPvpTeam(e.target.value)} className="bg-slate-900 border border-slate-800 rounded px-3 py-2 text-slate-200 focus:outline-none">
+                <option value="RED">Join as RED</option>
+                <option value="BLUE">Join as BLUE</option>
+              </select>
+              <input type="text" value={pvpJoinCode} onChange={(e) => setPvpJoinCode(e.target.value)} placeholder="Join Code" className="flex-1 bg-slate-900 border border-slate-800 rounded px-3 py-2 text-slate-200 focus:outline-none uppercase" />
+            </div>
+            <button onClick={handleJoinPvp} className="w-full py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-lg text-xs transition-colors border border-slate-700">
+              Join with Code
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Filter Toolbar */}

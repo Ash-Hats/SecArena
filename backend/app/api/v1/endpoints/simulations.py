@@ -9,7 +9,8 @@ from app.db.session import get_db
 from app.models.simulation import SimulationEvent, SimulationSession
 from app.models.user import User, UserRole
 from app.schemas.simulation import (ScenarioResponse, SimulationActionRequest, SimulationActionResponse,
-    SimulationEventResponse, SimulationSessionResponse, SimulationStartRequest)
+    SimulationEventResponse, SimulationSessionResponse, SimulationStartRequest,
+    PvpCreateRequest, PvpJoinRequest, PvpCreateFlagRequest)
 from app.services.simulation import SimulationService
 from app.simulation.scenarios import SCENARIOS, public_scenario
 
@@ -66,3 +67,26 @@ def score(session_id: str, current_user: User = Depends(get_current_user), db: S
 @router.get("/{session_id}/state", response_model=SimulationSessionResponse)
 def state(session_id: str, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     return SimulationService.response(SimulationService.get_session(db, session_id, current_user))
+
+
+@router.post("/pvp/create", response_model=SimulationSessionResponse)
+def create_pvp_session(payload: PvpCreateRequest, current_user: User = Depends(require_role(UserRole.STUDENT)), db: Session = Depends(get_db)):
+    return SimulationService.response(SimulationService.start_pvp(db, payload.scenario_slug, payload.time_limit_minutes, payload.team_choice, current_user))
+
+
+@router.post("/pvp/join", response_model=SimulationSessionResponse)
+def join_pvp_session(payload: PvpJoinRequest, current_user: User = Depends(require_role(UserRole.STUDENT)), db: Session = Depends(get_db)):
+    return SimulationService.response(SimulationService.join_pvp(db, payload.join_code, payload.team_choice, current_user))
+
+
+@router.post("/{session_id}/create_flag", response_model=SimulationSessionResponse)
+def create_pvp_flag(session_id: str, payload: PvpCreateFlagRequest, current_user: User = Depends(require_role(UserRole.STUDENT)), db: Session = Depends(get_db)):
+    session = SimulationService.get_session(db, session_id, current_user)
+    return SimulationService.response(SimulationService.create_flag(db, session, payload.flag_content, payload.flag_path, current_user))
+
+
+@router.post("/{session_id}/submit_flag", response_model=SimulationSessionResponse)
+def submit_pvp_flag(session_id: str, payload: PvpCreateFlagRequest, current_user: User = Depends(require_role(UserRole.STUDENT)), db: Session = Depends(get_db)):
+    # Re-using PvpCreateFlagRequest just for flag_content field
+    session = SimulationService.get_session(db, session_id, current_user)
+    return SimulationService.response(SimulationService.submit_flag(db, session, payload.flag_content, current_user))
