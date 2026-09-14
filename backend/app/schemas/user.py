@@ -62,3 +62,19 @@ class AdminUserUpdate(BaseModel):
     password: Optional[str] = Field(default=None, min_length=8, max_length=128)
     role: Optional[UserRole] = None
     is_active: Optional[bool] = None
+
+class UserUpdate(BaseModel):
+    """Profile update payload for regular users."""
+    username: Optional[str] = Field(default=None, min_length=3, max_length=50)
+    email: Optional[EmailStr] = None
+    old_password: Optional[str] = Field(default=None, min_length=1)
+    new_password: Optional[str] = Field(default=None, min_length=8, max_length=128)
+
+    @field_validator("username")
+    def validate_username(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
+        v = v.strip()
+        if not v.isalnum() and "_" not in v and "-" not in v:
+            raise ValueError("Username can only contain alphanumeric characters, underscores, and hyphens.")
+        return v

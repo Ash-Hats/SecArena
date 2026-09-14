@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { BookOpen, Terminal, CheckCircle2, TrendingUp, ArrowRight, Loader2, AlertCircle, CalendarDays } from 'lucide-react';
-import { getStudentDashboardApi } from '../../services/dashboard';
-import { StudentDashboardData } from '../../types/dashboard';
+import { Terminal, Loader2, AlertCircle } from 'lucide-react';
+import { getPvpHistory } from '../../services/simulation';
+import { SimulationSession } from '../../types/simulation';
+import { PvPHistoryTable } from '../../components/PvPHistoryTable';
 
 interface StudentDashboardPageProps {
   onNavigate: (path: string) => void;
 }
 
-export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({ onNavigate }) => {
-  const [data, setData] = useState<StudentDashboardData | null>(null);
+export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = () => {
+  const [history, setHistory] = useState<SimulationSession[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
-        const res = await getStudentDashboardApi();
-        setData(res);
+        const res = await getPvpHistory();
+        setHistory(res);
       } catch (err: any) {
         setError(err.message || 'Failed to load dashboard statistics.');
       } finally {
@@ -25,12 +26,20 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({ onNa
     };
 
     fetchDashboard();
+    
+    const interval = setInterval(() => {
+      getPvpHistory()
+        .then(res => setHistory(res))
+        .catch(console.error);
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh] text-slate-400 font-mono text-sm space-y-3">
-        <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
+      <div className="flex flex-col items-center justify-center min-h-[50vh] text-[#FBFADA]/60 font-mono text-sm space-y-3">
+        <Loader2 className="w-8 h-8 text-[#FBFADA] animate-spin" />
         <span>Loading Student Dashboard...</span>
       </div>
     );
@@ -48,96 +57,25 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = ({ onNa
   return (
     <div className="space-y-8">
       {/* Welcome Hero */}
-      <div className="bg-[#0d1322] border border-slate-800 rounded-2xl p-6 md:p-8 relative overflow-hidden">
-        <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="bg-[#33503C] border border-[#FBFADA] rounded-2xl p-6 md:p-8 relative overflow-hidden">
+        <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-[#FBFADA]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 space-y-2">
-          <div className="inline-flex items-center space-x-2 text-xs font-mono text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded-md border border-cyan-500/20">
+          <div className="inline-flex items-center space-x-2 text-xs font-mono text-[#FBFADA] bg-[#FBFADA]/10 px-2.5 py-1 rounded-md border border-[#FBFADA]/20">
             <Terminal className="w-3.5 h-3.5" />
             <span>Student Command Center</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">
-            Welcome back, {data?.username}
+          <h1 className="text-3xl font-extrabold text-[#FBFADA] tracking-tight">
+            Welcome back
           </h1>
-          <p className="text-slate-400 text-sm max-w-xl leading-relaxed">
-            Continue your cybersecurity training journey. Explore available lab blueprints and prepare for hands-on exercises.
+          <p className="text-[#FBFADA]/70 text-sm max-w-xl leading-relaxed">
+            Continue your cybersecurity training journey. Review your past PvP battles and room history below.
           </p>
         </div>
       </div>
 
-      {/* Metrics Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="bg-[#0d1322] border border-slate-800 rounded-xl p-5 space-y-3">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
-            <span>Available Labs</span>
-            <BookOpen className="w-4 h-4 text-cyan-400" />
-          </div>
-          <div className="text-3xl font-bold text-white font-mono">{data?.available_labs_count}</div>
-          <p className="text-[11px] text-slate-500">Published training blueprints</p>
-        </div>
-
-        <div className="bg-[#0d1322] border border-slate-800 rounded-xl p-5 space-y-3">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
-            <span>Running Labs</span>
-            <Terminal className="w-4 h-4 text-purple-400" />
-          </div>
-          <div className="text-3xl font-bold text-white font-mono">{data?.running_labs_count}</div>
-          <p className="text-[11px] text-slate-500">Active browser simulations</p>
-        </div>
-
-        <div className="bg-[#0d1322] border border-slate-800 rounded-xl p-5 space-y-3">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
-            <span>Completed Challenges</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-          </div>
-          <div className="text-3xl font-bold text-white font-mono">{data?.completed_challenges_count}</div>
-          <p className="text-[11px] text-slate-500">Verified flag submissions</p>
-        </div>
-
-        <div className="bg-[#0d1322] border border-slate-800 rounded-xl p-5 space-y-3">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium">
-            <span>Learning Status</span>
-            <TrendingUp className="w-4 h-4 text-amber-400" />
-          </div>
-          <div className="text-xs font-semibold text-cyan-400 uppercase tracking-wider">Active Trainee</div>
-          <p className="text-[11px] text-slate-500">Progress tracking enabled</p>
-        </div>
-      </div>
-
-      {/* Progress & Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-[#0d1322] border border-slate-800 rounded-xl p-6 space-y-4">
-          <h3 className="text-base font-bold text-white">Learning Progress</h3>
-          <div className="p-4 rounded-lg bg-slate-900/80 border border-slate-800/80 text-xs text-slate-400 leading-relaxed font-mono">
-            {data?.progress_status_message}
-          </div>
-        </div>
-
-        <div className="bg-[#0d1322] border border-slate-800 rounded-xl p-6 space-y-4">
-          <h3 className="text-base font-bold text-white">Quick Actions</h3>
-          <div className="space-y-2.5">
-            <button
-              onClick={() => onNavigate('/student/events')}
-              className="w-full flex items-center justify-between px-4 py-3 bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/30 rounded-lg text-xs font-semibold transition-all"
-            >
-              <span className="flex items-center gap-2"><CalendarDays className="w-4 h-4" />Join Training Event</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => onNavigate('/student/labs')}
-              className="w-full flex items-center justify-between px-4 py-3 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-lg text-xs font-semibold transition-all"
-            >
-              <span>Browse Lab Catalog</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => onNavigate('/student/profile')}
-              className="w-full flex items-center justify-between px-4 py-3 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 rounded-lg text-xs font-semibold transition-all"
-            >
-              <span>View Profile</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
+      <div>
+        <h2 className="text-xl font-bold text-[#FBFADA] mb-4">PvP Match History</h2>
+        <PvPHistoryTable history={history} />
       </div>
     </div>
   );

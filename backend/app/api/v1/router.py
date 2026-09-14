@@ -1,7 +1,7 @@
 """API v1 Router Aggregator."""
 
 from fastapi import APIRouter
-from app.api.v1.endpoints import health, auth, dashboard, labs, test, admin, events, simulations
+from app.api.v1.endpoints import health, auth, dashboard, labs, test, admin, events, simulations, custom_commands
 
 api_v1_router = APIRouter()
 
@@ -14,3 +14,4 @@ api_v1_router.include_router(events.router, prefix="/events", tags=["Training Ev
 api_v1_router.include_router(simulations.router, prefix="/simulations", tags=["Simulations"])
 api_v1_router.include_router(test.router, prefix="/test", tags=["Test RBAC"])
 api_v1_router.include_router(admin.router, prefix="/admin", tags=["Administration"])
+api_v1_router.include_router(custom_commands.router, prefix="/admin/commands", tags=["Custom Commands"])

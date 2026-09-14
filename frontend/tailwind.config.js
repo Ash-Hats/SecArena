@@ -7,6 +7,16 @@ export default {
   theme: {
     extend: {
       colors: {
+        coffee: {
+          light: '#E6D5C3',
+          DEFAULT: '#DCD7C9',
+          dark: '#A27B5C'
+        },
+        darkgreen: {
+          light: '#3F4F44',
+          DEFAULT: '#2C392F',
+          dark: '#232c25'
+        },
         cyber: {
           dark: '#0a0e17',
           card: '#111827',

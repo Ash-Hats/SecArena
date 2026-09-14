@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.core.security import get_current_user
 from app.models.user import User
-from app.schemas.user import UserRegister, UserLogin, UserResponse, TokenResponse
+from app.schemas.user import UserRegister, UserLogin, UserResponse, TokenResponse, UserUpdate
 from app.services.auth import AuthService
 
 router = APIRouter()
@@ -50,3 +50,17 @@ def get_me(
     current_user: User = Depends(get_current_user),
 ):
     return UserResponse.model_validate(current_user)
+
+@router.put(
+    "/me",
+    response_model=UserResponse,
+    summary="Update Authenticated User Profile",
+    description="Updates the profile of the currently authenticated user.",
+)
+def update_me(
+    payload: UserUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    updated_user = AuthService.update_profile(db, current_user, payload)
+    return UserResponse.model_validate(updated_user)

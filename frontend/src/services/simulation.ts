@@ -12,3 +12,6 @@ export const createPvpSession = (scenario_slug: string, team_choice: string, tim
 export const joinPvpSession = (join_code: string, team_choice: string) => apiRequest<SimulationSession>('/simulations/pvp/join', { method: 'POST', body: JSON.stringify({ join_code, team_choice }) });
 export const createPvpFlag = (id: string, flag_content: string, flag_path: string) => apiRequest<SimulationSession>(`/simulations/${encodeURIComponent(id)}/create_flag`, { method: 'POST', body: JSON.stringify({ flag_content, flag_path }) });
 export const submitPvpFlag = (id: string, flag_content: string) => apiRequest<SimulationSession>(`/simulations/${encodeURIComponent(id)}/submit_flag`, { method: 'POST', body: JSON.stringify({ flag_content, flag_path: '' }) });
+
+export const getPvpHistory = () => apiRequest<SimulationSession[]>('/simulations/pvp/history');
+export const getPublicLobbies = () => apiRequest<SimulationSession[]>('/simulations/pvp/public-lobbies');

@@ -69,9 +69,9 @@ def test_pvp_lifecycle(client: TestClient, db, student_user, student_token, inst
     )
     assert res_submit.status_code == 200
     submit_data = res_submit.json()
-    assert "SEC_ARENA{super_secret}" in submit_data["discovered_flags"]
+    assert any(f["flag"] == "SEC_ARENA{super_secret}" for f in submit_data["discovered_flags"])
 
     # Timeline should show discovery
     res_timeline_final = client.get(f"/api/v1/simulations/{session_id}/timeline", headers=headers2)
     timeline_final = res_timeline_final.json()
-    assert any("Red Team submitted a valid flag!" in e["description"] for e in timeline_final)
+    assert any("(Red Team) submitted a valid flag!" in e["description"] for e in timeline_final)

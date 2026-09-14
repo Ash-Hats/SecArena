@@ -5,95 +5,76 @@
 @layer base {
   :root {
     color-scheme: dark;
+    --background: #8E9F7C;
+    --foreground: #12372A;
   }
 
   body {
-    @apply text-slate-100 font-sans min-h-screen;
-    background-color: #170d10;
-    background-image:
-      radial-gradient(circle at 12% 8%, rgba(169, 213, 186, 0.08), transparent 24rem),
-      radial-gradient(circle at 88% 0%, rgba(123, 35, 52, 0.23), transparent 30rem);
+    @apply font-sans min-h-screen text-[#FBFADA];
+    background-color: var(--background);
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(162, 123, 92, 0.08), transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(63, 79, 68, 0.15), transparent 25%),
+      linear-gradient(to right, rgba(162, 123, 92, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(162, 123, 92, 0.05) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+    background-attachment: fixed;
   }
 
   ::selection {
-    background: #a9d5ba;
-    color: #241116;
-  }
-
-  button, a, input, textarea, select {
-    transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
-  }
-
-  button:not(:disabled):hover {
-    transform: translateY(-1px);
-  }
-
-  button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
-    outline: 2px solid #a9d5ba;
-    outline-offset: 2px;
+    background: rgba(162, 123, 92, 0.3);
+    color: #fff;
   }
 }
 
 @layer components {
-  .input-event {
-    @apply rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none;
-    background-color: #25181c;
-    border-color: #513039;
+  /* Glassmorphism Surface */
+  .glass-panel {
+    @apply bg-[#33503C]/40 backdrop-blur-xl border border-[#FBFADA]/50 shadow-2xl;
+  }
+  
+  .glass-panel-hover {
+    @apply transition-all duration-300 hover:bg-[#33503C]/60 hover:border-[#FBFADA]/30 hover:shadow-[#FBFADA]/10;
   }
 
-  .input-event:focus {
-    border-color: #a9d5ba;
-    box-shadow: 0 0 0 3px rgba(169, 213, 186, 0.12);
+  /* Animated Gradients */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#12372A] via-[#FBFADA] to-[#8E9F7C];
+    background-size: 200% auto;
+    animation: textShine 4s linear infinite;
   }
 
-  .surface-card {
-    box-shadow: 0 14px 34px rgba(9, 4, 6, 0.18);
+  /* Custom Inputs */
+  .input-modern {
+    @apply w-full bg-[#33503C]/50 border border-[#FBFADA] focus:border-[#FBFADA] rounded-lg px-4 py-2.5 text-[#FBFADA] outline-none transition-all shadow-inner focus:shadow-[0_0_15px_rgba(162,123,92,0.15)] focus:bg-[#33503C]/80;
   }
 
-  .surface-card:hover {
-    border-color: rgba(169, 213, 186, 0.38);
-    box-shadow: 0 16px 38px rgba(9, 4, 6, 0.25);
+  .btn-primary {
+    @apply px-6 py-2.5 bg-gradient-to-r from-[#FBFADA] to-[#FBFADA] text-white font-bold rounded-lg hover:from-[#FBFADA] hover:to-[#FBFADA] shadow-lg shadow-[#FBFADA]/25 transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none;
   }
 }
 
-@keyframes enter-page {
-  from { opacity: 0; transform: translateY(7px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes textShine {
+  to {
+    background-position: 200% center;
+  }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .page-enter { animation: enter-page 260ms ease-out both; }
-  .bg-\[\#0d1322\].border { transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease; }
-  .bg-\[\#0d1322\].border:hover { border-color: rgba(169, 213, 186, 0.34); box-shadow: 0 12px 28px rgba(8, 3, 5, 0.2); }
+@keyframes blob {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+  100% { transform: translate(0px, 0px) scale(1); }
 }
 
-/* Brand palette: maroon is the administrative/teacher accent; pista green is the learner/action accent. */
-@layer utilities {
-  .bg-\[\#0a0e17\] { background-color: #170d10 !important; }
-  .bg-\[\#0d1322\] { background-color: #211419 !important; }
-  .bg-slate-950\/40 { background-color: rgba(23, 13, 16, 0.72) !important; }
-  .bg-slate-900, .bg-slate-900\/80, .bg-slate-900\/90 { background-color: #2a1a20 !important; }
-  .bg-slate-800, .bg-slate-800\/30, .bg-slate-800\/50 { background-color: #3a242b !important; }
-  .border-slate-800, .border-slate-800\/60, .border-slate-800\/80 { border-color: #513039 !important; }
-  .border-slate-700 { border-color: #67414c !important; }
+.animate-blob {
+  animation: blob 7s infinite alternate;
+}
 
-  .bg-cyan-500 { background-color: #a9d5ba !important; }
-  .bg-cyan-500\/5 { background-color: rgba(169, 213, 186, 0.05) !important; }
-  .bg-cyan-500\/10 { background-color: rgba(169, 213, 186, 0.12) !important; }
-  .bg-cyan-500\/20 { background-color: rgba(169, 213, 186, 0.2) !important; }
-  .border-cyan-500\/20, .border-cyan-500\/30, .border-cyan-500\/40 { border-color: rgba(169, 213, 186, 0.48) !important; }
-  .text-cyan-400, .text-cyan-300, .hover\:text-cyan-400:hover, .hover\:text-cyan-300:hover { color: #bce8c8 !important; }
-  .focus\:border-cyan-500\/60:focus { border-color: #a9d5ba !important; }
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
 
-  .bg-purple-500 { background-color: #8a3043 !important; }
-  .bg-purple-500\/5 { background-color: rgba(138, 48, 67, 0.07) !important; }
-  .bg-purple-500\/10 { background-color: rgba(138, 48, 67, 0.16) !important; }
-  .bg-purple-500\/20 { background-color: rgba(138, 48, 67, 0.24) !important; }
-  .border-purple-500\/20, .border-purple-500\/30, .border-purple-500\/50 { border-color: rgba(183, 82, 104, 0.55) !important; }
-  .text-purple-400, .text-purple-300, .hover\:text-purple-400:hover { color: #e4a5b3 !important; }
-  .focus\:border-purple-500\/60:focus { border-color: #b75268 !important; }
-
-  .bg-rose-500 { background-color: #8a3043 !important; }
-  .text-rose-400, .text-rose-300, .hover\:text-rose-400:hover { color: #e4a5b3 !important; }
-  .border-rose-500\/30 { border-color: rgba(183, 82, 104, 0.55) !important; }
+.animation-delay-4000 {
+  animation-delay: 4s;
 }

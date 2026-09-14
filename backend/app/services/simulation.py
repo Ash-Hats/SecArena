@@ -5,6 +5,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.attributes import flag_modified
 
+from app.models.custom_command import CustomCommand
 from app.models.simulation import SimulationAction, SimulationEvent, SimulationSession, SimulationStatus, SimulationSessionUser, SimulationTeam
 from app.models.user import User, UserRole
 from app.simulation.detection import detect
@@ -20,8 +21,9 @@ class SimulationService:
             "score": session.score, "progress": session.progress, "started_at": session.started_at,
             "completed_at": session.completed_at, "stopped_at": session.stopped_at,
             "cwd": session.state.get("cwd", "/"), "discovered_flags": session.state.get("discovered_flags", []),
+            "pvp_flags": session.state.get("pvp_flags", {}),
             "is_pvp": getattr(session, "is_pvp", False), "join_code": getattr(session, "join_code", None),
-            "participants": [{"user_id": p.user_id, "team": p.team.value} for p in getattr(session, "participants", [])],
+            "participants": [{"user_id": p.user_id, "username": p.user.username if p.user else "Unknown", "team": p.team.value} for p in getattr(session, "participants", [])],
         }
 
     @staticmethod
@@ -49,14 +51,35 @@ class SimulationService:
         return session
 
     @classmethod
-    def action(cls, db: Session, session: SimulationSession, action_input: str) -> tuple[dict, list[SimulationEvent]]:
+    def action(cls, db: Session, session: SimulationSession, action_input: str, user: User) -> tuple[dict, list[SimulationEvent]]:
         if session.status != SimulationStatus.RUNNING:
             raise HTTPException(status_code=409, detail="This simulation session is no longer running.")
-        result = execute(session.state, action_input)
+            
+        custom_commands = {}
+        for cc in db.query(CustomCommand).all():
+            custom_commands[cc.command_name] = {
+                "output": cc.output,
+                "is_real_execution": cc.is_real_execution
+            }
+            
+        result = execute(session.state, action_input, custom_commands)
         flag_modified(session, "state")
         if not result["success"]:
             result["score"] = -2
         session.score = max(0, session.score + result["score"])
+        
+        # Check if a flag was just hidden via terminal
+        if "fs" in session.state:
+            for path, data in list(session.state["fs"].items()):
+                if isinstance(data, dict) and data.get("hidden_by_terminal"):
+                    del data["hidden_by_terminal"]
+                    if "pvp_flags" not in session.state:
+                        session.state["pvp_flags"] = {}
+                    session.state["pvp_flags"][data["content"]] = {
+                        "path": path, "found": False, "points": 50, "hidden_by": user.username
+                    }
+                    db.add(SimulationEvent(session_id=session.id, event_type="FLAG_HIDDEN", severity="INFO", description=f"{user.username} hid a flag via terminal.", detected="true"))
+
         if result["flag_found"]:
             session.status = SimulationStatus.COMPLETED; session.completed_at = datetime.now(timezone.utc); session.progress = 100
         else:
@@ -130,7 +153,7 @@ class SimulationService:
         if "pvp_flags" not in session.state:
             session.state["pvp_flags"] = {}
             
-        session.state["pvp_flags"][content] = {"path": path, "found": False, "points": 50}
+        session.state["pvp_flags"][content] = {"path": path, "found": False, "points": 50, "hidden_by": user.username}
         
         # We need to inject this file into the virtual filesystem
         if "fs" not in session.state:
@@ -152,13 +175,14 @@ class SimulationService:
             raise HTTPException(status_code=400, detail="Flag already submitted.")
             
         flag_info["found"] = True
+        flag_info["found_by"] = user.username
         session.score += flag_info["points"]
         
         if "discovered_flags" not in session.state:
             session.state["discovered_flags"] = []
-        session.state["discovered_flags"].append(content)
+        session.state["discovered_flags"].append({"flag": content, "discovered_by": user.username})
         
         flag_modified(session, "state")
-        db.add(SimulationEvent(session_id=session.id, event_type="FLAG_DISCOVERED", severity="INFO", description="Red Team submitted a valid flag!", detected="true"))
+        db.add(SimulationEvent(session_id=session.id, event_type="FLAG_DISCOVERED", severity="INFO", description=f"{user.username} (Red Team) submitted a valid flag!", detected="true"))
         db.commit(); db.refresh(session)
         return session

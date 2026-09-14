@@ -18,8 +18,15 @@ router = APIRouter()
 
 
 @router.get("/scenarios", response_model=List[ScenarioResponse])
-def list_scenarios(current_user: User = Depends(get_current_user)):
-    return [public_scenario(item) for item in SCENARIOS.values()]
+def list_scenarios(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from app.models.custom_command import CustomCommand
+    custom_cmds = [cc.command_name for cc in db.query(CustomCommand).all()]
+    scenarios = []
+    for item in SCENARIOS.values():
+        pub = public_scenario(item)
+        pub["supported_commands"] = pub.get("supported_commands", []) + custom_cmds
+        scenarios.append(pub)
+    return scenarios
 
 
 @router.get("", response_model=List[SimulationSessionResponse])
@@ -43,7 +50,7 @@ def get_session(session_id: str, current_user: User = Depends(get_current_user),
 @router.post("/{session_id}/action", response_model=SimulationActionResponse)
 def run_action(session_id: str, payload: SimulationActionRequest, current_user: User = Depends(require_role(UserRole.STUDENT)), db: Session = Depends(get_db)):
     session = SimulationService.get_session(db, session_id, current_user)
-    result, events = SimulationService.action(db, session, payload.input)
+    result, events = SimulationService.action(db, session, payload.input, current_user)
     return {"success": result["success"], "command": result["command"], "output": result["output"], "score_contribution": result["score"], "session": SimulationService.response(session), "detections": events}
 
 
@@ -68,6 +75,23 @@ def score(session_id: str, current_user: User = Depends(get_current_user), db: S
 def state(session_id: str, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     return SimulationService.response(SimulationService.get_session(db, session_id, current_user))
 
+@router.get("/pvp/public-lobbies", response_model=List[SimulationSessionResponse])
+def get_public_lobbies(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from app.models.simulation import SimulationStatus
+    query = db.query(SimulationSession).filter(
+        SimulationSession.is_pvp == True,
+        SimulationSession.status == SimulationStatus.RUNNING
+    ).order_by(SimulationSession.started_at.desc())
+    return [SimulationService.response(item) for item in query.all()]
+
+@router.get("/pvp/history", response_model=List[SimulationSessionResponse])
+def get_pvp_history(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    from app.models.simulation import SimulationSessionUser, SimulationStatus
+    query = db.query(SimulationSession).join(SimulationSessionUser).filter(
+        SimulationSession.is_pvp == True,
+        SimulationSessionUser.user_id == current_user.id
+    ).order_by(SimulationSession.started_at.desc())
+    return [SimulationService.response(item) for item in query.all()]
 
 @router.post("/pvp/create", response_model=SimulationSessionResponse)
 def create_pvp_session(payload: PvpCreateRequest, current_user: User = Depends(require_role(UserRole.STUDENT)), db: Session = Depends(get_db)):

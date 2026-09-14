@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.core.security import hash_password, verify_password, create_access_token
 from app.repositories.user import UserRepository
-from app.schemas.user import UserRegister, UserLogin, UserResponse, TokenResponse
+from app.schemas.user import UserRegister, UserLogin, UserResponse, TokenResponse, UserUpdate
 from app.models.user import User, UserRole
 
 
@@ -79,3 +79,39 @@ class AuthService:
             token_type="bearer",
             user=UserResponse.model_validate(user),
         )
+
+    @staticmethod
+    def update_profile(db: Session, user: User, payload: UserUpdate) -> User:
+        """Update authenticated user's profile information."""
+        if payload.username and payload.username != user.username:
+            if UserRepository.get_by_username(db, payload.username):
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Username is already taken.",
+                )
+            user.username = payload.username
+            
+        if payload.email and payload.email != user.email:
+            if UserRepository.get_by_email(db, payload.email):
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Email address is already registered.",
+                )
+            user.email = payload.email
+
+        if payload.new_password:
+            if not payload.old_password:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Old password is required to change password.",
+                )
+            if not verify_password(payload.old_password, user.password_hash):
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Incorrect old password.",
+                )
+            user.password_hash = hash_password(payload.new_password)
+
+        db.commit()
+        db.refresh(user)
+        return user

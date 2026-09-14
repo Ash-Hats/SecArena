@@ -20,3 +20,10 @@ export async function getMeApi(): Promise<User> {
     method: 'GET',
   });
 }
+
+export async function updateProfileApi(data: { username?: string; email?: string }): Promise<User> {
+  return apiRequest<User>('/auth/me', {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+}

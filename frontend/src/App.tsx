@@ -5,7 +5,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { LoginPage } from './pages/auth/LoginPage';
 import { RegisterPage } from './pages/auth/RegisterPage';
 import { StudentDashboardPage } from './pages/student/StudentDashboardPage';
-import { StudentProfilePage } from './pages/student/StudentProfilePage';
+import { ProfilePage } from './pages/profile/ProfilePage';
 import { StudentLabCatalogPage } from './pages/student/StudentLabCatalogPage';
 import { StudentLabDetailPage } from './pages/student/StudentLabDetailPage';
 import { InstructorDashboardPage } from './pages/instructor/InstructorDashboardPage';
@@ -19,6 +19,7 @@ import { InstructorEventsPage } from './pages/instructor/InstructorEventsPage';
 import { InstructorEventEditorPage } from './pages/instructor/InstructorEventEditorPage';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { StudentSimulationPage } from './pages/student/StudentSimulationPage';
+import { AboutPage } from './pages/AboutPage';
 
 function AppContent() {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -108,9 +109,9 @@ function AppContent() {
         </ProtectedRoute>
       )}
 
-      {currentPath === '/student/profile' && (
+      {(currentPath === '/student/profile' || currentPath === '/instructor/profile') && (
         <ProtectedRoute allowedRoles={['student', 'instructor']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
-          <StudentProfilePage />
+          <ProfilePage />
         </ProtectedRoute>
       )}
 
@@ -228,6 +229,12 @@ function AppContent() {
             phase="Phase 10 (Advanced Analytics & Research Evaluation)"
             description="Evaluate student learning velocity, exercise difficulty ratings, and cohort performance graphs."
           />
+        </ProtectedRoute>
+      )}
+
+      {currentPath === '/about' && (
+        <ProtectedRoute allowedRoles={['student', 'instructor', 'admin']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
+          <AboutPage />
         </ProtectedRoute>
       )}
     </AppLayout>

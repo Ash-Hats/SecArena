@@ -6,6 +6,7 @@ RULES = {
     "find_flag": ("find_flag", 20),
     "cat_readme": ("read_evidence", 20),
     "flag": ("flag", 50),
+    "hide_flag": ("hide_flag", 10),
 }
 
 

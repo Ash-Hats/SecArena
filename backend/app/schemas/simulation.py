@@ -39,12 +39,14 @@ class SimulationEventResponse(BaseModel):
 
 class ParticipantResponse(BaseModel):
     user_id: str
+    username: str
     team: str
 
 class SimulationSessionResponse(BaseModel):
     id: str; scenario_slug: str; status: str; score: int; progress: int
     started_at: datetime; completed_at: datetime | None; stopped_at: datetime | None
-    cwd: str; discovered_flags: list[str]
+    cwd: str; discovered_flags: list[Any]
+    pvp_flags: dict[str, Any] = {}
     is_pvp: bool = False
     join_code: str | None = None
     participants: list[ParticipantResponse] = []
