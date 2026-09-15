@@ -49,6 +49,35 @@ cd backend
 .venv/bin/pytest -v
 ```
 
+## Deployment
+
+SecArena is designed to be deployed with a separated frontend and backend.
+
+### Backend (Render)
+The backend is a FastAPI Python application with a SQLite database. It cannot be deployed to serverless environments (like Vercel functions) because the simulated virtual filesystem (VFS) and SQLite database require persistent disk access.
+
+1. Create an account on [Render.com](https://render.com).
+2. Go to your Render Dashboard and select **New +** > **Blueprint**.
+3. Connect your GitHub repository. Render will automatically detect the `render.yaml` configuration file at the root of the project.
+4. Render will provision the FastAPI service and attach a 1GB Persistent Disk (cost: $0.25/month) to safely store your database and match history across restarts.
+5. You will be prompted to enter a value for `CORS_ORIGINS`. Enter the URL where you plan to host your frontend (e.g., `https://secarena.vercel.app`).
+6. Click **Apply**. Render will build and deploy your backend. Note the public URL (e.g., `https://secarena-backend.onrender.com`).
+
+### Frontend (Vercel)
+The frontend is a React/Vite SPA and is perfectly suited for Vercel's global edge network. Client-side routing is handled seamlessly via the included `frontend/vercel.json` file.
+
+1. Log in to [Vercel](https://vercel.com/) and click **Add New...** > **Project**.
+2. Import the SecArena GitHub repository.
+3. Under **Build and Output Settings**, ensure:
+   - **Root Directory**: `frontend`
+   - **Framework Preset**: `Vite`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+4. Expand **Environment Variables** and add:
+   - Name: `VITE_API_URL`
+   - Value: The Render URL you generated in the backend step (e.g., `https://secarena-backend.onrender.com/api/v1`).
+5. Click **Deploy**.
+
 ## Security boundary
 
 Simulation commands are never sent to a shell. The backend owns session state, scoring, detection events, and flags; clients cannot submit their own scores or reveal undiscovered flags.
