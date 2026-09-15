@@ -1,6 +1,6 @@
 import React from 'react';
 import { SimulationSession } from '../types/simulation';
-import { Shield, Crosshair, Trophy } from 'lucide-react';
+import { Shield, Crosshair } from 'lucide-react';
 
 interface PvPHistoryTableProps {
   history: SimulationSession[];
