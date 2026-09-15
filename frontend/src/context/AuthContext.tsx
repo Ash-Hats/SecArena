@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { User, LoginCredentials, RegisterData } from '../types/auth';
-import { loginApi, registerApi, getMeApi } from '../services/auth';
+import { loginApi, registerApi, getMeApi, logoutApi } from '../services/auth';
 
 interface AuthContextType {
   user: User | null;
@@ -10,7 +10,7 @@ interface AuthContextType {
   login: (credentials: LoginCredentials) => Promise<User>;
   register: (data: RegisterData) => Promise<void>;
   updateUser: (user: User) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -64,10 +64,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const logout = () => {
-    sessionStorage.removeItem('secarena_token');
-    setToken(null);
-    setUser(null);
+  const logout = async () => {
+    try {
+      if (token) {
+        await logoutApi();
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      sessionStorage.removeItem('secarena_token');
+      setToken(null);
+      setUser(null);
+    }
   };
 
   const updateUser = (updatedUser: User) => {

@@ -12,7 +12,7 @@ from app.schemas.lab import (
     LabCreate,
     LabUpdate,
     LabStudentResponse,
-    LabInstructorResponse,
+    LabAdminResponse,
 )
 from app.services.lab import LabService
 
@@ -41,7 +41,7 @@ def list_student_catalog(
 
 @router.get(
     "/manage",
-    response_model=List[LabInstructorResponse],
+    response_model=List[LabAdminResponse],
     summary="Instructor Lab Management List",
     description="Lists all lab blueprints created by the authenticated Instructor across all lifecycle statuses.",
 )
@@ -50,7 +50,7 @@ def list_instructor_labs(
     category: Optional[LabCategory] = Query(None, description="Filter by category"),
     difficulty: Optional[Difficulty] = Query(None, description="Filter by difficulty"),
     search: Optional[str] = Query(None, description="Search terms"),
-    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: Session = Depends(get_db),
 ):
     return LabService.list_instructor_labs(
@@ -65,13 +65,13 @@ def list_instructor_labs(
 
 @router.get(
     "/manage/{lab_id}",
-    response_model=LabInstructorResponse,
+    response_model=LabAdminResponse,
     summary="Instructor Lab Blueprint Detail",
     description="Retrieves full lab blueprint details for instructor management view.",
 )
 def get_instructor_lab_detail(
     lab_id: str,
-    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: Session = Depends(get_db),
 ):
     return LabService.get_instructor_lab_detail(db, lab_id=lab_id, current_user=current_user)
@@ -97,14 +97,14 @@ def get_published_lab_detail(
 
 @router.post(
     "",
-    response_model=LabInstructorResponse,
+    response_model=LabAdminResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Create Lab Blueprint (Instructor Only)",
     description="Creates a new cybersecurity lab blueprint in DRAFT state.",
 )
 def create_lab(
     payload: LabCreate,
-    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: Session = Depends(get_db),
 ):
     return LabService.create_lab(db, payload=payload, current_user=current_user)
@@ -112,14 +112,14 @@ def create_lab(
 
 @router.put(
     "/manage/{lab_id}",
-    response_model=LabInstructorResponse,
+    response_model=LabAdminResponse,
     summary="Update Lab Blueprint (Instructor Only)",
     description="Updates an existing lab blueprint. Cannot update archived labs.",
 )
 def update_lab(
     lab_id: str,
     payload: LabUpdate,
-    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: Session = Depends(get_db),
 ):
     return LabService.update_lab(db, lab_id=lab_id, payload=payload, current_user=current_user)
@@ -132,7 +132,7 @@ def update_lab(
 )
 def delete_lab(
     lab_id: str,
-    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: Session = Depends(get_db),
 ):
     return LabService.delete_lab(db, lab_id=lab_id, current_user=current_user)
@@ -140,13 +140,13 @@ def delete_lab(
 
 @router.post(
     "/manage/{lab_id}/publish",
-    response_model=LabInstructorResponse,
+    response_model=LabAdminResponse,
     summary="Publish Lab Blueprint",
     description="Transitions a lab from DRAFT to PUBLISHED state after content validation.",
 )
 def publish_lab(
     lab_id: str,
-    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: Session = Depends(get_db),
 ):
     return LabService.publish_lab(db, lab_id=lab_id, current_user=current_user)
@@ -154,13 +154,13 @@ def publish_lab(
 
 @router.post(
     "/manage/{lab_id}/unpublish",
-    response_model=LabInstructorResponse,
+    response_model=LabAdminResponse,
     summary="Unpublish Lab Blueprint",
     description="Reverts a published lab back to DRAFT state.",
 )
 def unpublish_lab(
     lab_id: str,
-    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: Session = Depends(get_db),
 ):
     return LabService.unpublish_lab(db, lab_id=lab_id, current_user=current_user)
@@ -168,13 +168,13 @@ def unpublish_lab(
 
 @router.post(
     "/manage/{lab_id}/archive",
-    response_model=LabInstructorResponse,
+    response_model=LabAdminResponse,
     summary="Archive Lab Blueprint",
     description="Archives a lab blueprint. Archived labs are hidden from students.",
 )
 def archive_lab(
     lab_id: str,
-    current_user: User = Depends(require_role(UserRole.INSTRUCTOR)),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
     db: Session = Depends(get_db),
 ):
     return LabService.archive_lab(db, lab_id=lab_id, current_user=current_user)

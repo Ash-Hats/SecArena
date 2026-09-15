@@ -27,7 +27,7 @@ class StudentDashboardResponse(BaseModel):
     recent_activity: List[ActivityItem] = []
 
 
-class InstructorDashboardResponse(BaseModel):
+class AdminDashboardResponse(BaseModel):
     """Instructor Dashboard Data Response."""
 
     username: str
@@ -40,7 +40,7 @@ class InstructorDashboardResponse(BaseModel):
     recent_activity: List[ActivityItem] = []
 
 
-class InstructorStudentListItem(BaseModel):
+class AdminStudentListItem(BaseModel):
     """Student list item for instructor management overview."""
 
     id: str

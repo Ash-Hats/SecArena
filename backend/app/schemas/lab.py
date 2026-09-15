@@ -96,7 +96,7 @@ class LabStudentResponse(BaseModel):
         from_attributes = True
 
 
-class LabInstructorResponse(BaseModel):
+class LabAdminResponse(BaseModel):
     """Instructor Lab Management Response."""
 
     id: str

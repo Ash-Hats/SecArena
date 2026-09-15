@@ -7,8 +7,8 @@ from app.repositories.dashboard import DashboardRepository
 from app.repositories.lab import LabRepository
 from app.schemas.dashboard import (
     StudentDashboardResponse,
-    InstructorDashboardResponse,
-    InstructorStudentListItem,
+    AdminDashboardResponse,
+    AdminStudentListItem,
 )
 
 
@@ -31,11 +31,11 @@ class DashboardService:
         )
 
     @staticmethod
-    def get_instructor_dashboard(db: Session, current_user: User) -> InstructorDashboardResponse:
+    def get_instructor_dashboard(db: Session, current_user: User) -> AdminDashboardResponse:
         """Construct dashboard data for an authenticated Instructor."""
         total_students = DashboardRepository.get_total_students_count(db)
 
-        return InstructorDashboardResponse(
+        return AdminDashboardResponse(
             username=current_user.username,
             role=current_user.role,
             total_students_count=total_students,
@@ -51,7 +51,7 @@ class DashboardService:
         db: Session,
         search: Optional[str] = None,
         is_active: Optional[bool] = None,
-    ) -> List[InstructorStudentListItem]:
+    ) -> List[AdminStudentListItem]:
         """Retrieve list of registered students for Instructor management overview."""
         students = DashboardRepository.get_instructor_students_list(db, search=search, is_active=is_active)
-        return [InstructorStudentListItem.model_validate(s) for s in students]
+        return [AdminStudentListItem.model_validate(s) for s in students]

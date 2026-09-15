@@ -8,7 +8,7 @@ from app.core.security import require_role
 from app.db.session import get_db
 from app.models.lab import Lab
 from app.models.user import User, UserRole
-from app.schemas.lab import LabCreate, LabInstructorResponse, LabUpdate
+from app.schemas.lab import LabCreate, LabAdminResponse, LabUpdate
 from app.schemas.user import AdminUserCreate, AdminUserUpdate, UserResponse
 from app.services.admin import AdminService
 from app.services.lab import LabService
@@ -36,17 +36,17 @@ def delete_user(user_id: str, current_user: User = Depends(require_role(UserRole
     return AdminService.delete_user(db, user_id, current_user)
 
 
-@router.get("/labs", response_model=List[LabInstructorResponse])
+@router.get("/labs", response_model=List[LabAdminResponse])
 def list_all_labs(current_user: User = Depends(require_role(UserRole.ADMIN)), db: Session = Depends(get_db)):
-    return [LabInstructorResponse.model_validate(lab) for lab in db.query(Lab).order_by(Lab.updated_at.desc()).all()]
+    return [LabAdminResponse.model_validate(lab) for lab in db.query(Lab).order_by(Lab.updated_at.desc()).all()]
 
 
-@router.post("/labs", response_model=LabInstructorResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/labs", response_model=LabAdminResponse, status_code=status.HTTP_201_CREATED)
 def create_lab(payload: LabCreate, current_user: User = Depends(require_role(UserRole.ADMIN)), db: Session = Depends(get_db)):
     return LabService.create_lab(db, payload, current_user)
 
 
-@router.put("/labs/{lab_id}", response_model=LabInstructorResponse)
+@router.put("/labs/{lab_id}", response_model=LabAdminResponse)
 def update_lab(lab_id: str, payload: LabUpdate, current_user: User = Depends(require_role(UserRole.ADMIN)), db: Session = Depends(get_db)):
     return LabService.update_lab(db, lab_id, payload, current_user, allow_any=True)
 

@@ -5,7 +5,7 @@ import uuid
 from datetime import datetime, timezone
 
 from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String, Text, UniqueConstraint
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 from app.db.base import Base
 
@@ -32,7 +32,7 @@ class TrainingEvent(Base):
     created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
-    author = relationship("User", backref="created_events")
+    author = relationship("User", backref=backref("created_events", cascade="all, delete-orphan"))
     assignments = relationship("EventLab", cascade="all, delete-orphan", back_populates="event")
     enrollments = relationship("EventEnrollment", cascade="all, delete-orphan", back_populates="event")
 

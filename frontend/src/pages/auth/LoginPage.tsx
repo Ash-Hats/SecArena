@@ -7,19 +7,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface LoginPageProps {
   portal: UserRole;
   onNavigateToRegister: () => void;
-  onNavigateToOtherPortal: () => void;
   onSuccess: (role: UserRole) => void;
 }
 
-export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegister, onNavigateToOtherPortal, onSuccess }) => {
+export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegister, onSuccess }) => {
   const { login, logout } = useAuth();
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  const isTeacher = portal === 'instructor' || portal === 'admin';
-  const portalName = portal === 'admin' ? 'Administrator' : isTeacher ? 'Instructor' : 'Student';
+    const portalName = portal === 'admin' ? 'Administrator' : 'Student';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +28,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
       const signedInUser = await login({ username_or_email: usernameOrEmail, password });
       if (signedInUser.role !== portal) {
         logout();
-        throw new Error(`This account belongs to the ${signedInUser.role === 'admin' ? 'Administrator' : signedInUser.role === 'instructor' ? 'Instructor' : 'Student'} portal.`);
+        throw new Error(`This account belongs to the ${signedInUser.role === 'admin' ? 'Administrator' : 'Student'} portal.`);
       }
       onSuccess(signedInUser.role);
     } catch (err: any) {
@@ -45,7 +43,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
       
       {/* Left Art Section */}
       <div className="hidden lg:flex w-1/2 relative flex-col justify-center items-center p-12 overflow-hidden border-r border-[#33503C]/40 z-10">
-        <div className={`absolute inset-0 opacity-20 ${isTeacher ? 'bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-[#33503C] via-[#8E9F7C] to-[#8E9F7C]' : 'bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-[#33503C] via-[#8E9F7C] to-[#8E9F7C]'}`}></div>
+        <div className={`absolute inset-0 opacity-20 ${portal === 'admin' ? 'bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-[#33503C] via-[#8E9F7C] to-[#8E9F7C]' : 'bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-[#33503C] via-[#8E9F7C] to-[#8E9F7C]'}`}></div>
         
         {/* Animated Background Elements */}
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#33503C]/20 rounded-full blur-3xl animate-blob"></div>
@@ -58,13 +56,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
           className="relative z-20 text-center max-w-lg"
         >
           <div className="flex justify-center mb-8">
-            <div className={`p-4 rounded-2xl bg-[#8E9F7C]/50 backdrop-blur-xl border shadow-2xl ${isTeacher ? 'border-[#33503C]/50 text-[#FBFADA] shadow-none' : 'border-[#33503C]/50 text-[#FBFADA] shadow-none'}`}>
+            <div className={`p-4 rounded-2xl bg-[#8E9F7C]/50 backdrop-blur-xl border shadow-2xl ${portal === 'admin' ? 'border-[#33503C]/50 text-[#FBFADA] shadow-none' : 'border-[#33503C]/50 text-[#FBFADA] shadow-none'}`}>
               <Shield className="w-16 h-16" />
             </div>
           </div>
           <h1 className="text-5xl font-black text-[#FBFADA] tracking-tighter mb-6 text-gradient">SecArena</h1>
           <p className="text-lg text-[#FBFADA] leading-relaxed">
-            {isTeacher 
+            {portal === 'admin' 
               ? "Design, deploy, and manage immersive cyber warfare scenarios for your cohort."
               : "Step into the simulation. Enhance your cybersecurity skills through hands-on, realistic challenges."}
           </p>
@@ -92,8 +90,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
         >
           <div className="text-center lg:text-left space-y-2">
             <div className="lg:hidden flex justify-center mb-6">
-              <div className={`p-3 rounded-xl bg-[#33503C] border ${isTeacher ? 'border-[#33503C]/50 text-[#FBFADA]' : 'border-[#33503C]/50 text-[#FBFADA]'}`}>
-                {isTeacher ? <GraduationCap className="w-8 h-8" /> : <Shield className="w-8 h-8" />}
+              <div className={`p-3 rounded-xl bg-[#33503C] border ${portal === 'admin' ? 'border-[#33503C]/50 text-[#FBFADA]' : 'border-[#33503C]/50 text-[#FBFADA]'}`}>
+                {portal === 'admin' ? <GraduationCap className="w-8 h-8" /> : <Shield className="w-8 h-8" />}
               </div>
             </div>
             <h2 className="text-3xl font-extrabold text-[#FBFADA] tracking-tight">Welcome Back</h2>
@@ -142,7 +140,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
               <button 
                 disabled={loading} 
                 className={`w-full py-3 text-[#FBFADA] font-bold rounded-lg text-sm transition-all transform hover:-translate-y-0.5 shadow-lg flex justify-center items-center gap-2 disabled:opacity-50 disabled:transform-none ${
-                  isTeacher 
+                  portal === 'admin' 
                     ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 shadow-none' 
                     : 'bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-none'
                 }`}
@@ -158,19 +156,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
             
             <div className="mt-8 pt-6 border-t border-[#33503C]/50 text-center text-sm text-[#FBFADA] space-y-4">
               {portal === 'admin' ? (
-                <p>Administrator access is provisioned by the server owner.</p>
-              ) : isTeacher ? (
-                <>
-                  <p>Instructor accounts require an administrator invitation.</p>
-                  <button onClick={onNavigateToOtherPortal} className="text-[#FBFADA] font-medium hover:text-cyan-300 transition-colors">Switch to Student Portal →</button>
-                </>
-              ) : (
+                <p>Administrator access is provisioned by the server owner.</p>) : (
                 <>
                   <div className="flex justify-center items-center gap-2">
-                    <span>New recruit?</span>
-                    <button onClick={onNavigateToRegister} className="text-[#FBFADA] font-bold hover:text-cyan-300 transition-colors">Request Access</button>
+                    <span>Don't have an account?</span>
+                    <button onClick={onNavigateToRegister} className="text-[#FBFADA] font-bold hover:text-cyan-300 transition-colors">Make one</button>
                   </div>
-                  <button onClick={onNavigateToOtherPortal} className="text-[#FBFADA] font-medium hover:text-purple-300 transition-colors text-xs">Instructor Login</button>
                 </>
               )}
             </div>

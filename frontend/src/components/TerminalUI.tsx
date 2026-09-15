@@ -4,16 +4,27 @@ import { FitAddon } from '@xterm/addon-fit';
 import '@xterm/xterm/css/xterm.css';
 
 interface TerminalUIProps {
-  onCommand: (command: string) => Promise<void>;
-  outputHistory: string;
+  onCommand: (command: string) => Promise<string | undefined>;
+  history?: { user: string; command: string; output: string }[];
+  currentUser?: string;
 }
 
-export function TerminalUI({ onCommand, outputHistory }: TerminalUIProps) {
+export function TerminalUI({ onCommand, history, currentUser }: TerminalUIProps) {
   const terminalRef = useRef<HTMLDivElement>(null);
   const term = useRef<Terminal | null>(null);
   const fitAddon = useRef<FitAddon | null>(null);
   const inputBuffer = useRef<string>('');
-  const lastOutputHistory = useRef<string>('');
+  const onCommandRef = useRef(onCommand);
+  const historyRef = useRef(history);
+  const renderedCount = useRef(0);
+
+  useEffect(() => {
+    onCommandRef.current = onCommand;
+  }, [onCommand]);
+
+  useEffect(() => {
+    historyRef.current = history;
+  }, [history]);
 
   useEffect(() => {
     if (!terminalRef.current) return;
@@ -34,19 +45,67 @@ export function TerminalUI({ onCommand, outputHistory }: TerminalUIProps) {
     term.current.open(terminalRef.current);
     fitAddon.current.fit();
 
-    term.current.write('student@secarena:~$ ');
+    term.current.attachCustomKeyEventHandler((e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.code === 'KeyC' && e.type === 'keydown') {
+        const selection = term.current?.getSelection();
+        if (selection) {
+          navigator.clipboard.writeText(selection);
+          term.current?.clearSelection();
+          return false;
+        }
+      }
+      if ((e.ctrlKey || e.metaKey) && e.code === 'KeyV' && e.type === 'keydown') {
+        navigator.clipboard.readText().then((text) => {
+          let printable = '';
+          for (let i = 0; i < text.length; i++) {
+            const char = text[i];
+            if ((char >= String.fromCharCode(0x20) && char <= String.fromCharCode(0x7E)) || char >= '\u00a0') {
+              printable += char;
+            }
+          }
+          if (printable.length > 0) {
+            inputBuffer.current += printable;
+            term.current?.write(printable);
+          }
+        }).catch(() => {});
+        return false;
+      }
+      return true;
+    });
+
+    if (!history || history.length === 0) {
+      term.current.write('student@secarena:~$ ');
+    }
 
     term.current.onData((e) => {
       switch (e) {
         case '\r': // Enter
           const command = inputBuffer.current.trim();
-          term.current?.write('\r\n');
+          if (historyRef.current === undefined) {
+             term.current?.write('\r\n');
+          }
           if (command) {
-            onCommand(command).then(() => {
-              term.current?.write('student@secarena:~$ ');
-            });
+            if (command === 'clear') {
+                term.current?.reset();
+                term.current?.write('student@secarena:~$ ');
+                onCommandRef.current(command);
+            } else {
+                onCommandRef.current(command).then((out) => {
+                  if (historyRef.current === undefined) {
+                      if (out) {
+                        const lines = out.split('\n');
+                        for (const line of lines) {
+                          term.current?.write(line + '\r\n');
+                        }
+                      }
+                      term.current?.write('student@secarena:~$ ');
+                  }
+                });
+            }
           } else {
-            term.current?.write('student@secarena:~$ ');
+            if (historyRef.current === undefined) {
+               term.current?.write('student@secarena:~$ ');
+            }
           }
           inputBuffer.current = '';
           break;
@@ -57,10 +116,19 @@ export function TerminalUI({ onCommand, outputHistory }: TerminalUIProps) {
           }
           break;
         default:
-          if (e >= String.fromCharCode(0x20) && e <= String.fromCharCode(0x7E) || e >= '\u00a0') {
-            inputBuffer.current += e;
-            term.current?.write(e);
+          // Handle multi-character strings (like pastes) or single characters
+          let printable = '';
+          for (let i = 0; i < e.length; i++) {
+            const char = e[i];
+            if (char >= String.fromCharCode(0x20) && char <= String.fromCharCode(0x7E) || char >= '\u00a0') {
+              printable += char;
+            }
           }
+          if (printable.length > 0) {
+            inputBuffer.current += printable;
+            term.current?.write(printable);
+          }
+          break;
       }
     });
 
@@ -75,21 +143,34 @@ export function TerminalUI({ onCommand, outputHistory }: TerminalUIProps) {
     };
   }, []);
 
-  // Update output when outputHistory changes
   useEffect(() => {
-    if (term.current && outputHistory && outputHistory !== lastOutputHistory.current) {
-      // Find what's new (simplified for now, assumes only append)
-      // Usually, it's better to just pass the latest output chunk instead of full history
-      const newOutput = outputHistory.slice(lastOutputHistory.current.length);
-      const lines = newOutput.split('\n');
-      for (const line of lines) {
-        if (line) {
-          term.current.write(line + '\r\n');
+    if (!term.current || !history) return;
+    
+    setTimeout(() => {
+        fitAddon.current?.fit();
+    }, 50);
+
+    if (history.length > renderedCount.current) {
+        term.current.write('\x1b[2K\r'); // clear current line
+        
+        for (let i = renderedCount.current; i < history.length; i++) {
+            const item = history[i];
+            
+            term.current.write(`\x1b[33m${item.user}@secarena:~$\x1b[0m ${item.command}\r\n`);
+            if (item.output) {
+                const lines = item.output.split('\n');
+                for (const line of lines) {
+                    term.current.write(line + '\r\n');
+                }
+            }
         }
-      }
-      lastOutputHistory.current = outputHistory;
+        
+        term.current.write(`student@secarena:~$ ${inputBuffer.current}`);
+        renderedCount.current = history.length;
     }
-  }, [outputHistory]);
+  }, [history, currentUser]);
+
+
 
   return (
     <div className="w-full h-full bg-transparent relative p-2">

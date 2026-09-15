@@ -27,3 +27,9 @@ export async function updateProfileApi(data: { username?: string; email?: string
     body: JSON.stringify(data),
   });
 }
+
+export async function logoutApi(): Promise<void> {
+  return apiRequest<void>('/auth/logout', {
+    method: 'POST',
+  });
+}

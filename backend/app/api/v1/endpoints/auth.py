@@ -64,3 +64,19 @@ def update_me(
 ):
     updated_user = AuthService.update_profile(db, current_user, payload)
     return UserResponse.model_validate(updated_user)
+
+@router.post(
+    "/logout",
+    status_code=status.HTTP_200_OK,
+    summary="Logout User",
+    description="Deletes all simulation history and data for the user on logout.",
+)
+def logout(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    from app.models.simulation import SimulationSession
+    # Delete all simulation sessions associated with the user
+    db.query(SimulationSession).filter(SimulationSession.student_id == current_user.id).delete()
+    db.commit()
+    return {"message": "Logged out and data cleared"}

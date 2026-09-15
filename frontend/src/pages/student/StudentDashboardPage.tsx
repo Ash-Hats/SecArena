@@ -3,12 +3,14 @@ import { Terminal, Loader2, AlertCircle } from 'lucide-react';
 import { getPvpHistory } from '../../services/simulation';
 import { SimulationSession } from '../../types/simulation';
 import { PvPHistoryTable } from '../../components/PvPHistoryTable';
+import { useAuth } from '../../context/AuthContext';
 
 interface StudentDashboardPageProps {
   onNavigate: (path: string) => void;
 }
 
 export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = () => {
+  const { user } = useAuth();
   const [history, setHistory] = useState<SimulationSession[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -75,7 +77,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = () => {
 
       <div>
         <h2 className="text-xl font-bold text-[#FBFADA] mb-4">PvP Match History</h2>
-        <PvPHistoryTable history={history} />
+        <PvPHistoryTable history={history} currentUserId={user?.id} />
       </div>
     </div>
   );

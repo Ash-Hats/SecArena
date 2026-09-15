@@ -5,7 +5,7 @@ import uuid
 from datetime import datetime, timezone
 
 from sqlalchemy import Boolean, Column, DateTime, Enum, ForeignKey, Integer, JSON, String, Text
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 from app.db.base import Base
 
@@ -42,7 +42,7 @@ class SimulationSession(Base):
     join_code = Column(String(20), unique=True, index=True, nullable=True)
     time_limit_minutes = Column(Integer, nullable=True)
 
-    student = relationship("User", backref="simulation_sessions")
+    student = relationship("User", backref=backref("simulation_sessions", cascade="all, delete-orphan"))
     actions = relationship("SimulationAction", back_populates="session", cascade="all, delete-orphan")
     events = relationship("SimulationEvent", back_populates="session", cascade="all, delete-orphan")
     participants = relationship("SimulationSessionUser", back_populates="session", cascade="all, delete-orphan")
@@ -56,7 +56,7 @@ class SimulationSessionUser(Base):
     joined_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
 
     session = relationship("SimulationSession", back_populates="participants")
-    user = relationship("User")
+    user = relationship("User", backref=backref("simulation_session_users", cascade="all, delete-orphan"))
 
 
 class SimulationAction(Base):

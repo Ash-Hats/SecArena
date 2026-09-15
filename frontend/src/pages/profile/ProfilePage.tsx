@@ -90,7 +90,7 @@ export const ProfilePage: React.FC = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-[#8E9F7C] border border-[#FBFADA] focus:border-[#FBFADA] rounded-lg px-4 py-2.5 text-[#FBFADA] outline-none transition-colors shadow-inner"
+                className="w-full bg-[#8E9F7C] border border-[#FBFADA] focus:border-[#FBFADA] rounded-lg px-4 py-2.5 text-[#FBFADA] placeholder:text-[#FBFADA]/60 outline-none transition-colors shadow-inner"
                 required
               />
             </div>
@@ -107,7 +107,7 @@ export const ProfilePage: React.FC = () => {
                   type="password"
                   value={oldPassword}
                   onChange={(e) => setOldPassword(e.target.value)}
-                  className="w-full bg-[#8E9F7C] border border-[#FBFADA] focus:border-[#FBFADA] rounded-lg px-4 py-2.5 text-[#FBFADA] outline-none transition-colors shadow-inner"
+                  className="w-full bg-[#8E9F7C] border border-[#FBFADA] focus:border-[#FBFADA] rounded-lg px-4 py-2.5 text-[#FBFADA] placeholder:text-[#FBFADA]/60 outline-none transition-colors shadow-inner"
                   placeholder="Required for change"
                 />
               </div>
@@ -117,7 +117,7 @@ export const ProfilePage: React.FC = () => {
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full bg-[#8E9F7C] border border-[#FBFADA] focus:border-[#FBFADA] rounded-lg px-4 py-2.5 text-[#FBFADA] outline-none transition-colors shadow-inner"
+                  className="w-full bg-[#8E9F7C] border border-[#FBFADA] focus:border-[#FBFADA] rounded-lg px-4 py-2.5 text-[#FBFADA] placeholder:text-[#FBFADA]/60 outline-none transition-colors shadow-inner"
                   placeholder="Min 8 characters"
                 />
               </div>
@@ -128,7 +128,7 @@ export const ProfilePage: React.FC = () => {
             <button
               type="submit"
               disabled={loading || (username === user?.username && email === user?.email && !newPassword)}
-              className="px-6 py-2.5 bg-[#FBFADA] text-white font-bold rounded-lg hover:bg-[#FBFADA] shadow-lg disabled:opacity-50 transition-all flex items-center gap-2"
+              className="px-6 py-2.5 bg-[#FBFADA] text-[#12372A] font-bold rounded-lg hover:bg-[#e6e5c5] shadow-lg disabled:opacity-50 transition-all flex items-center gap-2"
             >
               <Save className="w-4 h-4" /> {loading ? 'Saving...' : 'Save Changes'}
             </button>

@@ -3,8 +3,9 @@
 import enum
 import uuid
 from datetime import datetime, timezone
-from sqlalchemy import String, Text, Integer, Enum, DateTime, ForeignKey, Column, JSON
-from sqlalchemy.orm import relationship
+from sqlalchemy import Boolean, Column, DateTime, Enum, ForeignKey, Integer, JSON, String, Text
+from sqlalchemy.orm import relationship, backref
+
 from app.db.base import Base
 
 
@@ -67,7 +68,7 @@ class Lab(Base):
     archived_at = Column(DateTime(timezone=True), nullable=True)
 
     # Relationships
-    author = relationship("User", backref="created_labs")
+    author = relationship("User", backref=backref("created_labs", cascade="all, delete-orphan"))
     hints = relationship("LabHint", back_populates="lab", cascade="all, delete-orphan", order_by="LabHint.hint_order")
 
     def __repr__(self) -> str:

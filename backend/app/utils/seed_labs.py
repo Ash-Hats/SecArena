@@ -157,7 +157,7 @@ def seed_labs():
                 username="instructor_seed",
                 email="instructor@secarena.local",
                 password_hash=hash_password("SecArenaSeed123!"),
-                role=UserRole.INSTRUCTOR,
+                role=UserRole.ADMIN,
             )
             print(f"[+] Created seed instructor account 'instructor_seed'.")
 

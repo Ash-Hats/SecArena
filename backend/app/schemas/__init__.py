@@ -1,14 +1,14 @@
 """Pydantic Schemas Package."""
 
 from app.schemas.user import UserRegister, UserLogin, UserResponse, TokenResponse
-from app.schemas.dashboard import StudentDashboardResponse, InstructorDashboardResponse, InstructorStudentListItem
+from app.schemas.dashboard import StudentDashboardResponse, AdminDashboardResponse, AdminStudentListItem
 from app.schemas.lab import (
     HintCreate,
     HintResponse,
     LabCreate,
     LabUpdate,
     LabStudentResponse,
-    LabInstructorResponse,
+    LabAdminResponse,
 )
 
 __all__ = [
@@ -17,12 +17,12 @@ __all__ = [
     "UserResponse",
     "TokenResponse",
     "StudentDashboardResponse",
-    "InstructorDashboardResponse",
-    "InstructorStudentListItem",
+    "AdminDashboardResponse",
+    "AdminStudentListItem",
     "HintCreate",
     "HintResponse",
     "LabCreate",
     "LabUpdate",
     "LabStudentResponse",
-    "LabInstructorResponse",
+    "LabAdminResponse",
 ]

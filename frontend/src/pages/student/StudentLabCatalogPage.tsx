@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Loader2, Shield, Crosshair, Users, ArrowRight } from 'lucide-react';
-import { getPublicLobbies, joinPvpSession } from '../../services/simulation';
+import { getPublicLobbies, joinPvpSession, createPvpSession } from '../../services/simulation';
 import { SimulationSession } from '../../types/simulation';
 
 interface StudentLabCatalogPageProps {
@@ -12,29 +12,35 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
   const [lobbies, setLobbies] = useState<SimulationSession[]>([]);
   const [loading, setLoading] = useState(true);
   const [joinCode, setJoinCode] = useState('');
+  const [lobbyName, setLobbyName] = useState('');
+  const [flagFormat, setFlagFormat] = useState('SEC_ARENA{...}');
   const [teamChoice, setTeamChoice] = useState<'RED'|'BLUE'>('RED');
   const [joining, setJoining] = useState(false);
+  const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreating(true);
+    setError(null);
+    try {
+      const nameToUse = lobbyName.trim() || 'PvP Arena Match';
+      const session = await createPvpSession('linux-reconnaissance-beginner', teamChoice, nameToUse, flagFormat);
+      if (onJoinPvp) onJoinPvp(session.id);
+    } catch (err: any) {
+      setError(err.message || 'Failed to create lobby.');
+    } finally {
+      setCreating(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchLobbies = async () => {
-      try {
-        const res = await getPublicLobbies();
-        setLobbies(res);
-      } catch (err) {
-        console.error("Failed to load public lobbies");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchLobbies();
+    getPublicLobbies().then(setLobbies).catch(() => {}).finally(() => setLoading(false));
     
     const interval = setInterval(() => {
-      getPublicLobbies()
-        .then(res => setLobbies(res))
-        .catch(console.error);
-    }, 3000);
-
+      getPublicLobbies().then(setLobbies).catch(console.error);
+    }, 5000);
+    
     return () => clearInterval(interval);
   }, []);
 
@@ -87,7 +93,7 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
                     value={joinCode}
                     onChange={(e) => setJoinCode(e.target.value.toUpperCase().slice(0, 6))}
                     placeholder="e.g. AB123C"
-                    className="w-full bg-[#8E9F7C] border border-[#FBFADA] rounded-lg pl-10 pr-4 py-2.5 text-[#FBFADA] font-mono outline-none focus:border-[#FBFADA] transition-colors"
+                    className="w-full bg-[#8E9F7C] border border-[#FBFADA] rounded-lg pl-10 pr-4 py-2.5 text-[#FBFADA] placeholder:text-[#FBFADA]/70 font-mono outline-none focus:border-[#FBFADA] transition-colors"
                   />
                 </div>
               </div>
@@ -125,9 +131,80 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
               <button
                 type="submit"
                 disabled={joining || joinCode.length < 6}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-[#FBFADA] hover:bg-[#FBFADA] text-white font-bold transition-all disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-[#FBFADA] hover:bg-[#e6e5c5] text-[#12372A] font-bold transition-all disabled:opacity-50"
               >
                 {joining ? <Loader2 className="w-5 h-5 animate-spin" /> : <><ArrowRight className="w-5 h-5" /> Join Lobby</>}
+              </button>
+            </form>
+          </div>
+
+          <div className="bg-[#33503C] border border-[#FBFADA] rounded-xl p-6 space-y-6">
+            <div>
+              <h2 className="text-lg font-bold text-[#FBFADA]">Create a Match</h2>
+              <p className="text-sm text-[#FBFADA]/60 mt-1">Start a new public lobby for others to join.</p>
+            </div>
+            
+            <form onSubmit={handleCreate} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-[#FBFADA] uppercase tracking-wider">Lobby Name</label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={lobbyName}
+                    onChange={(e) => setLobbyName(e.target.value)}
+                    placeholder="e.g. My Cool Match"
+                    className="w-full bg-[#8E9F7C] border border-[#FBFADA] rounded-lg px-4 py-2.5 text-[#FBFADA] placeholder:text-[#FBFADA]/70 font-mono outline-none focus:border-[#FBFADA] transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-[#FBFADA] uppercase tracking-wider">Flag Format</label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={flagFormat}
+                    onChange={(e) => setFlagFormat(e.target.value)}
+                    placeholder="e.g. SEC_ARENA{...}"
+                    className="w-full bg-[#8E9F7C] border border-[#FBFADA] rounded-lg px-4 py-2.5 text-[#FBFADA] placeholder:text-[#FBFADA]/70 font-mono outline-none focus:border-[#FBFADA] transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-[#FBFADA] uppercase tracking-wider">Select Team</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setTeamChoice('RED')}
+                    className={`flex items-center justify-center gap-2 py-2.5 rounded-lg border text-sm font-bold transition-all ${
+                      teamChoice === 'RED'
+                        ? 'bg-rose-500/20 border-rose-500/50 text-rose-400'
+                        : 'bg-[#8E9F7C] border-[#FBFADA] text-[#FBFADA]/60 hover:bg-[#FBFADA]'
+                    }`}
+                  >
+                    <Crosshair className="w-4 h-4" /> Red
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTeamChoice('BLUE')}
+                    className={`flex items-center justify-center gap-2 py-2.5 rounded-lg border text-sm font-bold transition-all ${
+                      teamChoice === 'BLUE'
+                        ? 'bg-blue-500/20 border-blue-500/50 text-blue-400'
+                        : 'bg-[#8E9F7C] border-[#FBFADA] text-[#FBFADA]/60 hover:bg-[#FBFADA]'
+                    }`}
+                  >
+                    <Shield className="w-4 h-4" /> Blue
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={creating}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-[#FBFADA] hover:bg-[#e6e5c5] text-[#12372A] font-bold transition-all disabled:opacity-50 mt-2"
+              >
+                {creating ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Crosshair className="w-5 h-5" /> Create Lobby</>}
               </button>
             </form>
           </div>
@@ -153,7 +230,7 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
                   <div key={lobby.id} className="bg-[#33503C] border border-[#FBFADA] rounded-xl p-5 flex items-center justify-between hover:border-[#FBFADA]/50 transition-colors">
                     <div>
                       <div className="flex items-center gap-3">
-                        <h3 className="font-bold text-[#FBFADA]">{lobby.scenario_slug}</h3>
+                        <h3 className="font-bold text-[#FBFADA]">{lobby.lobby_name || lobby.scenario_slug}</h3>
                         <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#FBFADA]/10 text-[#FBFADA] border border-[#FBFADA]/20">
                           {lobby.status}
                         </span>
@@ -162,9 +239,20 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
                         Started: {new Date(lobby.started_at).toLocaleString()}
                       </p>
                     </div>
-                    <div className="flex items-center gap-4 text-sm text-[#FBFADA]/70 font-mono bg-[#8E9F7C] px-4 py-2 rounded-lg border border-[#FBFADA]">
-                      <Users className="w-4 h-4 text-[#FBFADA]" />
-                      {totalPlayers} Players Active
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2 text-sm text-[#FBFADA]/70 font-mono bg-[#8E9F7C] px-3 py-1.5 rounded-lg border border-[#FBFADA]">
+                        <Users className="w-4 h-4 text-[#FBFADA]" />
+                        {totalPlayers} Players Active
+                      </div>
+                      <button 
+                        onClick={() => {
+                          setJoinCode(lobby.join_code || '');
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="px-4 py-1.5 bg-[#FBFADA] text-[#12372A] rounded-lg text-sm font-bold hover:bg-[#e6e5c5] transition-colors"
+                      >
+                        Join
+                      </button>
                     </div>
                   </div>
                 );

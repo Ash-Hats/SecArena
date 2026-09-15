@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, BookOpen, Users, BarChart3, UserCheck, Cpu, CalendarDays, Terminal, Info } from 'lucide-react';
+import { LayoutDashboard, BookOpen, UserCheck, Cpu, Terminal, Info } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
 interface SidebarProps {
@@ -9,7 +9,6 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate }) => {
   const { user } = useAuth();
-  const isInstructor = user?.role === 'instructor';
 
   const studentNavItems = [
     { label: 'Dashboard', path: '/student/dashboard', icon: LayoutDashboard },
@@ -19,32 +18,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath, onNavigate }) => 
     { label: 'About', path: '/about', icon: Info },
   ];
 
-  const instructorNavItems = [
-    { label: 'Dashboard', path: '/instructor/dashboard', icon: LayoutDashboard },
-    { label: 'Training Events', path: '/instructor/events', icon: CalendarDays },
-    { label: 'Lab Management', path: '/instructor/labs', icon: BookOpen },
-    { label: 'Students Overview', path: '/instructor/students', icon: Users },
-    { label: 'My Profile', path: '/instructor/profile', icon: UserCheck },
-    { label: 'Analytics', path: '/instructor/analytics', icon: BarChart3, badge: 'Phase 10' },
-    { label: 'About', path: '/about', icon: Info },
-  ];
-
-  const navItems = isInstructor ? instructorNavItems : studentNavItems;
-
   return (
     <aside className="w-64 border-r border-[#33503C] bg-[#33503C]/50 backdrop-blur-md flex flex-col justify-between flex-shrink-0 min-h-[calc(100vh-4rem)]">
       <div className="p-4 space-y-6">
         {/* Role Identity Tag */}
         <div className="px-3 py-2 rounded-lg bg-[#33503C] border border-[#33503C] flex items-center space-x-2 text-xs">
-          <div className={`w-2 h-2 rounded-full ${isInstructor ? 'bg-[#33503C] animate-pulse' : 'bg-[#12372A] animate-pulse'}`} />
-          <span className="font-mono text-[#FBFADA] capitalize">{user?.role} Portal</span>
+          <div className="w-2 h-2 rounded-full bg-[#12372A] animate-pulse" />
+          <span className="font-mono text-[#FBFADA] capitalize">{user?.role || 'student'} Portal</span>
         </div>
 
         {/* Navigation Section */}
         <nav className="space-y-1">
-          {navItems.map((item) => {
+          {studentNavItems.map((item) => {
             const Icon = item.icon;
-            const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path) && item.path !== '/student/labs' && item.path !== '/instructor/labs');
+            const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path) && item.path !== '/student/labs');
 
             return (
               <button

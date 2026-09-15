@@ -15,14 +15,26 @@ from app.simulation.scenarios import SCENARIOS
 
 class SimulationService:
     @staticmethod
-    def response(session: SimulationSession) -> dict:
+    def response(session: SimulationSession, user_id: str = None) -> dict:
+        user_states = session.state.get("user_states", {})
+        user_cwd = user_states.get(user_id, {}).get("cwd") if user_id else None
+        cwd = user_cwd if user_cwd is not None else session.state.get("cwd", "/")
+        
+        terminal_history = session.state.get("terminal_history", [])
+        if user_id:
+            terminal_history = [h for h in terminal_history if h.get("user_id") == user_id]
+            
         return {
             "id": session.id, "scenario_slug": session.scenario_slug, "status": session.status.value,
             "score": session.score, "progress": session.progress, "started_at": session.started_at,
             "completed_at": session.completed_at, "stopped_at": session.stopped_at,
-            "cwd": session.state.get("cwd", "/"), "discovered_flags": session.state.get("discovered_flags", []),
+            "cwd": cwd, "discovered_flags": session.state.get("discovered_flags", []),
             "pvp_flags": session.state.get("pvp_flags", {}),
             "is_pvp": getattr(session, "is_pvp", False), "join_code": getattr(session, "join_code", None),
+            "lobby_name": session.state.get("lobby_name", None),
+            "supported_commands": SCENARIOS.get(session.scenario_slug, {}).get("supported_commands", []),
+            "student_id": session.student_id,
+            "terminal_history": terminal_history,
             "participants": [{"user_id": p.user_id, "username": p.user.username if p.user else "Unknown", "team": p.team.value} for p in getattr(session, "participants", [])],
         }
 
@@ -44,7 +56,16 @@ class SimulationService:
     def start(cls, db: Session, scenario_slug: str, student: User) -> SimulationSession:
         if scenario_slug not in SCENARIOS:
             raise HTTPException(status_code=404, detail="Simulation scenario not found.")
-        session = SimulationSession(scenario_slug=scenario_slug, student_id=student.id, state=initial_state())
+            
+        scenario = SCENARIOS.get(scenario_slug, {})
+        files = scenario.get("files", {})
+        
+        state = initial_state()
+        from app.simulation.vfs import VirtualFileSystem
+        vfs = VirtualFileSystem(files)
+        state["vfs"] = vfs.fs
+        
+        session = SimulationSession(scenario_slug=scenario_slug, student_id=student.id, state=state)
         db.add(session); db.flush()
         db.add(SimulationEvent(session_id=session.id, event_type="SESSION_STARTED", severity="INFO", description="Simulation session started.", detected="true"))
         db.commit(); db.refresh(session)
@@ -62,23 +83,18 @@ class SimulationService:
                 "is_real_execution": cc.is_real_execution
             }
             
-        result = execute(session.state, action_input, custom_commands)
+        scenario = SCENARIOS.get(session.scenario_slug, {})
+        supported_commands = scenario.get("supported_commands", [])
+            
+        is_pvp = getattr(session, "is_pvp", False)
+        result = execute(session.state, action_input, custom_commands, supported_commands, is_pvp, user_id=str(user.id))
+        if "terminal_history" not in session.state:
+            session.state["terminal_history"] = []
+        session.state["terminal_history"].append({"user": user.username, "user_id": str(user.id), "command": action_input, "output": result.get("output", "")})
         flag_modified(session, "state")
         if not result["success"]:
             result["score"] = -2
         session.score = max(0, session.score + result["score"])
-        
-        # Check if a flag was just hidden via terminal
-        if "fs" in session.state:
-            for path, data in list(session.state["fs"].items()):
-                if isinstance(data, dict) and data.get("hidden_by_terminal"):
-                    del data["hidden_by_terminal"]
-                    if "pvp_flags" not in session.state:
-                        session.state["pvp_flags"] = {}
-                    session.state["pvp_flags"][data["content"]] = {
-                        "path": path, "found": False, "points": 50, "hidden_by": user.username
-                    }
-                    db.add(SimulationEvent(session_id=session.id, event_type="FLAG_HIDDEN", severity="INFO", description=f"{user.username} hid a flag via terminal.", detected="true"))
 
         if result["flag_found"]:
             session.status = SimulationStatus.COMPLETED; session.completed_at = datetime.now(timezone.utc); session.progress = 100
@@ -106,12 +122,24 @@ class SimulationService:
         return session
 
     @classmethod
-    def start_pvp(cls, db: Session, scenario_slug: str, time_limit: int | None, team_choice: str, student: User) -> SimulationSession:
+    def start_pvp(cls, db: Session, scenario_slug: str, time_limit: int | None, team_choice: str, lobby_name: str, student: User, flag_format: str = "SEC_ARENA{...}") -> SimulationSession:
         import string; import random
         join_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
         
+        scenario = SCENARIOS.get(scenario_slug, {})
+        files = scenario.get("files", {})
+        
+        state = initial_state()
+        state["lobby_name"] = lobby_name
+        state["flag_format"] = flag_format
+        state["cwd"] = "/home/student"
+        
+        from app.simulation.vfs import VirtualFileSystem
+        vfs = VirtualFileSystem(files)
+        state["vfs"] = vfs.fs
+        
         session = SimulationSession(
-            scenario_slug=scenario_slug, student_id=student.id, state=initial_state(),
+            scenario_slug=scenario_slug, student_id=student.id, state=state,
             is_pvp=True, join_code=join_code, time_limit_minutes=time_limit
         )
         db.add(session); db.flush()
@@ -137,12 +165,20 @@ class SimulationService:
             
         existing = db.query(SimulationSessionUser).filter_by(session_id=session.id, user_id=student.id).first()
         if existing:
-            raise HTTPException(status_code=400, detail="You are already in this session.")
+            return session
             
         db.add(SimulationSessionUser(session_id=session.id, user_id=student.id, team=team))
         db.add(SimulationEvent(session_id=session.id, event_type="PLAYER_JOINED", severity="INFO", description=f"A player joined the {team.value} team.", detected="true"))
         db.commit(); db.refresh(session)
         return session
+
+    @classmethod
+    def leave_session(cls, db: Session, session_id: str, student: User):
+        participant = db.query(SimulationSessionUser).filter_by(session_id=session_id, user_id=student.id).first()
+        if participant:
+            db.delete(participant)
+            db.add(SimulationEvent(session_id=session_id, event_type="PLAYER_LEFT", severity="INFO", description=f"A player left the {participant.team.value} team.", detected="true"))
+            db.commit()
 
     @classmethod
     def create_flag(cls, db: Session, session: SimulationSession, content: str, path: str, user: User) -> SimulationSession:
@@ -156,9 +192,14 @@ class SimulationService:
         session.state["pvp_flags"][content] = {"path": path, "found": False, "points": 50, "hidden_by": user.username}
         
         # We need to inject this file into the virtual filesystem
-        if "fs" not in session.state:
-            session.state["fs"] = {}
-        session.state["fs"][path] = {"type": "file", "content": content, "owner": "root", "perms": "644"}
+        if "vfs" not in session.state:
+            session.state["vfs"] = {}
+        
+        from app.simulation.vfs import VirtualFileSystem
+        vfs = VirtualFileSystem()
+        vfs.fs = session.state["vfs"]
+        vfs.write_file(path, content)
+        session.state["vfs"] = vfs.fs
         
         flag_modified(session, "state")
         db.add(SimulationEvent(session_id=session.id, event_type="FLAG_HIDDEN", severity="INFO", description=f"Blue Team hid a flag.", detected="true"))

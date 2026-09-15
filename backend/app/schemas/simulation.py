@@ -15,6 +15,8 @@ class PvpCreateRequest(BaseModel):
     scenario_slug: str = "linux-reconnaissance-beginner"
     time_limit_minutes: int | None = None
     team_choice: str = "RED" # RED or BLUE
+    lobby_name: str = "PvP Match"
+    flag_format: str = "SEC_ARENA{...}"
 
 
 class PvpJoinRequest(BaseModel):
@@ -49,6 +51,11 @@ class SimulationSessionResponse(BaseModel):
     pvp_flags: dict[str, Any] = {}
     is_pvp: bool = False
     join_code: str | None = None
+    lobby_name: str | None = None
+    flag_format: str = "SEC_ARENA{...}"
+    student_id: str | None = None
+    supported_commands: list[str] = []
+    terminal_history: list[dict[str, Any]] = []
     participants: list[ParticipantResponse] = []
     model_config = {"from_attributes": True}
 

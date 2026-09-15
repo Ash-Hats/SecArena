@@ -11,7 +11,6 @@ class UserRole(str, enum.Enum):
     """User Role Definitions."""
 
     STUDENT = "student"
-    INSTRUCTOR = "instructor"
     ADMIN = "admin"
 
 

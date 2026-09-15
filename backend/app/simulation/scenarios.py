@@ -17,7 +17,7 @@ LINUX_RECON = {
     },
     "flag_path": "/opt/secret/flag.txt",
     "flag": "SEC_ARENA{linux_recon_complete}",
-    "supported_commands": ["pwd", "ls", "cd", "cat", "find", "grep", "whoami", "id", "ps", "history", "clear", "hideflag", "mkdir", "touch", "rm", "echo", "nano", "vim", "|"],
+    "supported_commands": ["pwd", "ls", "cd", "cat", "find", "grep", "whoami", "id", "history", "clear", "hideflag", "mkdir", "touch", "rm", "echo", "|"],
 }
 
 SCENARIOS = {LINUX_RECON["slug"]: LINUX_RECON}

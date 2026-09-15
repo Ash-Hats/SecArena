@@ -8,27 +8,20 @@ import { StudentDashboardPage } from './pages/student/StudentDashboardPage';
 import { ProfilePage } from './pages/profile/ProfilePage';
 import { StudentLabCatalogPage } from './pages/student/StudentLabCatalogPage';
 import { StudentLabDetailPage } from './pages/student/StudentLabDetailPage';
-import { InstructorDashboardPage } from './pages/instructor/InstructorDashboardPage';
-import { InstructorStudentsPage } from './pages/instructor/InstructorStudentsPage';
-import { InstructorLabManagementPage } from './pages/instructor/InstructorLabManagementPage';
-import { InstructorLabEditorPage } from './pages/instructor/InstructorLabEditorPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { StudentEventsPage } from './pages/student/StudentEventsPage';
 import { StudentEventDetailPage } from './pages/student/StudentEventDetailPage';
-import { InstructorEventsPage } from './pages/instructor/InstructorEventsPage';
-import { InstructorEventEditorPage } from './pages/instructor/InstructorEventEditorPage';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { StudentSimulationPage } from './pages/student/StudentSimulationPage';
+import { PvpDashboardPage } from './pages/student/PvpDashboardPage';
 import { AboutPage } from './pages/AboutPage';
 
 function AppContent() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const [currentPath, setCurrentPath] = useState<string>(() => window.location.pathname || '/login');
   const [selectedLabSlug, setSelectedLabSlug] = useState<string | null>(null);
-  const [editingLabId, setEditingLabId] = useState<string | undefined>(undefined);
-  const [selectedEventId, setSelectedEventId] = useState<string | undefined>(undefined);
-  const [editingEventId, setEditingEventId] = useState<string | undefined>(undefined);
-  const [simulationId, setSimulationId] = useState<string | undefined>(undefined);
+const [selectedEventId, setSelectedEventId] = useState<string | undefined>(undefined);
+const [simulationId, setSimulationId] = useState<string | undefined>(undefined);
 
   const navigateTo = (path: string) => {
     window.history.pushState({}, '', path);
@@ -46,16 +39,13 @@ function AppContent() {
   useEffect(() => {
     if (!isLoading) {
       if (!isAuthenticated) {
-        if (currentPath !== '/login' && currentPath !== '/register' && currentPath !== '/teacher/login' && currentPath !== '/admin') {
+        if (currentPath !== '/login' && currentPath !== '/register' && currentPath !== '/admin') {
           navigateTo('/login');
         }
       } else if (user) {
-        if (currentPath === '/' || currentPath === '/login' || currentPath === '/register' || currentPath === '/teacher/login' || currentPath === '/admin') {
+        if (currentPath === '/' || currentPath === '/login' || currentPath === '/register' || currentPath === '/admin') {
           if (user.role === 'admin') {
-            navigateTo('/admin/dashboard');
-          } else if (user.role === 'instructor') {
-            navigateTo('/instructor/dashboard');
-          } else {
+            navigateTo('/admin/dashboard'); } else {
             navigateTo('/student/dashboard');
           }
         }
@@ -76,17 +66,14 @@ function AppContent() {
     if (currentPath === '/register') {
       return <RegisterPage onNavigateToLogin={() => navigateTo('/login')} />;
     }
-    if (currentPath === '/teacher/login') {
-      return <LoginPage portal="instructor" onNavigateToRegister={() => navigateTo('/register')} onNavigateToOtherPortal={() => navigateTo('/login')} onSuccess={() => navigateTo('/instructor/dashboard')} />;
-    }
     if (currentPath === '/admin') {
-      return <LoginPage portal="admin" onNavigateToRegister={() => navigateTo('/register')} onNavigateToOtherPortal={() => navigateTo('/login')} onSuccess={() => navigateTo('/admin/dashboard')} />;
+      return <LoginPage portal="admin" onNavigateToRegister={() => navigateTo('/register')} onSuccess={() => navigateTo('/admin/dashboard')} />;
     }
     return (
       <LoginPage
         portal="student"
         onNavigateToRegister={() => navigateTo('/register')}
-        onNavigateToOtherPortal={() => navigateTo('/teacher/login')}
+        
         onSuccess={() => navigateTo('/student/dashboard')}
       />
     );
@@ -104,19 +91,19 @@ function AppContent() {
   return (
     <AppLayout currentPath={currentPath} onNavigate={navigateTo}>
       {currentPath === '/student/dashboard' && (
-        <ProtectedRoute allowedRoles={['student', 'instructor']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
+        <ProtectedRoute allowedRoles={['student']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
           <StudentDashboardPage onNavigate={navigateTo} />
         </ProtectedRoute>
       )}
 
-      {(currentPath === '/student/profile' || currentPath === '/instructor/profile') && (
-        <ProtectedRoute allowedRoles={['student', 'instructor']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
+      {(currentPath === '/student/profile') && (
+        <ProtectedRoute allowedRoles={['student']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
           <ProfilePage />
         </ProtectedRoute>
       )}
 
       {currentPath === '/student/labs' && (
-        <ProtectedRoute allowedRoles={['student', 'instructor']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
+        <ProtectedRoute allowedRoles={['student']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
           <StudentLabCatalogPage
             onSelectLab={(slug) => {
               setSelectedLabSlug(slug);
@@ -124,7 +111,7 @@ function AppContent() {
             }}
             onJoinPvp={(id) => {
               setSimulationId(id);
-              navigateTo(`/student/simulations/${id}`);
+              navigateTo(`/student/pvp/${id}`);
             }}
           />
         </ProtectedRoute>
@@ -143,7 +130,7 @@ function AppContent() {
       )}
 
       {currentPath.startsWith('/student/labs/') && (
-        <ProtectedRoute allowedRoles={['student', 'instructor']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
+        <ProtectedRoute allowedRoles={['student']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
           <StudentLabDetailPage
             slug={selectedLabSlug || currentPath.replace('/student/labs/', '')}
             onBack={() => navigateTo('/student/labs')}
@@ -153,7 +140,7 @@ function AppContent() {
       )}
 
       {currentPath === '/student/progress' && (
-        <ProtectedRoute allowedRoles={['student', 'instructor']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
+        <ProtectedRoute allowedRoles={['student']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
           <PlaceholderPage
             title="Student Learning Progress"
             phase="Phase 5 (CTF Flags & Scoring)"
@@ -168,72 +155,24 @@ function AppContent() {
         </ProtectedRoute>
       ) : null}
 
-      {currentPath === '/instructor/dashboard' && (
-        <ProtectedRoute allowedRoles={['instructor']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
-          <InstructorDashboardPage onNavigate={navigateTo} />
+      {currentPath === '/student/pvp' || currentPath.startsWith('/student/pvp/') ? (
+        <ProtectedRoute allowedRoles={['student']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
+          <PvpDashboardPage sessionId={simulationId || (currentPath.startsWith('/student/pvp/') ? currentPath.split('/')[3] : undefined)} onLeave={() => navigateTo('/student/labs')} />
         </ProtectedRoute>
-      )}
+      ) : null}
 
-      {currentPath === '/instructor/students' && (
-        <ProtectedRoute allowedRoles={['instructor']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
-          <InstructorStudentsPage />
-        </ProtectedRoute>
-      )}
 
-      {currentPath === '/instructor/labs' && (
-        <ProtectedRoute allowedRoles={['instructor']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
-          <InstructorLabManagementPage
-            onNavigateToNew={() => {
-              setEditingLabId(undefined);
-              navigateTo('/instructor/labs/new');
-            }}
-            onNavigateToEdit={(labId) => {
-              setEditingLabId(labId);
-              navigateTo(`/instructor/labs/${labId}/edit`);
-            }}
-          />
-        </ProtectedRoute>
-      )}
 
-      {currentPath === '/instructor/events' && (
-        <ProtectedRoute allowedRoles={['instructor']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/instructor/dashboard')}>
-          <InstructorEventsPage onCreate={() => { setEditingEventId(undefined); navigateTo('/instructor/events/new'); }} onEdit={(eventId) => { setEditingEventId(eventId); navigateTo(`/instructor/events/${eventId}/edit`); }} />
-        </ProtectedRoute>
-      )}
 
-      {(currentPath === '/instructor/events/new' || currentPath.startsWith('/instructor/events/') && currentPath.endsWith('/edit')) && (
-        <ProtectedRoute allowedRoles={['instructor']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/instructor/dashboard')}>
-          <InstructorEventEditorPage eventId={editingEventId || (currentPath.endsWith('/edit') ? currentPath.split('/')[3] : undefined)} onBack={() => navigateTo('/instructor/events')} />
-        </ProtectedRoute>
-      )}
 
-      {currentPath === '/instructor/labs/new' && (
-        <ProtectedRoute allowedRoles={['instructor']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
-          <InstructorLabEditorPage onBack={() => navigateTo('/instructor/labs')} />
-        </ProtectedRoute>
-      )}
+      
 
-      {currentPath.includes('/edit') && (
-        <ProtectedRoute allowedRoles={['instructor']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
-          <InstructorLabEditorPage
-            labId={editingLabId || currentPath.split('/')[3]}
-            onBack={() => navigateTo('/instructor/labs')}
-          />
-        </ProtectedRoute>
-      )}
 
-      {currentPath === '/instructor/analytics' && (
-        <ProtectedRoute allowedRoles={['instructor']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
-          <PlaceholderPage
-            title="Cohort Analytics Platform"
-            phase="Phase 10 (Advanced Analytics & Research Evaluation)"
-            description="Evaluate student learning velocity, exercise difficulty ratings, and cohort performance graphs."
-          />
-        </ProtectedRoute>
-      )}
+      
+
 
       {currentPath === '/about' && (
-        <ProtectedRoute allowedRoles={['student', 'instructor', 'admin']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
+        <ProtectedRoute allowedRoles={['student', 'admin']} onNavigateToLogin={() => navigateTo('/login')} onNavigateToHome={() => navigateTo('/student/dashboard')}>
           <AboutPage />
         </ProtectedRoute>
       )}

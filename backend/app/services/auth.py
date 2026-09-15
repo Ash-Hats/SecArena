@@ -53,11 +53,17 @@ class AuthService:
         if not user:
             user = UserRepository.get_by_username(db, input_str)
 
-        # Generic authentication failure message to prevent credential enumeration
-        if not user or not verify_password(payload.password, user.password_hash):
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Not registered.",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+
+        if not verify_password(payload.password, user.password_hash):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Incorrect username/email or password.",
+                detail="Password or username is incorrect.",
                 headers={"WWW-Authenticate": "Bearer"},
             )
 

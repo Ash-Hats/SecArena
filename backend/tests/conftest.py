@@ -74,7 +74,7 @@ def instructor_user(db):
         username="testinstructor",
         email="instructor@example.com",
         password_hash=hash_password("InstructorPass123!"),
-        role=UserRole.INSTRUCTOR,
+        role=UserRole.ADMIN,
         is_active=True,
     )
     db.add(user)

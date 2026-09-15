@@ -24,7 +24,11 @@ export async function apiRequest<T>(
     try {
       const errorData = await response.json();
       if (errorData && errorData.detail) {
-        errorMsg = typeof errorData.detail === 'string' ? errorData.detail : JSON.stringify(errorData.detail);
+        if (Array.isArray(errorData.detail) && errorData.detail.length > 0 && errorData.detail[0].msg) {
+          errorMsg = errorData.detail.map((err: any) => err.msg).join(', ');
+        } else {
+          errorMsg = typeof errorData.detail === 'string' ? errorData.detail : JSON.stringify(errorData.detail);
+        }
       }
     } catch (e) {
       // Ignore JSON parse errors

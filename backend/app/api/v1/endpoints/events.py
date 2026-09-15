@@ -44,7 +44,7 @@ def _validate_labs(db: Session, lab_ids: List[str], instructor_id: str) -> List[
 
 
 @router.get("/manage", response_model=List[TrainingEventResponse])
-def list_instructor_events(current_user: User = Depends(require_role(UserRole.INSTRUCTOR)), db: Session = Depends(get_db)):
+def list_instructor_events(current_user: User = Depends(require_role(UserRole.ADMIN)), db: Session = Depends(get_db)):
     events = db.query(TrainingEvent).options(joinedload(TrainingEvent.assignments).joinedload(EventLab.lab), joinedload(TrainingEvent.enrollments)).filter(TrainingEvent.author_id == current_user.id).order_by(TrainingEvent.updated_at.desc()).all()
     return [_event_response(event, current_user.id) for event in events]
 
@@ -56,7 +56,7 @@ def list_published_events(current_user: User = Depends(get_current_user), db: Se
 
 
 @router.post("", response_model=TrainingEventResponse, status_code=status.HTTP_201_CREATED)
-def create_event(payload: EventPayload, current_user: User = Depends(require_role(UserRole.INSTRUCTOR)), db: Session = Depends(get_db)):
+def create_event(payload: EventPayload, current_user: User = Depends(require_role(UserRole.ADMIN)), db: Session = Depends(get_db)):
     if db.query(TrainingEvent).filter(TrainingEvent.join_code == payload.join_code).first():
         raise HTTPException(status_code=409, detail="That join code is already in use.")
     labs = _validate_labs(db, payload.lab_ids, current_user.id)
@@ -76,7 +76,7 @@ def get_event(event_id: str, current_user: User = Depends(get_current_user), db:
 
 
 @router.put("/{event_id}", response_model=TrainingEventResponse)
-def update_event(event_id: str, payload: EventPayload, current_user: User = Depends(require_role(UserRole.INSTRUCTOR)), db: Session = Depends(get_db)):
+def update_event(event_id: str, payload: EventPayload, current_user: User = Depends(require_role(UserRole.ADMIN)), db: Session = Depends(get_db)):
     event = _get_event(db, event_id)
     if event.author_id != current_user.id:
         raise HTTPException(status_code=403, detail="You do not have permission to modify this event.")
@@ -92,7 +92,7 @@ def update_event(event_id: str, payload: EventPayload, current_user: User = Depe
 
 
 @router.post("/{event_id}/status", response_model=TrainingEventResponse)
-def set_event_status(event_id: str, payload: EventStatusUpdate, current_user: User = Depends(require_role(UserRole.INSTRUCTOR)), db: Session = Depends(get_db)):
+def set_event_status(event_id: str, payload: EventStatusUpdate, current_user: User = Depends(require_role(UserRole.ADMIN)), db: Session = Depends(get_db)):
     event = _get_event(db, event_id)
     if event.author_id != current_user.id:
         raise HTTPException(status_code=403, detail="You do not have permission to modify this event.")

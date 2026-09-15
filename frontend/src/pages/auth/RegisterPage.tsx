@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, UserPlus, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
+import { Shield, UserPlus, AlertCircle, Loader2 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
 interface RegisterPageProps {
@@ -14,7 +14,6 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onNavigateToLogin })
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +33,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onNavigateToLogin })
     setError(null);
     try {
       await register({ username, email, password });
-      setSuccess(true);
+      onNavigateToLogin();
     } catch (err: any) {
       setError(err.message || 'Registration failed. Please check input parameters.');
     } finally {
@@ -43,93 +42,83 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onNavigateToLogin })
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0e17] text-slate-100 flex flex-col justify-center items-center px-4 py-12 selection:bg-cyan-500 selection:text-black">
-      <div className="w-full max-w-md space-y-6">
+    <div className="min-h-screen bg-[#8E9F7C] text-[#FBFADA] flex flex-col justify-center items-center px-4 py-12 selection:bg-[#33503C]/30">
+      
+      {/* Animated Background Elements */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#33503C]/20 rounded-full blur-3xl animate-blob"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#33503C]/20 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
+
+      <div className="w-full max-w-md space-y-6 z-20">
         {/* Header Branding */}
         <div className="text-center space-y-2">
-          <div className="inline-flex p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 mb-2">
+          <div className="inline-flex p-3 rounded-xl bg-[#33503C] border border-[#33503C]/50 text-[#FBFADA] mb-2">
             <Shield className="w-8 h-8" />
           </div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-white">SecArena</h1>
-          <p className="text-xs text-slate-400 font-mono">Student Account Registration</p>
+          <h1 className="text-3xl font-extrabold tracking-tight text-[#FBFADA]">SecArena</h1>
+          <p className="text-xs text-[#FBFADA] font-mono uppercase tracking-widest">Student Account Registration</p>
         </div>
 
-        <div className="bg-[#0d1322] border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
-          {success ? (
-            <div className="text-center space-y-4 py-4">
-              <div className="inline-flex p-3 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
-                <CheckCircle2 className="w-10 h-10" />
-              </div>
-              <h2 className="text-xl font-bold text-white">Registration Successful!</h2>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Your Student account has been created. You may now log in to access your training dashboard.
-              </p>
-              <button
-                onClick={onNavigateToLogin}
-                className="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-lg text-xs uppercase tracking-wider transition-all"
-              >
-                Proceed to Login
-              </button>
-            </div>
-          ) : (
-            <>
-              <div className="border-b border-slate-800 pb-4">
-                <h2 className="text-xl font-bold text-white">Create Student Account</h2>
-                <p className="text-xs text-slate-400 mt-1">Join SecArena to access cyber training scenarios.</p>
+        <div className="glass-panel rounded-2xl p-6 sm:p-8 relative overflow-hidden group border border-[#33503C]/50">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#33503C] to-[#12372A]"></div>
+          
+          <>
+              <div className="border-b border-[#33503C]/50 pb-4">
+                <h2 className="text-xl font-bold text-[#FBFADA]">Create Student Account</h2>
+                <p className="text-xs text-[#FBFADA] mt-1">Join SecArena to access cyber training scenarios.</p>
               </div>
 
               {error && (
-                <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex items-start space-x-2">
+                <div className="p-3 mt-4 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex items-start space-x-2">
                   <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
                   <span>{error}</span>
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-4 text-left">
+              <form onSubmit={handleSubmit} className="space-y-5 mt-4 text-left">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Username</label>
+                  <label className="block text-xs font-bold text-[#FBFADA] mb-1.5 uppercase tracking-wider">Username</label>
                   <input
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="student_alex"
-                    className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-500/60 font-mono"
+                    className="input-modern"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
+                  <label className="block text-xs font-bold text-[#FBFADA] mb-1.5 uppercase tracking-wider">Email Address</label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="student@example.com"
-                    className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-500/60 font-mono"
+                    className="input-modern"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Password</label>
+                  <label className="block text-xs font-bold text-[#FBFADA] mb-1.5 uppercase tracking-wider">Password</label>
                   <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-500/60 font-mono"
+                    className="input-modern"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Confirm Password</label>
+                  <label className="block text-xs font-bold text-[#FBFADA] mb-1.5 uppercase tracking-wider">Confirm Password</label>
                   <input
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-cyan-500/60 font-mono"
+                    className="input-modern"
                     required
                   />
                 </div>
@@ -137,33 +126,32 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onNavigateToLogin })
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-lg text-xs uppercase tracking-wider transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
+                  className="w-full py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-[#FBFADA] font-bold rounded-lg text-sm transition-all transform hover:-translate-y-0.5 shadow-none flex items-center justify-center space-x-2 disabled:opacity-50 disabled:transform-none"
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Loader2 className="w-5 h-5 animate-spin" />
                       <span>Creating Account...</span>
                     </>
                   ) : (
                     <>
-                      <UserPlus className="w-4 h-4" />
+                      <UserPlus className="w-5 h-5" />
                       <span>Register Account</span>
                     </>
                   )}
                 </button>
               </form>
 
-              <div className="pt-4 border-t border-slate-800/80 text-center text-xs text-slate-400 flex justify-between items-center">
+              <div className="mt-8 pt-6 border-t border-[#33503C]/50 text-center text-sm text-[#FBFADA] flex justify-between items-center">
                 <span>Already registered?</span>
                 <button
                   onClick={onNavigateToLogin}
-                  className="text-cyan-400 hover:text-cyan-300 font-semibold underline underline-offset-4"
+                  className="text-[#FBFADA] hover:text-cyan-300 font-bold transition-colors"
                 >
                   Back to Login
                 </button>
               </div>
             </>
-          )}
         </div>
       </div>
     </div>

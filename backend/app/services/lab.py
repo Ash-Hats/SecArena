@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from app.models.user import User
 from app.models.lab import Lab, LabStatus, LabCategory, Difficulty
 from app.repositories.lab import LabRepository
-from app.schemas.lab import LabCreate, LabUpdate, LabStudentResponse, LabInstructorResponse
+from app.schemas.lab import LabCreate, LabUpdate, LabStudentResponse, LabAdminResponse
 
 
 def generate_slug(title: str) -> str:
@@ -34,7 +34,7 @@ class LabService:
             )
 
     @staticmethod
-    def create_lab(db: Session, payload: LabCreate, current_user: User) -> LabInstructorResponse:
+    def create_lab(db: Session, payload: LabCreate, current_user: User) -> LabAdminResponse:
         """Create a new Lab blueprint in DRAFT state."""
         slug_str = payload.slug or generate_slug(payload.title)
         
@@ -61,10 +61,10 @@ class LabService:
         )
 
         created_lab = LabRepository.create_lab(db, lab, hints_data=hints_dicts)
-        return LabInstructorResponse.model_validate(created_lab)
+        return LabAdminResponse.model_validate(created_lab)
 
     @staticmethod
-    def update_lab(db: Session, lab_id: str, payload: LabUpdate, current_user: User, allow_any: bool = False) -> LabInstructorResponse:
+    def update_lab(db: Session, lab_id: str, payload: LabUpdate, current_user: User, allow_any: bool = False) -> LabAdminResponse:
         """Update an existing Lab blueprint."""
         lab = LabRepository.get_by_id(db, lab_id)
         if not lab:
@@ -95,10 +95,10 @@ class LabService:
                     )
 
         updated_lab = LabRepository.update_lab(db, lab, update_dict, hints_data=hints_data)
-        return LabInstructorResponse.model_validate(updated_lab)
+        return LabAdminResponse.model_validate(updated_lab)
 
     @staticmethod
-    def publish_lab(db: Session, lab_id: str, current_user: User) -> LabInstructorResponse:
+    def publish_lab(db: Session, lab_id: str, current_user: User) -> LabAdminResponse:
         """Publish a Lab blueprint after strict validation."""
         lab = LabRepository.get_by_id(db, lab_id)
         if not lab:
@@ -135,10 +135,10 @@ class LabService:
             lab,
             {"status": LabStatus.PUBLISHED, "published_at": now},
         )
-        return LabInstructorResponse.model_validate(updated_lab)
+        return LabAdminResponse.model_validate(updated_lab)
 
     @staticmethod
-    def unpublish_lab(db: Session, lab_id: str, current_user: User) -> LabInstructorResponse:
+    def unpublish_lab(db: Session, lab_id: str, current_user: User) -> LabAdminResponse:
         """Revert a published Lab to DRAFT state."""
         lab = LabRepository.get_by_id(db, lab_id)
         if not lab:
@@ -153,10 +153,10 @@ class LabService:
             )
 
         updated_lab = LabRepository.update_lab(db, lab, {"status": LabStatus.DRAFT})
-        return LabInstructorResponse.model_validate(updated_lab)
+        return LabAdminResponse.model_validate(updated_lab)
 
     @staticmethod
-    def archive_lab(db: Session, lab_id: str, current_user: User) -> LabInstructorResponse:
+    def archive_lab(db: Session, lab_id: str, current_user: User) -> LabAdminResponse:
         """Archive a Lab blueprint."""
         lab = LabRepository.get_by_id(db, lab_id)
         if not lab:
@@ -170,7 +170,7 @@ class LabService:
             lab,
             {"status": LabStatus.ARCHIVED, "archived_at": now},
         )
-        return LabInstructorResponse.model_validate(updated_lab)
+        return LabAdminResponse.model_validate(updated_lab)
 
     @staticmethod
     def delete_lab(db: Session, lab_id: str, current_user: User, allow_any: bool = False) -> dict:
@@ -217,7 +217,7 @@ class LabService:
         category: Optional[LabCategory] = None,
         difficulty: Optional[Difficulty] = None,
         search: Optional[str] = None,
-    ) -> List[LabInstructorResponse]:
+    ) -> List[LabAdminResponse]:
         """Fetch all labs authored by the current instructor."""
         labs = LabRepository.list_instructor_labs(
             db,
@@ -227,14 +227,14 @@ class LabService:
             difficulty=difficulty,
             search=search,
         )
-        return [LabInstructorResponse.model_validate(l) for l in labs]
+        return [LabAdminResponse.model_validate(l) for l in labs]
 
     @staticmethod
-    def get_instructor_lab_detail(db: Session, lab_id: str, current_user: User) -> LabInstructorResponse:
+    def get_instructor_lab_detail(db: Session, lab_id: str, current_user: User) -> LabAdminResponse:
         """Fetch lab detail for instructor management view."""
         lab = LabRepository.get_by_id(db, lab_id)
         if not lab:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Lab blueprint not found.")
 
         LabService._verify_lab_ownership(lab, current_user)
-        return LabInstructorResponse.model_validate(lab)
+        return LabAdminResponse.model_validate(lab)
