@@ -36,11 +36,15 @@ class Settings(BaseSettings):
 
     # CORS / Frontend Integration
     FRONTEND_URL: str = "http://localhost:5173"
-    CORS_ORIGINS: str = "http://localhost:5173,http://127.0.0.1:5173"
+    CORS_ORIGINS: str = "https://sec-arena.vercel.app,http://localhost:5173,http://127.0.0.1:5173"
 
     @property
     def cors_origins_list(self) -> List[str]:
-        return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+        origins = [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+        # Forcefully include the live Vercel frontend to prevent environment variable typos from breaking the site
+        if "https://sec-arena.vercel.app" not in origins:
+            origins.append("https://sec-arena.vercel.app")
+        return origins
 
 
 
