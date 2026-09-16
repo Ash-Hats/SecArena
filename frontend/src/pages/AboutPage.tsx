@@ -25,41 +25,57 @@ export const AboutPage: React.FC = () => {
           <h2 className="text-xl font-bold text-[#FBFADA] flex items-center gap-2 mb-4">
             <BookOpen className="w-5 h-5" /> Platform Overview
           </h2>
-          <p className="text-[#FBFADA]/80 leading-relaxed text-sm">
+          <p className="text-[#FBFADA]/80 leading-relaxed text-sm mb-4">
             SecArena is a highly interactive cyber warfare and penetration testing simulation environment.
-            Our goal is to provide realistic, containerized training scenarios where students can practice 
-            both offensive (Red Team) and defensive (Blue Team) skills.
+            You can practice your skills in standalone scenarios or compete against other players in real-time PvP matches.
           </p>
+          <h3 className="text-[#FBFADA] font-bold text-sm mb-2">How to Play:</h3>
+          <ul className="text-[#FBFADA]/80 text-sm space-y-2 list-disc list-inside">
+            <li><strong>Simulator:</strong> Play solo scenarios. Use the terminal to navigate the system, find vulnerabilities, and discover the hidden <code className="bg-[#33503C] px-1 rounded">SEC_ARENA&#123;...&#125;</code> flag to win.</li>
+            <li><strong>PvP Mode:</strong> Create or join multiplayer lobbies using a 6-character Join Code. Compete as either Red or Blue team.</li>
+          </ul>
         </div>
 
         <div className="glass-panel rounded-2xl p-6">
           <h2 className="text-xl font-bold text-[#FBFADA] flex items-center gap-2 mb-4">
             <Terminal className="w-5 h-5" /> Virtual Terminal
           </h2>
+          <p className="text-[#FBFADA]/80 leading-relaxed text-sm mb-4">
+            The heart of SecArena is the simulated terminal. It provides a sandboxed filesystem for you to execute commands.
+          </p>
           <ul className="text-[#FBFADA]/80 text-sm space-y-2 list-disc list-inside">
-            <li>Type <code className="bg-[#33503C] px-1 rounded">help</code> to see available commands.</li>
-            <li>Use <code className="bg-[#33503C] px-1 rounded">echo</code> to write to files non-interactively.</li>
-            <li>Standard utilities like <code className="bg-[#33503C] px-1 rounded">ls</code>, <code className="bg-[#33503C] px-1 rounded">cd</code>, and <code className="bg-[#33503C] px-1 rounded">grep</code> are supported.</li>
-            <li>Use <code className="bg-[#33503C] px-1 rounded">hideflag</code> to secure your captured flags in PvP mode.</li>
+            <li>Navigate using standard commands: <code className="bg-[#33503C] px-1 rounded">cd</code>, <code className="bg-[#33503C] px-1 rounded">ls</code>, <code className="bg-[#33503C] px-1 rounded">pwd</code>.</li>
+            <li>Read files and search text: <code className="bg-[#33503C] px-1 rounded">cat</code>, <code className="bg-[#33503C] px-1 rounded">grep</code>, <code className="bg-[#33503C] px-1 rounded">find</code>.</li>
+            <li>Create or delete files: <code className="bg-[#33503C] px-1 rounded">touch</code>, <code className="bg-[#33503C] px-1 rounded">mkdir</code>, <code className="bg-[#33503C] px-1 rounded">echo</code>, <code className="bg-[#33503C] px-1 rounded">rm</code>.</li>
+            <li>Use <code className="bg-[#33503C] px-1 rounded">clear</code> to clean your terminal output at any time.</li>
           </ul>
         </div>
       </div>
 
       <div className="glass-panel rounded-2xl p-6">
         <h2 className="text-xl font-bold text-[#FBFADA] flex items-center gap-2 mb-4">
-          <Shield className="w-5 h-5" /> PvP Mode
+          <Shield className="w-5 h-5" /> PvP Mode Strategy Guide
         </h2>
         <div className="text-[#FBFADA]/80 text-sm space-y-4 leading-relaxed">
           <p>
-            In PvP (Player vs Player) mode, you can join a simulation room with other students. 
-            Each player can choose to be on the <strong>Red Team</strong> or <strong>Blue Team</strong>.
+            <strong>Blue Team (Defenders):</strong> Your primary objective is to hide flags securely in the virtual filesystem. 
+            Use the "Action Center" on the right side of the dashboard, or type <code className="bg-[#33503C] px-1 rounded">hideflag /path/to/file SEC_ARENA&#123;flag_name&#125;</code> in the terminal to securely inject flags into the filesystem. Try to hide them in obscure directories to buy time!
           </p>
           <p>
-            You can capture flags and submit them to earn points for your team. Use the 
-            "Submit Captured Flag" input located below the terminal in your simulation view. 
-            The history of all played rooms and scores will appear in your PvP History on the dashboard!
+            <strong>Red Team (Attackers):</strong> Your objective is to hunt down the flags hidden by the Blue Team. 
+            Use search commands like <code className="bg-[#33503C] px-1 rounded">find</code> and <code className="bg-[#33503C] px-1 rounded">grep</code> to sweep the filesystem. Once you find a flag string in the terminal, copy it and paste it into your "Action Center" to capture it and score points.
+          </p>
+          <p>
+            The team with the most points when the host ends the match wins.
           </p>
         </div>
+      </div>
+
+      {/* Watermark */}
+      <div className="pt-12 pb-4 text-center">
+        <p className="text-[#FBFADA]/20 text-xs font-mono tracking-widest uppercase font-bold">
+          made by Ash-Hats
+        </p>
       </div>
     </motion.div>
   );
