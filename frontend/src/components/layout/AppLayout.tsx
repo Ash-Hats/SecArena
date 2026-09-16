@@ -14,7 +14,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, currentPath, onN
       <Header />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar currentPath={currentPath} onNavigate={onNavigate} />
-        <main className="flex-1 overflow-y-auto p-6 md:p-8 bg-transparent max-w-7xl mx-auto w-full">
+        <main className="flex-1 overflow-y-auto p-6 md:p-8 bg-transparent w-full">
           {children}
         </main>
       </div>
