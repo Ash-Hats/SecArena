@@ -239,6 +239,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
              <TerminalUI
                onCommand={handleCommand}
                history={session?.terminal_history}
+               currentUser={user?.username}
              />
              {busy && (
                <div className="absolute bottom-2 right-4 text-xs font-mono text-[#FBFADA]/50 animate-pulse flex items-center space-x-2">

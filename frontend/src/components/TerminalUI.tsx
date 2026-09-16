@@ -38,6 +38,7 @@ export function TerminalUI({ onCommand, history, currentUser }: TerminalUIProps)
       },
       fontFamily: 'monospace',
       fontSize: 14,
+      lineHeight: 1.2,
     });
     fitAddon.current = new FitAddon();
     term.current.loadAddon(fitAddon.current);
@@ -73,8 +74,10 @@ export function TerminalUI({ onCommand, history, currentUser }: TerminalUIProps)
       return true;
     });
 
+    const getPrompt = () => `\x1b[33m${currentUser || 'student'}@secarena:~$\x1b[0m `;
+
     if (!history || history.length === 0) {
-      term.current.write('student@secarena:~$ ');
+      term.current.write(getPrompt());
     }
 
     term.current.onData((e) => {
@@ -87,7 +90,7 @@ export function TerminalUI({ onCommand, history, currentUser }: TerminalUIProps)
           if (command) {
             if (command === 'clear') {
                 term.current?.reset();
-                term.current?.write('student@secarena:~$ ');
+                term.current?.write(getPrompt());
                 onCommandRef.current(command);
             } else {
                 onCommandRef.current(command).then((out) => {
@@ -98,13 +101,13 @@ export function TerminalUI({ onCommand, history, currentUser }: TerminalUIProps)
                           term.current?.write(line + '\r\n');
                         }
                       }
-                      term.current?.write('student@secarena:~$ ');
+                      term.current?.write(getPrompt());
                   }
                 });
             }
           } else {
             if (historyRef.current === undefined) {
-               term.current?.write('student@secarena:~$ ');
+               term.current?.write(getPrompt());
             }
           }
           inputBuffer.current = '';
@@ -165,7 +168,7 @@ export function TerminalUI({ onCommand, history, currentUser }: TerminalUIProps)
             }
         }
         
-        term.current.write(`student@secarena:~$ ${inputBuffer.current}`);
+        term.current.write(`\x1b[33m${currentUser || 'student'}@secarena:~$\x1b[0m ${inputBuffer.current}`);
         renderedCount.current = history.length;
     }
   }, [history, currentUser]);

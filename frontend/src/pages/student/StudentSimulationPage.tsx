@@ -111,6 +111,7 @@ export const StudentSimulationPage: React.FC<Props> = ({ sessionId, onSessionSta
                <TerminalUI
                  onCommand={handleCommand}
                  history={session?.terminal_history}
+                 currentUser={user?.username}
                />
              )}
              {busy && session && (
