@@ -1,8 +1,18 @@
 # SecArena — Learn. Attack. Detect. Defend.
 
+**Live Demo:** [https://sec-arena.vercel.app](https://sec-arena.vercel.app)
+
 SecArena is a browser-based cybersecurity attack-simulation and defense-training platform. It models virtual hosts, files, users, services, actions, detections, flags, scores, and timelines entirely as application data.
 
 No scenario starts a vulnerable machine, executes a shell command, reads the host filesystem, scans a network, or runs arbitrary code.
+
+## How to Use
+
+1. **Sign Up / Log In:** Create a free student account to access the dashboard.
+2. **Simulator (Solo Mode):** Practice your terminal skills in standalone scenarios. Use standard Linux commands (`ls`, `cd`, `cat`, `find`) to navigate the virtual filesystem, identify vulnerabilities, and capture the `SEC_ARENA{...}` flag.
+3. **PvP Mode (Multiplayer):** Join or create a real-time multiplayer room using a Join Code.
+   - **Blue Team:** Hide flags securely within the filesystem using the `hideflag` command.
+   - **Red Team:** Search the filesystem to discover flags hidden by the Blue team and submit them to score points.
 
 ## Current capabilities
 
