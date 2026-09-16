@@ -14,6 +14,6 @@ def execute(state: dict, action_input: str, custom_commands: dict = None, suppor
     result = vshell.execute(action_input)
     result["score"] = 0
     result["rule"] = None
-    result["flag_found"] = "SEC_ARENA{" in result.get("output", "")
+    result["flag_found"] = False if is_pvp else "SEC_ARENA{" in result.get("output", "")
     
     return result
