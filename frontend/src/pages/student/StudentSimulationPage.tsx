@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import { Terminal, AlertTriangle, ShieldAlert } from 'lucide-react';
 import { getScenarios, getSimulation, runSimulationAction, submitPvpFlag, getSimulations, startSimulation } from '../../services/simulation';
 import { Scenario, SimulationSession } from '../../types/simulation';
+import { useAuth } from '../../context/AuthContext';
 import { TerminalUI } from '../../components/TerminalUI';
 
 interface Props { sessionId?: string; onSessionStarted: (id: string) => void; }
 
 export const StudentSimulationPage: React.FC<Props> = ({ sessionId, onSessionStarted }) => {
+  const { user } = useAuth();
   const [scenario, setScenario] = useState<Scenario | null>(null);
   const [session, setSession] = useState<SimulationSession | null>(null);
   const [error, setError] = useState<string | null>(null); 
