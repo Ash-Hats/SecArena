@@ -1,0 +1,31 @@
+import sys
+import os
+
+# Append current directory so we can import app modules
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from app.db.session import SessionLocal
+from app.models.user import User, UserRole
+from app.core.security import get_password_hash
+
+def run():
+    db = SessionLocal()
+    admin = db.query(User).filter_by(username="admin").first()
+    if admin:
+        print("Admin user already exists. Updating password to admin123")
+        admin.hashed_password = get_password_hash("admin123")
+    else:
+        print("Creating admin user...")
+        admin = User(
+            username="admin",
+            email="admin@secarena.com",
+            role=UserRole.ADMIN,
+            is_active=True,
+            hashed_password=get_password_hash("admin123")
+        )
+        db.add(admin)
+    db.commit()
+    print("Success! Admin user created. You can now login with admin / admin123")
+
+if __name__ == "__main__":
+    run()
