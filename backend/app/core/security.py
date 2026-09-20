@@ -13,8 +13,14 @@ from app.core.logging import logger
 from app.db.session import get_db
 from app.models.user import User, UserRole
 
-# Password context using Argon2id algorithm
-pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
+# Password context using Argon2id algorithm. 
+# time_cost and memory_cost are lowered here to make login faster.
+pwd_context = CryptContext(
+    schemes=["argon2"], 
+    deprecated="auto",
+    argon2__time_cost=1,          # Lower iterations (default is usually 2+)
+    argon2__memory_cost=1024 * 16 # Lower memory usage to 16MB (default is usually 64MB+)
+)
 
 # HTTP Bearer Token Scheme
 security_bearer = HTTPBearer(auto_error=False)

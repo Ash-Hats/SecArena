@@ -51,10 +51,13 @@ class VirtualFileSystem:
         abs_path = self._resolve(path)
         self.fs[abs_path] = {'type': 'dir'}
 
-    def ls(self, path=""):
+    def ls(self, path="", show_hidden=False):
         abs_path = self._resolve(path)
         if abs_path in self.fs and self.fs[abs_path]['type'] == 'file':
-            return abs_path.split('/')[-1]
+            name = abs_path.split('/')[-1]
+            if not show_hidden and name.startswith('.'):
+                return ""
+            return name
             
         results = []
         prefix = abs_path.rstrip('/') + '/' if abs_path != '/' else '/'
@@ -62,6 +65,8 @@ class VirtualFileSystem:
             if p.startswith(prefix) and p != prefix:
                 rel = p[len(prefix):]
                 if '/' not in rel:
+                    if not show_hidden and rel.startswith('.'):
+                        continue
                     results.append(rel)
         return "\n".join(sorted(results)) if results else ""
 
@@ -171,7 +176,13 @@ class VirtualShell:
                 return ""
             return f"cd: {target}: No such file or directory"
         elif prog == "ls":
-            return self.vfs.ls(args[0] if args else "")
+            show_hidden = "-a" in args
+            target = ""
+            for arg in args:
+                if not arg.startswith("-"):
+                    target = arg
+                    break
+            return self.vfs.ls(target, show_hidden=show_hidden)
         elif prog == "cat":
             if not args: return stdin
             out = []
