@@ -35,7 +35,7 @@ class SimulationService:
             "supported_commands": SCENARIOS.get(session.scenario_slug, {}).get("supported_commands", []),
             "student_id": session.student_id,
             "terminal_history": terminal_history,
-            "participants": [{"user_id": p.user_id, "username": p.user.username if p.user else "Unknown", "team": p.team.value} for p in getattr(session, "participants", [])],
+            "participants": [{"user_id": p.user_id, "username": p.user.username if p.user else "Unknown", "team": p.team.value, "is_approved": getattr(p, "is_approved", False)} for p in getattr(session, "participants", [])],
         }
 
     @classmethod
