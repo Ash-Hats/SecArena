@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Any
 from pydantic import BaseModel, Field
+from app.models.simulation import SimulationTeam
 
 
 class SimulationStartRequest(BaseModel):
@@ -41,8 +42,11 @@ class SimulationEventResponse(BaseModel):
 
 class ParticipantResponse(BaseModel):
     user_id: str
-    username: str
-    team: str
+    username: str | None = None
+    team: SimulationTeam
+    is_approved: bool
+    model_config = {"from_attributes": True}
+
 
 class SimulationSessionResponse(BaseModel):
     id: str; scenario_slug: str; status: str; score: int; progress: int

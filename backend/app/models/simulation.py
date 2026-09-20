@@ -53,6 +53,7 @@ class SimulationSessionUser(Base):
     session_id = Column(String(36), ForeignKey("simulation_sessions.id", ondelete="CASCADE"), primary_key=True)
     user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
     team = Column(Enum(SimulationTeam), nullable=False)
+    is_approved = Column(Boolean, nullable=False, default=False)
     joined_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
 
     session = relationship("SimulationSession", back_populates="participants")

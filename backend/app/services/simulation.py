@@ -38,8 +38,8 @@ class SimulationService:
             "participants": [{"user_id": p.user_id, "username": p.user.username if p.user else "Unknown", "team": p.team.value} for p in getattr(session, "participants", [])],
         }
 
-    @staticmethod
-    def get_session(db: Session, session_id: str, user: User) -> SimulationSession:
+    @classmethod
+    def get_session(cls, db: Session, session_id: str, user: User, require_approved: bool = False) -> SimulationSession:
         session = db.query(SimulationSession).filter(SimulationSession.id == session_id).first()
         if not session:
             raise HTTPException(status_code=404, detail="Simulation session not found.")
@@ -48,6 +48,8 @@ class SimulationService:
                 participant = db.query(SimulationSessionUser).filter_by(session_id=session.id, user_id=user.id).first()
                 if not participant and session.student_id != user.id:
                     raise HTTPException(status_code=403, detail="You do not have access to this PvP session.")
+                if require_approved and participant and not participant.is_approved:
+                    raise HTTPException(status_code=403, detail="You are not approved to perform actions in this room.")
             elif session.student_id != user.id:
                 raise HTTPException(status_code=403, detail="You do not have access to this simulation session.")
         return session
@@ -145,7 +147,7 @@ class SimulationService:
         db.add(session); db.flush()
         
         team = SimulationTeam.RED if team_choice.upper() == "RED" else SimulationTeam.BLUE
-        db.add(SimulationSessionUser(session_id=session.id, user_id=student.id, team=team))
+        db.add(SimulationSessionUser(session_id=session.id, user_id=student.id, team=team, is_approved=True))
         db.add(SimulationEvent(session_id=session.id, event_type="SESSION_STARTED", severity="INFO", description=f"PvP session started. Code: {join_code}", detected="true"))
         db.commit(); db.refresh(session)
         return session
@@ -179,6 +181,32 @@ class SimulationService:
             db.delete(participant)
             db.add(SimulationEvent(session_id=session_id, event_type="PLAYER_LEFT", severity="INFO", description=f"A player left the {participant.team.value} team.", detected="true"))
             db.commit()
+
+    @classmethod
+    def approve_join(cls, db: Session, session_id: str, target_user_id: str, current_user: User):
+        session = db.query(SimulationSession).filter_by(id=session_id).first()
+        if not session or session.student_id != current_user.id:
+            raise HTTPException(status_code=403, detail="Only the host can approve members.")
+            
+        participant = db.query(SimulationSessionUser).filter_by(session_id=session_id, user_id=target_user_id).first()
+        if not participant:
+            raise HTTPException(status_code=404, detail="Participant not found.")
+            
+        participant.is_approved = True
+        db.commit()
+
+    @classmethod
+    def reject_join(cls, db: Session, session_id: str, target_user_id: str, current_user: User):
+        session = db.query(SimulationSession).filter_by(id=session_id).first()
+        if not session or session.student_id != current_user.id:
+            raise HTTPException(status_code=403, detail="Only the host can reject members.")
+            
+        participant = db.query(SimulationSessionUser).filter_by(session_id=session_id, user_id=target_user_id).first()
+        if not participant:
+            raise HTTPException(status_code=404, detail="Participant not found.")
+            
+        db.delete(participant)
+        db.commit()
 
     @classmethod
     def create_flag(cls, db: Session, session: SimulationSession, content: str, path: str, user: User) -> SimulationSession:

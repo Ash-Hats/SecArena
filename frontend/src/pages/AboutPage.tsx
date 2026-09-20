@@ -73,14 +73,8 @@ export const AboutPage: React.FC = () => {
 
       {/* Watermark */}
       <div className="pt-12 pb-4 text-center">
-        <p className="text-[#FBFADA]/30 text-xs font-mono tracking-widest uppercase font-bold mb-2">
-          Project Team
-        </p>
-        <p className="text-[#FBFADA]/50 text-sm">
-          Shivani Barskar • Rohit Soni
-        </p>
-        <p className="text-[#FBFADA]/40 text-xs mt-2">
-          Guided by: Vijay Mandle
+        <p className="text-[#FBFADA]/20 text-xs font-mono tracking-widest uppercase font-bold">
+          made by Ash-Hats
         </p>
       </div>
     </motion.div>

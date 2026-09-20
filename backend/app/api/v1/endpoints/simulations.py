@@ -49,7 +49,7 @@ def get_session(session_id: str, current_user: User = Depends(get_current_user),
 
 @router.post("/{session_id}/action", response_model=SimulationActionResponse)
 def run_action(session_id: str, payload: SimulationActionRequest, current_user: User = Depends(require_role(UserRole.STUDENT)), db: Session = Depends(get_db)):
-    session = SimulationService.get_session(db, session_id, current_user)
+    session = SimulationService.get_session(db, session_id, current_user, require_approved=True)
     result, events = SimulationService.action(db, session, payload.input, current_user)
     return {"success": result["success"], "command": result["command"], "output": result["output"], "score_contribution": result["score"], "session": SimulationService.response(session, str(current_user.id)), "detections": events}
 
@@ -112,12 +112,24 @@ def join_pvp_session(payload: PvpJoinRequest, current_user: User = Depends(requi
 
 @router.post("/{session_id}/create_flag", response_model=SimulationSessionResponse)
 def create_pvp_flag(session_id: str, payload: PvpCreateFlagRequest, current_user: User = Depends(require_role(UserRole.STUDENT)), db: Session = Depends(get_db)):
-    session = SimulationService.get_session(db, session_id, current_user)
+    session = SimulationService.get_session(db, session_id, current_user, require_approved=True)
     return SimulationService.response(SimulationService.create_flag(db, session, payload.flag_content, payload.flag_path, current_user), str(current_user.id))
 
 
 @router.post("/{session_id}/submit_flag", response_model=SimulationSessionResponse)
 def submit_pvp_flag(session_id: str, payload: PvpCreateFlagRequest, current_user: User = Depends(require_role(UserRole.STUDENT)), db: Session = Depends(get_db)):
     # Re-using PvpCreateFlagRequest just for flag_content field
-    session = SimulationService.get_session(db, session_id, current_user)
+    session = SimulationService.get_session(db, session_id, current_user, require_approved=True)
     return SimulationService.response(SimulationService.submit_flag(db, session, payload.flag_content, current_user), str(current_user.id))
+
+
+@router.post("/pvp/{session_id}/approve/{user_id}")
+def approve_pvp_join(session_id: str, user_id: str, current_user: User = Depends(require_role(UserRole.STUDENT)), db: Session = Depends(get_db)):
+    SimulationService.approve_join(db, session_id, user_id, current_user)
+    return {"status": "approved"}
+
+
+@router.post("/pvp/{session_id}/reject/{user_id}")
+def reject_pvp_join(session_id: str, user_id: str, current_user: User = Depends(require_role(UserRole.STUDENT)), db: Session = Depends(get_db)):
+    SimulationService.reject_join(db, session_id, user_id, current_user)
+    return {"status": "rejected"}

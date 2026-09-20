@@ -64,3 +64,5 @@ postgres_data/
 # Logs
 *.log
 logs/
+.vercel
+.env*

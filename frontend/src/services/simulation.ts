@@ -17,3 +17,6 @@ export const submitPvpFlag = (id: string, flag_content: string) => apiRequest<Si
 
 export const getPvpHistory = () => apiRequest<SimulationSession[]>('/simulations/pvp/history');
 export const getPublicLobbies = () => apiRequest<SimulationSession[]>('/simulations/pvp/public-lobbies');
+
+export const approvePvpJoin = (sessionId: string, userId: string) => apiRequest<{status: string}>(`/simulations/pvp/${encodeURIComponent(sessionId)}/approve/${encodeURIComponent(userId)}`, { method: 'POST' });
+export const rejectPvpJoin = (sessionId: string, userId: string) => apiRequest<{status: string}>(`/simulations/pvp/${encodeURIComponent(sessionId)}/reject/${encodeURIComponent(userId)}`, { method: 'POST' });

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Terminal, ShieldAlert, Crosshair, Shield, Users, Flag, Activity, Trophy, Code } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { getSimulation, runSimulationAction, submitPvpFlag, createPvpFlag, stopSimulation, leavePvpSession } from '../../services/simulation';
+import { getSimulation, runSimulationAction, submitPvpFlag, createPvpFlag, stopSimulation, leavePvpSession, approvePvpJoin, rejectPvpJoin } from '../../services/simulation';
 import { SimulationSession } from '../../types/simulation';
 import { TerminalUI } from '../../components/TerminalUI';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -112,6 +112,24 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
     }
   };
 
+  const handleApprove = async (userId: string) => {
+    if (!session) return;
+    try {
+      await approvePvpJoin(session.id, userId);
+      const active = await getSimulation(session.id);
+      setSession(active);
+    } catch (err: any) { setError(err.message); }
+  };
+  
+  const handleReject = async (userId: string) => {
+    if (!session) return;
+    try {
+      await rejectPvpJoin(session.id, userId);
+      const active = await getSimulation(session.id);
+      setSession(active);
+    } catch (err: any) { setError(err.message); }
+  };
+
   if (error) return (
     <div className="flex flex-col items-center justify-center min-h-[50vh] text-rose-400 font-mono text-sm space-y-4 text-center">
       <ShieldAlert className="w-12 h-12" />
@@ -131,6 +149,23 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
   const chartData = [
     { name: 'Teams', RED: redScore, BLUE: blueScore }
   ];
+
+  if (!isHost && myParticipant && !myParticipant.is_approved) {
+    return (
+      <div className="h-[calc(100vh-8rem)] flex flex-col items-center justify-center gap-6">
+        <div className="bg-[#33503C] border border-[#FBFADA] rounded-xl p-8 shadow-xl max-w-md w-full text-center">
+          <ShieldAlert className="w-16 h-16 text-amber-400 mx-auto mb-4 animate-pulse" />
+          <h2 className="text-[#FBFADA] font-extrabold text-2xl mb-2">Waiting for Approval</h2>
+          <p className="text-[#FBFADA]/70 text-sm mb-8">
+            The host of this lobby must approve your request to join before you can access the dashboard and terminal.
+          </p>
+          <button onClick={handleLeaveMatch} disabled={busy} className="w-full py-3 bg-rose-500/20 hover:bg-rose-500/40 text-rose-300 border border-rose-500/50 rounded-lg text-sm font-bold transition-all shadow-md disabled:opacity-50">
+            Cancel Request
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col gap-6">
@@ -203,8 +238,14 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
                   <Crosshair className="w-4 h-4" /> RED TEAM
                 </div>
                 {redTeam.map(p => (
-                  <div key={p.user_id} className="text-xs font-mono bg-rose-500/10 text-rose-200 p-2 rounded-lg border border-rose-500/20 truncate">
-                    {p.username || p.user_id.slice(0, 8)}
+                  <div key={p.user_id} className={`text-xs font-mono p-2 rounded-lg border flex justify-between items-center ${p.is_approved ? 'bg-rose-500/10 text-rose-200 border-rose-500/20' : 'bg-rose-500/5 text-rose-200/50 border-rose-500/10 border-dashed'}`}>
+                    <span className="truncate" title={p.is_approved ? '' : 'Pending Approval'}>{p.username || p.user_id.slice(0, 8)} {!p.is_approved && '(Pending)'}</span>
+                    {isHost && !p.is_approved && (
+                      <div className="flex gap-1">
+                        <button onClick={() => handleApprove(p.user_id)} className="px-1.5 py-0.5 bg-emerald-500/20 text-emerald-400 rounded hover:bg-emerald-500/40 transition-colors">✓</button>
+                        <button onClick={() => handleReject(p.user_id)} className="px-1.5 py-0.5 bg-rose-500/20 text-rose-400 rounded hover:bg-rose-500/40 transition-colors">✕</button>
+                      </div>
+                    )}
                   </div>
                 ))}
                 {redTeam.length === 0 && <div className="text-xs text-[#FBFADA]/40 italic">Waiting...</div>}
@@ -215,8 +256,14 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
                   <Shield className="w-4 h-4" /> BLUE TEAM
                 </div>
                 {blueTeam.map(p => (
-                  <div key={p.user_id} className="text-xs font-mono bg-blue-500/10 text-blue-200 p-2 rounded-lg border border-blue-500/20 truncate">
-                    {p.username || p.user_id.slice(0, 8)}
+                  <div key={p.user_id} className={`text-xs font-mono p-2 rounded-lg border flex justify-between items-center ${p.is_approved ? 'bg-blue-500/10 text-blue-200 border-blue-500/20' : 'bg-blue-500/5 text-blue-200/50 border-blue-500/10 border-dashed'}`}>
+                    <span className="truncate" title={p.is_approved ? '' : 'Pending Approval'}>{p.username || p.user_id.slice(0, 8)} {!p.is_approved && '(Pending)'}</span>
+                    {isHost && !p.is_approved && (
+                      <div className="flex gap-1">
+                        <button onClick={() => handleApprove(p.user_id)} className="px-1.5 py-0.5 bg-emerald-500/20 text-emerald-400 rounded hover:bg-emerald-500/40 transition-colors">✓</button>
+                        <button onClick={() => handleReject(p.user_id)} className="px-1.5 py-0.5 bg-rose-500/20 text-rose-400 rounded hover:bg-rose-500/40 transition-colors">✕</button>
+                      </div>
+                    )}
                   </div>
                 ))}
                 {blueTeam.length === 0 && <div className="text-xs text-[#FBFADA]/40 italic">Waiting...</div>}

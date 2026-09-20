@@ -59,10 +59,3 @@ cd backend
 .venv/bin/pytest -v
 ```
 Simulation commands are never sent to a shell. The backend owns session state, scoring, detection events, and flags; clients cannot submit their own scores or reveal undiscovered flags.
-
-## Project Team
-
-- **Shivani Barskar**
-- **Rohit Soni**
-
-**Guided by:** Vijay Mandle
