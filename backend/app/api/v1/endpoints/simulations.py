@@ -123,13 +123,13 @@ def submit_pvp_flag(session_id: str, payload: PvpCreateFlagRequest, current_user
     return SimulationService.response(SimulationService.submit_flag(db, session, payload.flag_content, current_user), str(current_user.id))
 
 
-@router.post("/pvp/{session_id}/approve/{user_id}")
+@router.post("/pvp/{session_id}/approve/{user_id}", response_model=SimulationSessionResponse)
 def approve_pvp_join(session_id: str, user_id: str, current_user: User = Depends(require_role(UserRole.STUDENT)), db: Session = Depends(get_db)):
-    SimulationService.approve_join(db, session_id, user_id, current_user)
-    return {"status": "approved"}
+    session = SimulationService.approve_join(db, session_id, user_id, current_user)
+    return SimulationService.response(session, str(current_user.id))
 
 
-@router.post("/pvp/{session_id}/reject/{user_id}")
+@router.post("/pvp/{session_id}/reject/{user_id}", response_model=SimulationSessionResponse)
 def reject_pvp_join(session_id: str, user_id: str, current_user: User = Depends(require_role(UserRole.STUDENT)), db: Session = Depends(get_db)):
-    SimulationService.reject_join(db, session_id, user_id, current_user)
-    return {"status": "rejected"}
+    session = SimulationService.reject_join(db, session_id, user_id, current_user)
+    return SimulationService.response(session, str(current_user.id))

@@ -194,6 +194,7 @@ class SimulationService:
             
         participant.is_approved = True
         db.commit()
+        return session
 
     @classmethod
     def reject_join(cls, db: Session, session_id: str, target_user_id: str, current_user: User):
@@ -207,6 +208,7 @@ class SimulationService:
             
         db.delete(participant)
         db.commit()
+        return session
 
     @classmethod
     def create_flag(cls, db: Session, session: SimulationSession, content: str, path: str, user: User) -> SimulationSession:

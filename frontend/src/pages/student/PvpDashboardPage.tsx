@@ -115,8 +115,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
   const handleApprove = async (userId: string) => {
     if (!session) return;
     try {
-      await approvePvpJoin(session.id, userId);
-      const active = await getSimulation(session.id);
+      const active = await approvePvpJoin(session.id, userId);
       setSession(active);
     } catch (err: any) { setError(err.message); }
   };
@@ -124,8 +123,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
   const handleReject = async (userId: string) => {
     if (!session) return;
     try {
-      await rejectPvpJoin(session.id, userId);
-      const active = await getSimulation(session.id);
+      const active = await rejectPvpJoin(session.id, userId);
       setSession(active);
     } catch (err: any) { setError(err.message); }
   };
