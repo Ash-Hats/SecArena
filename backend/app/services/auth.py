@@ -54,6 +54,8 @@ class AuthService:
             user = UserRepository.get_by_username(db, input_str)
 
         if not user:
+            from app.core.security import pwd_context
+            pwd_context.dummy_verify()
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Not registered.",
@@ -66,6 +68,12 @@ class AuthService:
                 detail="Password or username is incorrect.",
                 headers={"WWW-Authenticate": "Bearer"},
             )
+
+        # Automatically upgrade password hash if settings have changed (e.g., to lower the cost)
+        from app.core.security import pwd_context
+        if pwd_context.needs_update(user.password_hash):
+            user.password_hash = hash_password(payload.password)
+            db.commit()
 
         if not user.is_active:
             raise HTTPException(
