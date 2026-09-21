@@ -142,7 +142,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
   
   const flags = session?.discovered_flags || [];
   const redScore = session?.score || 0; 
-  const blueScore = Object.keys(session?.pvp_flags || {}).length * 50; 
+  const blueScore = Object.values(session?.pvp_flags || {}).filter((f: any) => !f.found).length * 50; 
   
   const chartData = [
     { name: 'Teams', RED: redScore, BLUE: blueScore }

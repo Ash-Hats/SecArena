@@ -40,7 +40,8 @@ export const PvPHistoryTable: React.FC<PvPHistoryTableProps> = ({ history, curre
             const myTeam = myParticipant?.team;
 
             const redScore = session.score || 0;
-            const blueScore = flagsHidden * 50;
+            const unfoundFlags = Object.values(session.pvp_flags || {}).filter((f: any) => !f.found).length;
+            const blueScore = unfoundFlags * 50;
 
             let resultMark = null;
             if (session.status === 'COMPLETED' || session.status === 'STOPPED') {
