@@ -17,7 +17,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  const portalName = portal === 'admin' ? 'Administrator' : 'Student';
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
