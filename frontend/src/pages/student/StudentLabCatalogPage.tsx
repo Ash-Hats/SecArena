@@ -60,7 +60,6 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
   };
 
   return (
-  return (
     <div className="space-y-8 animate-in fade-in duration-500 max-w-7xl mx-auto">
       {/* Header */}
       <div className="glass-panel rounded-3xl p-8 relative overflow-hidden bg-[#33503C]/80 border-none shadow-xl">
