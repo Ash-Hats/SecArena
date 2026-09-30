@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, ArrowRight, AlertCircle, Loader2, GraduationCap } from 'lucide-react';
+import { ArrowRight, AlertCircle, Loader2 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { UserRole } from '../../types/auth';
 import { motion, AnimatePresence } from 'framer-motion';

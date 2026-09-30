@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, UserPlus, AlertCircle, Loader2 } from 'lucide-react';
+import { UserPlus, AlertCircle, Loader2 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
 interface RegisterPageProps {
