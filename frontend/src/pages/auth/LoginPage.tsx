@@ -56,8 +56,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
           transition={{ duration: 0.5 }}
           className="flex flex-col items-center text-center space-y-4"
         >
-          <div className="p-3 bg-[#33503C]/20 border border-[#33503C]/30 rounded-2xl shadow-sm text-[#12372A]">
-            {portal === 'admin' ? <GraduationCap className="w-10 h-10" /> : <Shield className="w-10 h-10" />}
+          <div className="p-3 bg-transparent rounded-2xl drop-shadow-[0_0_15px_rgba(251,250,218,0.2)]">
+            <img src="/logo-nobg.png" alt="SecArena Logo" className="w-20 h-20 object-contain" />
           </div>
           <div>
             <h1 className="text-3xl font-black text-[#12372A] tracking-tighter uppercase">SecArena</h1>
