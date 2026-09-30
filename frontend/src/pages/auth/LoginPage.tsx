@@ -43,6 +43,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
       
       {/* Background Decor */}
       <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center">
+        {/* Subtle Cybersecurity Grid */}
+        <div 
+          className="absolute inset-0 opacity-[0.03]" 
+          style={{ 
+            backgroundImage: 'linear-gradient(#12372A 1px, transparent 1px), linear-gradient(90deg, #12372A 1px, transparent 1px)', 
+            backgroundSize: '40px 40px' 
+          }}
+        ></div>
         <div className="w-[50vw] h-[50vw] bg-[#33503C]/10 rounded-full blur-[100px] absolute top-[-10%] left-[-10%]"></div>
         <div className="w-[40vw] h-[40vw] bg-[#12372A]/10 rounded-full blur-[120px] absolute bottom-[-10%] right-[-10%]"></div>
       </div>
@@ -56,33 +64,45 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
           transition={{ duration: 0.6 }}
           className="flex flex-col items-center md:items-start text-center md:text-left"
         >
-          <div className="bg-transparent drop-shadow-[0_0_30px_rgba(251,250,218,0.2)] -mb-8 md:-mb-12 md:-ml-6">
+          <div className="bg-transparent drop-shadow-[0_0_30px_rgba(251,250,218,0.2)] -mb-4 md:-mb-8 md:-ml-6">
             <img src="/logo-nobg.png" alt="SecArena Logo" className="w-64 h-64 sm:w-80 sm:h-80 md:w-[400px] md:h-[400px] object-contain hover:scale-105 transition-transform duration-700 ease-out" />
           </div>
           <div className="z-10 relative md:ml-6 mt-4">
             {portal === 'student' && (
-              <div className="text-[#12372A]/80 font-medium max-w-sm leading-relaxed hidden md:block space-y-4">
-                <p className="text-[#12372A] font-bold text-lg border-b border-[#12372A]/20 pb-2 mb-4">Student Portal</p>
-                <p>
-                  Enter the arena. Master real-world vulnerabilities, practice offensive security, and defend resilient infrastructures in dynamically generated vulnerable environments.
+              <div className="text-[#12372A]/80 font-medium max-w-sm leading-relaxed hidden md:block space-y-5">
+                <p className="text-[#12372A] font-black text-xl tracking-tight uppercase">Cybersecurity Training Arena</p>
+                <p className="text-sm">
+                  Practice ethical hacking through interactive security simulations, build practical skills, and test your knowledge in realistic cyber environments.
                 </p>
-                <ul className="space-y-2 mt-4 text-sm">
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#33503C]"></span> Complete Interactive Labs</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#33503C]"></span> Participate in intense PvP matchups</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#33503C]"></span> Track your mastery on the leaderboards</li>
+                <ul className="space-y-2 mt-4 text-sm font-semibold">
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-sm bg-[#12372A]/60"></span> Interactive cybersecurity labs
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-sm bg-[#12372A]/60"></span> Hands-on Linux and security practice
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-sm bg-[#12372A]/60"></span> Competitive PvP security challenges
+                  </li>
                 </ul>
               </div>
             )}
             {portal === 'admin' && (
-              <div className="text-[#12372A]/80 font-medium max-w-sm leading-relaxed hidden md:block space-y-4">
-                <p className="text-[#12372A] font-bold text-lg border-b border-[#12372A]/20 pb-2 mb-4">Admin Portal</p>
-                <p>
-                  Command center. Oversee student progress, manage vulnerable labs, and orchestrate complex cybersecurity scenarios.
+              <div className="text-[#12372A]/80 font-medium max-w-sm leading-relaxed hidden md:block space-y-5">
+                <p className="text-[#12372A] font-black text-xl tracking-tight uppercase">Cybersecurity Command Center</p>
+                <p className="text-sm">
+                  Oversee student progress, manage vulnerable labs, and orchestrate complex cybersecurity scenarios with precision and visibility.
                 </p>
-                <ul className="space-y-2 mt-4 text-sm">
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#33503C]"></span> Monitor live student sessions</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#33503C]"></span> Provision & orchestrate environments</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#33503C]"></span> Analyze performance metrics</li>
+                <ul className="space-y-2 mt-4 text-sm font-semibold">
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-sm bg-[#12372A]/60"></span> Monitor live student sessions
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-sm bg-[#12372A]/60"></span> Provision & orchestrate environments
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-sm bg-[#12372A]/60"></span> Analyze performance metrics
+                  </li>
                 </ul>
               </div>
             )}
@@ -101,9 +121,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
             {/* Subtle Top Accent */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#12372A] to-[#33503C] opacity-80 rounded-t-3xl"></div>
 
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-[#FBFADA] mb-1.5">Welcome back</h2>
-              <p className="text-sm text-[#FBFADA]/80 font-medium">Sign in to continue to the platform</p>
+            <div className="mb-8 border-b border-[#FBFADA]/10 pb-6">
+              <h2 className="text-2xl font-bold text-[#FBFADA] tracking-tight mb-2">Welcome back</h2>
+              <p className="text-sm text-[#FBFADA]/80 font-medium">Sign in to continue your cybersecurity training.</p>
             </div>
             
             <AnimatePresence mode="wait">
@@ -122,9 +142,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
               )}
             </AnimatePresence>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <label className="block text-[11px] font-bold text-[#FBFADA]/90 uppercase tracking-wider">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-[#FBFADA]/80 uppercase tracking-widest">
                   Email / Username
                 </label>
                 <input 
@@ -137,8 +157,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
                 />
               </div>
               
-              <div className="space-y-2">
-                <label className="block text-[11px] font-bold text-[#FBFADA]/90 uppercase tracking-wider">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-[#FBFADA]/80 uppercase tracking-widest">
                   Password
                 </label>
                 <input 
@@ -152,21 +172,23 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
                 />
               </div>
 
-              <button 
-                disabled={loading} 
-                className={`w-full py-3.5 px-4 font-bold rounded-xl text-sm transition-all flex justify-center items-center gap-2 active:scale-[0.98] shadow-lg disabled:opacity-70 disabled:cursor-not-allowed ${
-                  portal === 'admin' 
-                    ? 'bg-gradient-to-r from-purple-700 to-fuchsia-700 hover:from-purple-600 hover:to-fuchsia-600 text-white shadow-purple-900/20' 
-                    : 'bg-gradient-to-r from-cyan-700 to-blue-700 hover:from-cyan-600 hover:to-blue-600 text-white shadow-blue-900/20'
-                }`}
-              >
-                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
-                  <>
-                    <span>Sign In</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </button>
+              <div className="pt-2">
+                <button 
+                  disabled={loading} 
+                  className={`w-full py-3.5 px-4 font-bold rounded-xl text-sm transition-all duration-200 flex justify-center items-center gap-2 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed ${
+                    portal === 'admin' 
+                      ? 'bg-gradient-to-r from-purple-700 to-purple-800 hover:from-purple-600 hover:to-purple-700 text-white shadow-purple-900/20 active:bg-purple-900' 
+                      : 'bg-gradient-to-r from-cyan-800 to-cyan-900 hover:from-cyan-700 hover:to-cyan-800 text-white shadow-cyan-900/20 active:bg-cyan-950'
+                  }`}
+                >
+                  {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
+                    <>
+                      <span>Sign In</span>
+                      <ArrowRight className="w-4 h-4 opacity-80" />
+                    </>
+                  )}
+                </button>
+              </div>
             </form>
           </motion.div>
           

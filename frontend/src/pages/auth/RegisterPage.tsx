@@ -46,6 +46,14 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onNavigateToLogin })
       
       {/* Background Decor */}
       <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center">
+        {/* Subtle Cybersecurity Grid */}
+        <div 
+          className="absolute inset-0 opacity-[0.03]" 
+          style={{ 
+            backgroundImage: 'linear-gradient(#12372A 1px, transparent 1px), linear-gradient(90deg, #12372A 1px, transparent 1px)', 
+            backgroundSize: '40px 40px' 
+          }}
+        ></div>
         <div className="w-[50vw] h-[50vw] bg-[#33503C]/10 rounded-full blur-[100px] absolute top-[-10%] left-[-10%]"></div>
         <div className="w-[40vw] h-[40vw] bg-[#12372A]/10 rounded-full blur-[120px] absolute bottom-[-10%] right-[-10%]"></div>
       </div>
@@ -58,15 +66,21 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onNavigateToLogin })
             <img src="/logo-nobg.png" alt="SecArena Logo" className="w-64 h-64 sm:w-80 sm:h-80 md:w-[400px] md:h-[400px] object-contain hover:scale-105 transition-transform duration-700 ease-out" />
           </div>
           <div className="z-10 relative md:ml-6 mt-4">
-            <div className="text-[#12372A]/80 font-medium max-w-sm leading-relaxed hidden md:block space-y-4">
-              <p className="text-[#12372A] font-bold text-lg border-b border-[#12372A]/20 pb-2 mb-4">Student Portal</p>
-              <p>
-                Begin your journey into cybersecurity. Create your student account to access hands-on vulnerable labs and real-world scenarios.
+            <div className="text-[#12372A]/80 font-medium max-w-sm leading-relaxed hidden md:block space-y-5">
+              <p className="text-[#12372A] font-black text-xl tracking-tight uppercase">Cybersecurity Training Arena</p>
+              <p className="text-sm">
+                Practice ethical hacking through interactive security simulations, build practical skills, and test your knowledge in realistic cyber environments.
               </p>
-              <ul className="space-y-2 mt-4 text-sm">
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#33503C]"></span> Complete Interactive Labs</li>
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#33503C]"></span> Participate in intense PvP matchups</li>
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#33503C]"></span> Track your mastery on the leaderboards</li>
+              <ul className="space-y-2 mt-4 text-sm font-semibold">
+                <li className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-sm bg-[#12372A]/60"></span> Interactive cybersecurity labs
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-sm bg-[#12372A]/60"></span> Hands-on Linux and security practice
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-sm bg-[#12372A]/60"></span> Competitive PvP security challenges
+                </li>
               </ul>
             </div>
           </div>
@@ -79,9 +93,9 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onNavigateToLogin })
             {/* Subtle Top Accent */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#12372A] to-[#33503C] opacity-80 rounded-t-3xl"></div>
             
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-[#FBFADA] mb-1.5">Create Account</h2>
-              <p className="text-sm text-[#FBFADA]/80 font-medium">Join SecArena to access cyber training scenarios.</p>
+            <div className="mb-8 border-b border-[#FBFADA]/10 pb-6">
+              <h2 className="text-2xl font-bold text-[#FBFADA] tracking-tight mb-2">Create your SecArena account</h2>
+              <p className="text-sm text-[#FBFADA]/80 font-medium">Build your practical cybersecurity skills through hands-on training and realistic security simulations.</p>
             </div>
 
             {error && (
@@ -91,69 +105,76 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onNavigateToLogin })
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <label className="block text-[11px] font-bold text-[#FBFADA]/90 uppercase tracking-wider">Username</label>
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="student_alex"
-                  className="input-modern"
-                  required
-                />
+            <form onSubmit={handleSubmit} className="space-y-5">
+              
+              <div className="space-y-4 border-b border-[#FBFADA]/10 pb-5">
+                <p className="text-[10px] font-bold text-[#FBFADA]/50 uppercase tracking-widest mb-2">Account Information</p>
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold text-[#FBFADA]/80 uppercase tracking-widest">Username</label>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="student_alex"
+                    className="input-modern w-full"
+                    required
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold text-[#FBFADA]/80 uppercase tracking-widest">Email Address</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="student@example.com"
+                    className="input-modern w-full"
+                    required
+                  />
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-[11px] font-bold text-[#FBFADA]/90 uppercase tracking-wider">Email Address</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="student@example.com"
-                  className="input-modern"
-                  required
-                />
+              <div className="space-y-4 pb-2">
+                <p className="text-[10px] font-bold text-[#FBFADA]/50 uppercase tracking-widest mb-2">Security</p>
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold text-[#FBFADA]/80 uppercase tracking-widest">Password</label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="input-modern w-full"
+                    required
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold text-[#FBFADA]/80 uppercase tracking-widest">Confirm Password</label>
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="input-modern w-full"
+                    required
+                  />
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-[11px] font-bold text-[#FBFADA]/90 uppercase tracking-wider">Password</label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="input-modern"
-                  required
-                />
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-3.5 px-4 font-bold rounded-xl text-sm transition-all duration-200 flex justify-center items-center gap-2 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed bg-gradient-to-r from-cyan-800 to-cyan-900 hover:from-cyan-700 hover:to-cyan-800 text-white shadow-cyan-900/20 active:bg-cyan-950"
+                >
+                  {loading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <>
+                      <UserPlus className="w-4 h-4 opacity-80" />
+                      <span>Register Account</span>
+                    </>
+                  )}
+                </button>
               </div>
-
-              <div className="space-y-2">
-                <label className="block text-[11px] font-bold text-[#FBFADA]/90 uppercase tracking-wider">Confirm Password</label>
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="input-modern"
-                  required
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-3.5 px-4 font-bold rounded-xl text-sm transition-all flex justify-center items-center gap-2 active:scale-[0.98] shadow-lg disabled:opacity-70 disabled:cursor-not-allowed bg-gradient-to-r from-cyan-700 to-blue-700 hover:from-cyan-600 hover:to-blue-600 text-white shadow-blue-900/20"
-              >
-                {loading ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <>
-                    <UserPlus className="w-5 h-5" />
-                    <span>Register Account</span>
-                  </>
-                )}
-              </button>
             </form>
           </div>
 
