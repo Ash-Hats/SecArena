@@ -57,27 +57,35 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-in fade-in duration-500 max-w-7xl mx-auto">
       {/* Welcome Hero */}
-      <div className="bg-[#33503C] border border-[#FBFADA] rounded-2xl p-6 md:p-8 relative overflow-hidden">
-        <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-[#FBFADA]/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative z-10 space-y-2">
-          <div className="inline-flex items-center space-x-2 text-xs font-mono text-[#FBFADA] bg-[#FBFADA]/10 px-2.5 py-1 rounded-md border border-[#FBFADA]/20">
+      <div className="glass-panel rounded-3xl p-8 md:p-10 relative overflow-hidden bg-[#33503C]/80 border-none shadow-xl">
+        <div className="absolute top-0 right-0 w-full h-1/2 bg-gradient-to-b from-[#FBFADA]/10 to-transparent pointer-events-none" />
+        <div className="absolute -right-10 -bottom-10 w-96 h-96 bg-[#8E9F7C]/20 rounded-full blur-3xl pointer-events-none" />
+        
+        <div className="relative z-10 space-y-4">
+          <div className="inline-flex items-center space-x-2 text-[11px] font-bold tracking-wider text-[#FBFADA] bg-[#12372A]/40 px-3 py-1.5 rounded-full border border-[#FBFADA]/20 uppercase">
             <Terminal className="w-3.5 h-3.5" />
             <span>Student Command Center</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-[#FBFADA] tracking-tight">
-            Welcome back
+          <h1 className="text-4xl md:text-5xl font-black text-[#FBFADA] tracking-tighter">
+            Welcome back, {user?.username}
           </h1>
-          <p className="text-[#FBFADA]/70 text-sm max-w-xl leading-relaxed">
-            Continue your cybersecurity training journey. Review your past PvP battles and room history below.
+          <p className="text-[#FBFADA]/80 text-sm md:text-base max-w-2xl leading-relaxed font-medium">
+            Continue your cybersecurity training journey. Review your past PvP battles and room history below to track your progress.
           </p>
         </div>
       </div>
 
-      <div>
-        <h2 className="text-xl font-bold text-[#FBFADA] mb-4">PvP Match History</h2>
-        <PvPHistoryTable history={history} currentUserId={user?.id} />
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-black text-[#12372A] tracking-tight flex items-center gap-2">
+            PvP Match History
+          </h2>
+        </div>
+        <div className="glass-panel rounded-2xl overflow-hidden border-[#33503C]/30 bg-[#FBFADA]/5 shadow-lg">
+          <PvPHistoryTable history={history} currentUserId={user?.id} />
+        </div>
       </div>
     </div>
   );

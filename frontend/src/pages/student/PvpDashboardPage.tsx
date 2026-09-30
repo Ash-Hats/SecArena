@@ -151,7 +151,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
   if (!isHost && myParticipant && !myParticipant.is_approved) {
     return (
       <div className="h-[calc(100vh-8rem)] flex flex-col items-center justify-center gap-6">
-        <div className="bg-[#33503C] border border-[#FBFADA] rounded-xl p-8 shadow-xl max-w-md w-full text-center">
+        <div className="glass-panel border-none shadow-2xl rounded-3xl p-8 max-w-md w-full text-center bg-[#33503C]/80">
           <ShieldAlert className="w-16 h-16 text-amber-400 mx-auto mb-4 animate-pulse" />
           <h2 className="text-[#FBFADA] font-extrabold text-2xl mb-2">Waiting for Approval</h2>
           <p className="text-[#FBFADA]/70 text-sm mb-8">
@@ -169,7 +169,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
     <div className="h-[calc(100vh-8rem)] flex flex-col gap-6">
       
       {/* Header Bar */}
-      <div className="flex items-center justify-between bg-[#33503C] border border-[#FBFADA] rounded-xl px-6 py-4 shadow-md">
+      <div className="flex items-center justify-between glass-panel border-none bg-[#33503C]/80 rounded-2xl px-6 py-4 shadow-lg">
         <div className="flex items-center gap-6">
           <div className="bg-rose-500/20 p-3 rounded-xl border border-rose-500/30 shadow-[0_0_15px_rgba(244,63,94,0.3)]">
             <Trophy className="text-rose-400 w-6 h-6" />
@@ -207,7 +207,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
         {/* Left Panel (Dashboard & Stats) */}
         <div className="flex-1 flex flex-col gap-6 min-w-0 overflow-y-auto">
           {/* Score Graph */}
-          <div className="bg-[#33503C] border border-[#FBFADA] rounded-xl p-5 shadow-lg flex-none h-64">
+          <div className="glass-panel bg-[#33503C]/60 border border-[#FBFADA]/20 rounded-2xl p-6 shadow-lg flex-none h-64">
             <h3 className="text-sm font-bold text-[#FBFADA] mb-4 flex items-center gap-2">
               <Activity className="w-4 h-4 text-[#FBFADA]/70" /> Live Score
             </h3>
@@ -225,7 +225,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
           </div>
 
           {/* Members List */}
-          <div className="bg-[#33503C] border border-[#FBFADA] rounded-xl p-5 shadow-lg flex-1 overflow-hidden flex flex-col">
+          <div className="glass-panel bg-[#33503C]/60 border border-[#FBFADA]/20 rounded-2xl p-6 shadow-lg flex-1 overflow-hidden flex flex-col">
             <h3 className="text-sm font-bold text-[#FBFADA] mb-4 flex items-center gap-2">
               <Users className="w-4 h-4 text-[#FBFADA]/70" /> Active Roster
             </h3>
@@ -271,8 +271,8 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
         </div>
 
         {/* Center Panel (Terminal) */}
-        <div className="flex-[2] min-w-0 bg-[#0d1322] border border-[#FBFADA] rounded-xl overflow-hidden shadow-2xl flex flex-col">
-          <div className="px-4 py-3 bg-[#33503C] border-b border-[#FBFADA] flex items-center justify-between shadow-md z-10">
+        <div className="flex-[2] min-w-0 bg-[#0a0e17] border border-[#FBFADA]/20 rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+          <div className="px-5 py-3 bg-[#12372A]/80 border-b border-[#FBFADA]/10 flex items-center justify-between shadow-md z-10">
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 rounded-full bg-rose-500"></div>
               <div className="w-3 h-3 rounded-full bg-amber-500"></div>
@@ -298,7 +298,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
         {/* Right Panel (Actions & Flags) */}
         <div className="flex-1 flex flex-col gap-6 min-w-0 overflow-y-auto">
           {session?.status === 'RUNNING' && myTeam === 'BLUE' && (
-             <div className="bg-[#33503C] border border-[#FBFADA] rounded-xl p-5 shadow-lg">
+             <div className="glass-panel bg-[#33503C]/60 border border-[#FBFADA]/20 rounded-2xl p-6 shadow-lg">
                 <h3 className="text-sm font-bold text-[#FBFADA] flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2"><ShieldAlert className="w-4 h-4 text-blue-400" /> Action Center</div>
                   <span className="text-xs font-mono text-[#FBFADA]/50 bg-black/20 px-2 py-1 rounded">Format: {session?.flag_format || 'SEC_ARENA{...}'}</span>
@@ -332,7 +332,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
           )}
 
           {session?.status === 'RUNNING' && myTeam === 'RED' && (
-             <div className="bg-[#33503C] border border-[#FBFADA] rounded-xl p-5 shadow-lg">
+             <div className="glass-panel bg-[#33503C]/60 border border-[#FBFADA]/20 rounded-2xl p-6 shadow-lg">
                 <h3 className="text-sm font-bold text-[#FBFADA] flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2"><ShieldAlert className="w-4 h-4 text-amber-400" /> Action Center</div>
                   <span className="text-xs font-mono text-[#FBFADA]/50 bg-black/20 px-2 py-1 rounded">Format: {session?.flag_format || 'SEC_ARENA{...}'}</span>
@@ -354,7 +354,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
              </div>
           )}
 
-          <div className="bg-[#33503C] border border-[#FBFADA] rounded-xl p-5 shadow-lg">
+          <div className="glass-panel bg-[#33503C]/60 border border-[#FBFADA]/20 rounded-2xl p-6 shadow-lg">
              <h3 className="text-sm font-bold text-[#FBFADA] mb-3 flex items-center gap-2">
                <Code className="w-4 h-4 text-[#FBFADA]/70" /> Supported Commands
              </h3>
@@ -370,7 +370,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
              </div>
           </div>
 
-          <div className="bg-[#33503C] border border-[#FBFADA] rounded-xl p-5 flex-1 shadow-lg flex flex-col">
+          <div className="glass-panel bg-[#33503C]/60 border border-[#FBFADA]/20 rounded-2xl p-6 flex-1 shadow-lg flex flex-col">
              <h3 className="text-sm font-bold text-[#FBFADA] mb-4 flex items-center gap-2">
                <Flag className="w-4 h-4 text-[#FBFADA]/70" /> {myTeam === 'BLUE' ? 'Flag Status (Blue Team)' : 'Flag Status (Red Team)'}
              </h3>
@@ -379,10 +379,10 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
                  Object.keys(session?.pvp_flags || {}).length === 0 ? (
                    <div className="text-xs text-[#FBFADA]/40 italic text-center mt-4">No flags hidden yet.</div>
                  ) : (
-                   Object.entries(session?.pvp_flags || {}).map(([flag, info]: [string, any], idx) => (
-                     <div key={idx} className={`p-3 rounded-lg border ${info.found ? 'bg-rose-500/10 border-rose-500/30' : 'bg-[#8E9F7C] border-[#FBFADA]/30'}`}>
-                       <div className="text-xs font-bold text-[#FBFADA] mb-1 flex items-center justify-between">
-                         <span>{info.found ? `Captured by ${info.found_by || 'Red Team'}` : `Hidden by ${info.hidden_by || 'You'}`}</span>
+                  Object.entries(session?.pvp_flags || {}).map(([flag, info]: [string, any], idx) => (
+                    <div key={idx} className={`p-3 rounded-lg border ${info.found ? 'bg-rose-500/10 border-rose-500/30' : 'bg-[#8E9F7C] border-[#FBFADA]/30'}`}>
+                      <div className="text-xs font-bold text-[#FBFADA] mb-1 flex items-center justify-between">
+                         <span>{info.found ? 'Captured by Red Team' : 'Hidden'}</span>
                          {info.found ? (
                            <span className="text-[10px] text-rose-300 bg-rose-500/20 px-1.5 rounded">Compromised</span>
                          ) : (
@@ -390,7 +390,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
                          )}
                        </div>
                        <div className="text-[10px] font-mono text-[#FBFADA]/80 truncate">Flag: {flag}</div>
-                       <div className="text-[10px] font-mono text-[#FBFADA]/60 truncate mt-1">Path: {info.path}</div>
+                       <div className="text-[10px] font-mono text-[#FBFADA]/60 truncate mt-1">Location: protected</div>
                      </div>
                    ))
                  )

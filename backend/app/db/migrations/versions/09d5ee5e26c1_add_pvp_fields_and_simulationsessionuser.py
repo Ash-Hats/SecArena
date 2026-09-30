@@ -36,9 +36,12 @@ def upgrade() -> None:
     op.add_column('simulation_sessions', sa.Column('join_code', sa.String(length=20), nullable=True))
     op.add_column('simulation_sessions', sa.Column('time_limit_minutes', sa.Integer(), nullable=True))
     op.create_index(op.f('ix_simulation_sessions_join_code'), 'simulation_sessions', ['join_code'], unique=True)
-    op.drop_constraint(op.f('training_events_join_code_key'), 'training_events', type_='unique')
-    op.drop_index(op.f('ix_training_events_join_code'), table_name='training_events')
-    op.create_index(op.f('ix_training_events_join_code'), 'training_events', ['join_code'], unique=True)
+    # SQLite cannot drop a named UNIQUE constraint in place.  The original
+    # unique constraint already enforces the desired invariant there.
+    if op.get_bind().dialect.name == 'postgresql':
+        op.drop_constraint(op.f('training_events_join_code_key'), 'training_events', type_='unique')
+        op.drop_index(op.f('ix_training_events_join_code'), table_name='training_events')
+        op.create_index(op.f('ix_training_events_join_code'), 'training_events', ['join_code'], unique=True)
     # ### end Alembic commands ###
 
 

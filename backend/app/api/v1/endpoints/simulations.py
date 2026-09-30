@@ -1,7 +1,7 @@
 """Authenticated API for safe, browser-based cybersecurity simulations."""
 
 from typing import List
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.security import get_current_user, require_role
@@ -88,7 +88,14 @@ def get_public_lobbies(current_user: User = Depends(get_current_user), db: Sessi
         SimulationSession.is_pvp == True,
         SimulationSession.status == SimulationStatus.RUNNING
     ).order_by(SimulationSession.started_at.desc())
-    return [SimulationService.response(item, str(current_user.id)) for item in query.all()]
+    lobbies = []
+    for item in query.all():
+        try:
+            SimulationService.ensure_pvp_active(db, item)
+        except HTTPException:
+            continue
+        lobbies.append(SimulationService.response(item, str(current_user.id)))
+    return lobbies
 
 @router.get("/pvp/history", response_model=List[SimulationSessionResponse])
 def get_pvp_history(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):

@@ -1,5 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
+from datetime import datetime, timedelta, timezone
+from app.models.simulation import SimulationSession
 
 def test_pvp_lifecycle(client: TestClient, db, student_user, student_token, instructor_user, instructor_token):
     # Phase 1: Blue Team (Student 1) Creates PvP Match
@@ -7,7 +9,7 @@ def test_pvp_lifecycle(client: TestClient, db, student_user, student_token, inst
     res_create = client.post(
         "/api/v1/simulations/pvp/create",
         headers=headers1,
-        json={"scenario_slug": "linux-reconnaissance-beginner", "team_choice": "BLUE"}
+        json={"scenario_slug": "linux-reconnaissance-beginner", "team_choice": "BLUE", "time_limit_minutes": 1}
     )
     assert res_create.status_code == 200
     session_data = res_create.json()
@@ -37,6 +39,7 @@ def test_pvp_lifecycle(client: TestClient, db, student_user, student_token, inst
     join_data = res_join.json()
     assert join_data["id"] == session_id
     assert len(join_data["participants"]) >= 2
+    red_user_id = next(participant["user_id"] for participant in join_data["participants"] if participant["team"] == "RED")
 
     # Phase 3: Blue Team Hides Flag
     res_hide = client.post(
@@ -45,6 +48,26 @@ def test_pvp_lifecycle(client: TestClient, db, student_user, student_token, inst
         json={"flag_content": "SEC_ARENA{super_secret}", "flag_path": "/opt/secret.txt"}
     )
     assert res_hide.status_code == 200
+    # API state must expose only opaque scoreboard metadata, never the flag.
+    assert "SEC_ARENA{super_secret}" not in str(res_hide.json())
+
+    blue_hide = client.post(
+        f"/api/v1/simulations/{session_id}/action",
+        headers=headers1,
+        json={"input": "hideflag /tmp/history SEC_ARENA{history_secret}"},
+    )
+    assert blue_hide.status_code == 200
+    assert "SEC_ARENA{history_secret}" not in str(blue_hide.json()["session"]["terminal_history"])
+
+    # Team-specific endpoints and the terminal command enforce the same rule.
+    assert client.post(f"/api/v1/simulations/{session_id}/submit_flag", headers=headers1,
+                       json={"flag_content": "SEC_ARENA{super_secret}", "flag_path": ""}).status_code == 403
+    assert client.post(f"/api/v1/simulations/{session_id}/create_flag", headers=headers2,
+                       json={"flag_content": "SEC_ARENA{other}", "flag_path": "/tmp/other"}).status_code == 403
+    hide_attempt = client.post(f"/api/v1/simulations/{session_id}/action", headers=headers2,
+                               json={"input": "hideflag /tmp/nope SEC_ARENA{other}"})
+    assert hide_attempt.status_code == 200
+    assert "permission denied" in hide_attempt.json()["output"]
 
     # Red Team checks timeline (Timeline is shared)
     res_timeline = client.get(f"/api/v1/simulations/{session_id}/timeline", headers=headers2)
@@ -69,7 +92,19 @@ def test_pvp_lifecycle(client: TestClient, db, student_user, student_token, inst
     )
     assert res_submit.status_code == 200
     submit_data = res_submit.json()
-    assert any(f["flag"] == "SEC_ARENA{super_secret}" for f in submit_data["discovered_flags"])
+    assert "SEC_ARENA{super_secret}" not in str(submit_data)
+
+    assert client.post(f"/api/v1/simulations/{session_id}/submit_flag", headers=headers2,
+                       json={"flag_content": "SEC_ARENA{super_secret}", "flag_path": ""}).status_code == 400
+
+    session = db.get(SimulationSession, session_id)
+    session.started_at = datetime.now(timezone.utc) - timedelta(minutes=2)
+    db.commit()
+    assert client.post(f"/api/v1/simulations/{session_id}/action", headers=headers2,
+                       json={"input": "pwd"}).status_code == 409
+    assert client.post(f"/api/v1/simulations/pvp/{session_id}/approve/{red_user_id}", headers=headers1).status_code == 409
+    assert client.post(f"/api/v1/simulations/pvp/{session_id}/reject/{red_user_id}", headers=headers1).status_code == 409
+    assert client.post(f"/api/v1/simulations/{session_id}/leave", headers=headers2).status_code == 409
 
     # Timeline should show discovery
     res_timeline_final = client.get(f"/api/v1/simulations/{session_id}/timeline", headers=headers2)

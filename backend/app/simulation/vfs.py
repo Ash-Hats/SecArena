@@ -79,11 +79,12 @@ class VirtualFileSystem:
 
 
 class VirtualShell:
-    def __init__(self, state, supported_commands=None, custom_commands=None, user_id=None):
+    def __init__(self, state, supported_commands=None, custom_commands=None, user_id=None, allow_hideflag=False):
         self.state = state
         self.supported = supported_commands or []
         self.custom = custom_commands or {}
         self.user_id = user_id
+        self.allow_hideflag = allow_hideflag
         
         if self.user_id:
             if "user_states" not in self.state:
@@ -221,6 +222,8 @@ class VirtualShell:
         elif prog == "id":
             return "uid=1000(student) gid=1000(student) groups=1000(student)"
         elif prog == "hideflag":
+            if not self.allow_hideflag:
+                return "hideflag: permission denied"
             if len(args) < 2: return "Usage: hideflag <path> <content>"
             path, content = args[0], " ".join(args[1:])
             self.vfs.write_file(path, content)

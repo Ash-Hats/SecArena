@@ -69,14 +69,9 @@ def update_me(
     "/logout",
     status_code=status.HTTP_200_OK,
     summary="Logout User",
-    description="Deletes all simulation history and data for the user on logout.",
+    description="Ends the client session; simulation history and progress are retained.",
 )
 def logout(
-    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    from app.models.simulation import SimulationSession
-    # Delete all simulation sessions associated with the user
-    db.query(SimulationSession).filter(SimulationSession.student_id == current_user.id).delete()
-    db.commit()
-    return {"message": "Logged out and data cleared"}
+    return {"message": "Logged out"}

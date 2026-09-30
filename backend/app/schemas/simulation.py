@@ -36,7 +36,7 @@ class ScenarioResponse(BaseModel):
 
 
 class SimulationEventResponse(BaseModel):
-    event_type: str; severity: str; description: str; detected: str; created_at: datetime
+    event_type: str; severity: str; description: str; detected: bool; created_at: datetime
     model_config = {"from_attributes": True}
 
 

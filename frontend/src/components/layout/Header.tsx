@@ -9,15 +9,15 @@ export const Header: React.FC<HeaderProps> = () => {
   const { user, logout } = useAuth();
 
   return (
-    <header className="h-16 border-b border-[#33503C] bg-[#33503C]/90 backdrop-blur px-6 flex items-center justify-between sticky top-0 z-30">
+    <header className="h-16 border-b border-[#12372A]/20 bg-[#33503C]/60 backdrop-blur-xl px-6 flex items-center justify-between sticky top-0 z-30 shadow-sm">
       {/* Brand Identification */}
-      <div className="flex items-center space-x-3">
-        <div className="p-2 rounded-lg bg-[#33503C]/10 border border-[#33503C]/30 text-[#FBFADA]">
+      <div className="flex items-center space-x-3.5">
+        <div className="p-2 rounded-xl bg-[#12372A]/30 border border-[#12372A]/50 text-[#FBFADA] shadow-inner">
           <Shield className="w-5 h-5" />
         </div>
-        <div>
-          <span className="text-lg font-bold tracking-wider text-[#FBFADA]">SecArena</span>
-          <span className="hidden sm:inline-block text-[10px] text-[#FBFADA]/80 font-mono ml-2 border border-[#33503C]/20 px-1.5 py-0.5 rounded bg-[#33503C]/5">
+        <div className="flex items-center">
+          <span className="text-xl font-black tracking-tighter text-[#FBFADA]">SecArena</span>
+          <span className="hidden sm:inline-block text-[9px] font-bold tracking-widest text-[#FBFADA]/80 font-mono ml-3 border border-[#12372A]/40 px-2 py-1 rounded-md bg-[#12372A]/20 uppercase shadow-inner">
             Cyber Training Platform
           </span>
         </div>
@@ -26,20 +26,20 @@ export const Header: React.FC<HeaderProps> = () => {
       {/* User Information & Actions */}
       <div className="flex items-center space-x-4">
         {user && (
-          <div className="flex items-center space-x-3 bg-[#8E9F7C]/80 border border-[#33503C] px-3 py-1.5 rounded-lg text-xs">
-            <div className="w-7 h-7 rounded-full bg-[#33503C]/20 border border-[#33503C]/40 flex items-center justify-center text-[#FBFADA] font-bold uppercase">
+          <div className="flex items-center space-x-3 bg-[#12372A]/20 border border-[#12372A]/30 px-3 py-1.5 rounded-xl shadow-inner">
+            <div className="w-8 h-8 rounded-lg bg-[#12372A]/80 border border-[#FBFADA]/20 flex items-center justify-center text-[#FBFADA] font-black uppercase text-sm shadow-md">
               {user.username.substring(0, 2)}
             </div>
-            <div className="hidden sm:flex flex-col text-left">
-              <span className="text-[#FBFADA] font-medium">{user.username}</span>
-              <span className="text-[10px] font-mono uppercase text-[#FBFADA]">{user.role}</span>
+            <div className="hidden sm:flex flex-col text-left pr-2">
+              <span className="text-[#FBFADA] font-bold text-[13px] leading-tight">{user.username}</span>
+              <span className="text-[9px] font-bold font-mono uppercase tracking-widest text-[#FBFADA]/60 leading-tight">{user.role}</span>
             </div>
           </div>
         )}
 
         <button
           onClick={logout}
-          className="p-2 text-[#FBFADA]/60 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg border border-transparent hover:border-rose-500/30 transition-all flex items-center space-x-1.5 text-xs font-medium"
+          className="p-2.5 text-[#FBFADA]/60 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl border border-transparent hover:border-rose-500/30 transition-all flex items-center space-x-2 text-xs font-bold active:scale-95"
           title="Sign Out"
         >
           <LogOut className="w-4 h-4" />

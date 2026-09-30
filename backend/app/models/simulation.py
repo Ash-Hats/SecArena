@@ -67,7 +67,7 @@ class SimulationAction(Base):
     session_id = Column(String(36), ForeignKey("simulation_sessions.id", ondelete="CASCADE"), nullable=False, index=True)
     action_input = Column(String(500), nullable=False)
     command = Column(String(50), nullable=False)
-    success = Column(String(10), nullable=False)
+    success = Column(Boolean, nullable=False)
     result = Column(Text, nullable=False)
     score_contribution = Column(Integer, nullable=False, default=0)
     created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
@@ -83,7 +83,7 @@ class SimulationEvent(Base):
     event_type = Column(String(80), nullable=False)
     severity = Column(String(20), nullable=False, default="INFO")
     description = Column(Text, nullable=False)
-    detected = Column(String(10), nullable=False, default="true")
+    detected = Column(Boolean, nullable=False, default=True)
     created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
 
     session = relationship("SimulationSession", back_populates="events")

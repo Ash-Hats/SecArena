@@ -57,15 +57,15 @@ class AuthService:
             from app.core.security import pwd_context
             pwd_context.dummy_verify()
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Not registered.",
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid username/email or password.",
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
         if not verify_password(payload.password, user.password_hash):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Password or username is incorrect.",
+                detail="Invalid username/email or password.",
                 headers={"WWW-Authenticate": "Bearer"},
             )
 

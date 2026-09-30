@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, ArrowRight, AlertCircle, Loader2, GraduationCap, TerminalSquare, KeyRound } from 'lucide-react';
+import { Shield, ArrowRight, AlertCircle, Loader2, GraduationCap } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { UserRole } from '../../types/auth';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,7 +17,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-    const portalName = portal === 'admin' ? 'Administrator' : 'Student';
+  const portalName = portal === 'admin' ? 'Administrator' : 'Student';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,134 +39,135 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
   };
 
   return (
-    <div className="min-h-screen bg-[#8E9F7C] text-[#FBFADA] flex overflow-hidden selection:bg-[#33503C]/30">
+    <div className="min-h-screen bg-[#8E9F7C] text-[#FBFADA] flex flex-col items-center justify-center p-6 sm:p-12 relative overflow-hidden selection:bg-[#33503C]/30">
       
-      {/* Left Art Section */}
-      <div className="hidden lg:flex w-1/2 relative flex-col justify-center items-center p-12 overflow-hidden border-r border-[#33503C]/40 z-10">
-        <div className={`absolute inset-0 opacity-20 ${portal === 'admin' ? 'bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-[#33503C] via-[#8E9F7C] to-[#8E9F7C]' : 'bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-[#33503C] via-[#8E9F7C] to-[#8E9F7C]'}`}></div>
-        
-        {/* Animated Background Elements */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#33503C]/20 rounded-full blur-3xl animate-blob"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#33503C]/20 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
-
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative z-20 text-center max-w-lg"
-        >
-          <div className="flex justify-center mb-8">
-            <div className={`p-4 rounded-2xl bg-[#8E9F7C]/50 backdrop-blur-xl border shadow-2xl ${portal === 'admin' ? 'border-[#33503C]/50 text-[#FBFADA] shadow-none' : 'border-[#33503C]/50 text-[#FBFADA] shadow-none'}`}>
-              <Shield className="w-16 h-16" />
-            </div>
-          </div>
-          <h1 className="text-5xl font-black text-[#FBFADA] tracking-tighter mb-6 text-gradient">SecArena</h1>
-          <p className="text-lg text-[#FBFADA] leading-relaxed">
-            {portal === 'admin' 
-              ? "Design, deploy, and manage immersive cyber warfare scenarios for your cohort."
-              : "Step into the simulation. Enhance your cybersecurity skills through hands-on, realistic challenges."}
-          </p>
-          
-          <div className="mt-12 grid grid-cols-2 gap-4 text-left">
-            <div className="bg-[#33503C]/40 backdrop-blur-md p-4 rounded-xl border border-[#33503C]/40">
-              <TerminalSquare className="w-6 h-6 text-[#FBFADA] mb-2" />
-              <h3 className="text-sm font-bold text-[#FBFADA]">Interactive Terminals</h3>
-            </div>
-            <div className="bg-[#33503C]/40 backdrop-blur-md p-4 rounded-xl border border-[#33503C]/40">
-              <KeyRound className="w-6 h-6 text-[#FBFADA] mb-2" />
-              <h3 className="text-sm font-bold text-[#FBFADA]">Red vs Blue PvP</h3>
-            </div>
-          </div>
-        </motion.div>
+      {/* Background Decor */}
+      <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center">
+        <div className="w-[50vw] h-[50vw] bg-[#33503C]/10 rounded-full blur-[100px] absolute top-[-10%] left-[-10%]"></div>
+        <div className="w-[40vw] h-[40vw] bg-[#12372A]/10 rounded-full blur-[120px] absolute bottom-[-10%] right-[-10%]"></div>
       </div>
 
-      {/* Right Login Section */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 sm:p-12 relative z-20 bg-[#8E9F7C]/80 backdrop-blur-xl">
+      <div className="w-full max-w-[440px] relative z-10 flex flex-col gap-8">
+        
+        {/* Branding Area */}
         <motion.div 
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="w-full max-w-md space-y-8"
+          className="flex flex-col items-center text-center space-y-4"
         >
-          <div className="text-center lg:text-left space-y-2">
-            <div className="lg:hidden flex justify-center mb-6">
-              <div className={`p-3 rounded-xl bg-[#33503C] border ${portal === 'admin' ? 'border-[#33503C]/50 text-[#FBFADA]' : 'border-[#33503C]/50 text-[#FBFADA]'}`}>
-                {portal === 'admin' ? <GraduationCap className="w-8 h-8" /> : <Shield className="w-8 h-8" />}
-              </div>
-            </div>
-            <h2 className="text-3xl font-extrabold text-[#FBFADA] tracking-tight">Welcome Back</h2>
-            <p className="text-sm text-[#FBFADA] font-mono uppercase tracking-widest">{portalName} Portal</p>
+          <div className="p-3 bg-[#33503C]/20 border border-[#33503C]/30 rounded-2xl shadow-sm text-[#12372A]">
+            {portal === 'admin' ? <GraduationCap className="w-10 h-10" /> : <Shield className="w-10 h-10" />}
           </div>
-
-          <div className="glass-panel rounded-2xl p-6 sm:p-8 relative overflow-hidden group">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#33503C] to-[#12372A]"></div>
-            
-            <AnimatePresence>
-              {error && (
-                <motion.div 
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="mb-6 p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex gap-2 items-center"
-                >
-                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                  {error}
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label className="block text-xs font-bold text-[#FBFADA] mb-1.5 uppercase tracking-wider">Username or email</label>
-                <input 
-                  value={usernameOrEmail} 
-                  onChange={(e) => setUsernameOrEmail(e.target.value)} 
-                  className="input-modern" 
-                  placeholder="Enter your credentials"
-                  required 
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-[#FBFADA] mb-1.5 uppercase tracking-wider">Password</label>
-                <input 
-                  type="password" 
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)} 
-                  className="input-modern" 
-                  placeholder="••••••••"
-                  required 
-                />
-              </div>
-              <button 
-                disabled={loading} 
-                className={`w-full py-3 text-[#FBFADA] font-bold rounded-lg text-sm transition-all transform hover:-translate-y-0.5 shadow-lg flex justify-center items-center gap-2 disabled:opacity-50 disabled:transform-none ${
-                  portal === 'admin' 
-                    ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 shadow-none' 
-                    : 'bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-none'
-                }`}
-              >
-                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
-                  <>
-                    <span>Authenticate</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </button>
-            </form>
-            
-            <div className="mt-8 pt-6 border-t border-[#33503C]/50 text-center text-sm text-[#FBFADA] space-y-4">
-              {portal === 'admin' ? (
-                <p>Administrator access is provisioned by the server owner.</p>) : (
-                <>
-                  <div className="flex justify-center items-center gap-2">
-                    <span>Don't have an account?</span>
-                    <button onClick={onNavigateToRegister} className="text-[#FBFADA] font-bold hover:text-cyan-300 transition-colors">Make one</button>
-                  </div>
-                </>
-              )}
-            </div>
+          <div>
+            <h1 className="text-3xl font-black text-[#12372A] tracking-tighter uppercase">SecArena</h1>
+            <p className="text-xs font-semibold tracking-[0.25em] text-[#33503C] uppercase mt-1">{portalName} Portal</p>
           </div>
         </motion.div>
+
+        {/* Form Card */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="glass-panel p-8 sm:p-10 rounded-3xl border border-[#FBFADA]/30 bg-[#33503C]/40 backdrop-blur-xl shadow-2xl relative"
+        >
+          {/* Subtle Top Accent */}
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#12372A] to-[#33503C] opacity-80 rounded-t-3xl"></div>
+
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-[#FBFADA] mb-1.5">Welcome back</h2>
+            <p className="text-sm text-[#FBFADA]/80 font-medium">Sign in to continue to the platform</p>
+          </div>
+          
+          <AnimatePresence mode="wait">
+            {error && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                animate={{ opacity: 1, height: 'auto', marginBottom: 24 }}
+                exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                className="overflow-hidden"
+              >
+                <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-sm font-medium flex gap-3 items-center">
+                  <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                  <p>{error}</p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <label className="block text-[11px] font-bold text-[#FBFADA]/90 uppercase tracking-wider">
+                Email / Username
+              </label>
+              <input 
+                value={usernameOrEmail} 
+                onChange={(e) => setUsernameOrEmail(e.target.value)} 
+                className="input-modern" 
+                placeholder="Enter your credentials"
+                autoComplete="username"
+                required 
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <label className="block text-[11px] font-bold text-[#FBFADA]/90 uppercase tracking-wider">
+                Password
+              </label>
+              <input 
+                type="password" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+                className="input-modern" 
+                placeholder="••••••••"
+                autoComplete="current-password"
+                required 
+              />
+            </div>
+
+            <button 
+              disabled={loading} 
+              className={`w-full py-3.5 px-4 font-bold rounded-xl text-sm transition-all flex justify-center items-center gap-2 active:scale-[0.98] shadow-lg disabled:opacity-70 disabled:cursor-not-allowed ${
+                portal === 'admin' 
+                  ? 'bg-gradient-to-r from-purple-700 to-fuchsia-700 hover:from-purple-600 hover:to-fuchsia-600 text-white shadow-purple-900/20' 
+                  : 'bg-gradient-to-r from-cyan-700 to-blue-700 hover:from-cyan-600 hover:to-blue-600 text-white shadow-blue-900/20'
+              }`}
+            >
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
+                <>
+                  <span>Sign In</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </form>
+        </motion.div>
+        
+        {/* Footer Actions */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-center"
+        >
+          {portal === 'student' ? (
+            <p className="text-sm text-[#12372A] font-medium">
+              Don't have an account?{' '}
+              <button 
+                onClick={onNavigateToRegister} 
+                className="font-bold underline decoration-[#12372A]/30 underline-offset-4 hover:decoration-[#12372A] transition-all"
+              >
+                Make one
+              </button>
+            </p>
+          ) : (
+            <p className="text-xs text-[#12372A]/70 font-medium">
+              Administrator access is provisioned by the server owner.
+            </p>
+          )}
+        </motion.div>
+
       </div>
     </div>
   );
