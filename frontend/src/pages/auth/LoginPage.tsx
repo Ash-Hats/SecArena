@@ -76,9 +76,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
                 </p>
                 <ul className="space-y-2 mt-4 text-sm font-semibold">
                   <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-sm bg-[#12372A]/60"></span> Interactive cybersecurity labs
-                  </li>
-                  <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-sm bg-[#12372A]/60"></span> Hands-on Linux and security practice
                   </li>
                   <li className="flex items-center gap-2">
