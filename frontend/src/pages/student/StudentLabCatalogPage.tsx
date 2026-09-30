@@ -14,7 +14,8 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
   const [joinCode, setJoinCode] = useState('');
   const [lobbyName, setLobbyName] = useState('');
   const [flagFormat, setFlagFormat] = useState('SEC_ARENA{...}');
-  const [teamChoice, setTeamChoice] = useState<'RED'|'BLUE'>('RED');
+  const [joinTeamChoice, setJoinTeamChoice] = useState<'RED'|'BLUE'>('RED');
+  const [createTeamChoice, setCreateTeamChoice] = useState<'RED'|'BLUE'>('RED');
   const [joining, setJoining] = useState(false);
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +26,7 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
     setError(null);
     try {
       const nameToUse = lobbyName.trim() || 'PvP Arena Match';
-      const session = await createPvpSession('linux-reconnaissance-beginner', teamChoice, nameToUse, flagFormat);
+      const session = await createPvpSession('linux-reconnaissance-beginner', createTeamChoice, nameToUse, flagFormat);
       if (onJoinPvp) onJoinPvp(session.id);
     } catch (err: any) {
       setError(err.message || 'Failed to create lobby.');
@@ -50,7 +51,7 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
     setJoining(true);
     setError(null);
     try {
-      const session = await joinPvpSession(joinCode, teamChoice);
+      const session = await joinPvpSession(joinCode, joinTeamChoice);
       if (onJoinPvp) onJoinPvp(session.id);
     } catch (err: any) {
       setError(err.message || 'Failed to join lobby. Invalid code?');
@@ -106,9 +107,9 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
-                    onClick={() => setTeamChoice('RED')}
+                    onClick={() => setJoinTeamChoice('RED')}
                     className={`flex items-center justify-center gap-2 py-3 rounded-xl border text-sm font-bold transition-all active:scale-95 ${
-                      teamChoice === 'RED'
+                      joinTeamChoice === 'RED'
                         ? 'bg-rose-500/20 border-rose-500/50 text-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.15)]'
                         : 'bg-[#12372A]/40 border-[#FBFADA]/20 text-[#FBFADA]/60 hover:bg-[#12372A]/60'
                     }`}
@@ -117,9 +118,9 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
                   </button>
                   <button
                     type="button"
-                    onClick={() => setTeamChoice('BLUE')}
+                    onClick={() => setJoinTeamChoice('BLUE')}
                     className={`flex items-center justify-center gap-2 py-3 rounded-xl border text-sm font-bold transition-all active:scale-95 ${
-                      teamChoice === 'BLUE'
+                      joinTeamChoice === 'BLUE'
                         ? 'bg-blue-500/20 border-blue-500/50 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.15)]'
                         : 'bg-[#12372A]/40 border-[#FBFADA]/20 text-[#FBFADA]/60 hover:bg-[#12372A]/60'
                     }`}
@@ -176,9 +177,9 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
-                    onClick={() => setTeamChoice('RED')}
+                    onClick={() => setCreateTeamChoice('RED')}
                     className={`flex items-center justify-center gap-2 py-3 rounded-xl border text-sm font-bold transition-all active:scale-95 ${
-                      teamChoice === 'RED'
+                      createTeamChoice === 'RED'
                         ? 'bg-rose-500/20 border-rose-500/50 text-rose-400 shadow-[0_0_15px_rgba(244,63,94,0.15)]'
                         : 'bg-[#12372A]/40 border-[#FBFADA]/20 text-[#FBFADA]/60 hover:bg-[#12372A]/60'
                     }`}
@@ -187,9 +188,9 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
                   </button>
                   <button
                     type="button"
-                    onClick={() => setTeamChoice('BLUE')}
+                    onClick={() => setCreateTeamChoice('BLUE')}
                     className={`flex items-center justify-center gap-2 py-3 rounded-xl border text-sm font-bold transition-all active:scale-95 ${
-                      teamChoice === 'BLUE'
+                      createTeamChoice === 'BLUE'
                         ? 'bg-blue-500/20 border-blue-500/50 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.15)]'
                         : 'bg-[#12372A]/40 border-[#FBFADA]/20 text-[#FBFADA]/60 hover:bg-[#12372A]/60'
                     }`}
