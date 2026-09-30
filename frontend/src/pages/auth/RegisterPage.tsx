@@ -58,11 +58,17 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onNavigateToLogin })
             <img src="/logo-nobg.png" alt="SecArena Logo" className="w-64 h-64 sm:w-80 sm:h-80 md:w-[400px] md:h-[400px] object-contain hover:scale-105 transition-transform duration-700 ease-out" />
           </div>
           <div className="z-10 relative md:ml-6 mt-4">
-            <h1 className="text-3xl md:text-5xl font-black text-[#12372A] tracking-tighter uppercase mb-2">SecArena</h1>
-            <p className="text-sm md:text-base font-bold tracking-[0.3em] text-[#33503C] uppercase">Student Portal</p>
-            <p className="text-[#12372A]/80 font-medium mt-6 max-w-sm leading-relaxed hidden md:block">
-              Begin your journey into cybersecurity. Create your student account to access hands-on vulnerable labs and real-world scenarios.
-            </p>
+            <div className="text-[#12372A]/80 font-medium max-w-sm leading-relaxed hidden md:block space-y-4">
+              <p className="text-[#12372A] font-bold text-lg border-b border-[#12372A]/20 pb-2 mb-4">Student Portal</p>
+              <p>
+                Begin your journey into cybersecurity. Create your student account to access hands-on vulnerable labs and real-world scenarios.
+              </p>
+              <ul className="space-y-2 mt-4 text-sm">
+                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#33503C]"></span> Complete Interactive Labs</li>
+                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#33503C]"></span> Participate in intense PvP matchups</li>
+                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#33503C]"></span> Track your mastery on the leaderboards</li>
+              </ul>
+            </div>
           </div>
         </div>
 

@@ -60,18 +60,31 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
             <img src="/logo-nobg.png" alt="SecArena Logo" className="w-64 h-64 sm:w-80 sm:h-80 md:w-[400px] md:h-[400px] object-contain hover:scale-105 transition-transform duration-700 ease-out" />
           </div>
           <div className="z-10 relative md:ml-6 mt-4">
-            <h1 className="text-3xl md:text-5xl font-black text-[#12372A] tracking-tighter uppercase mb-2">SecArena</h1>
-            <p className="text-sm md:text-base font-bold tracking-[0.3em] text-[#33503C] uppercase">{portalName} Portal</p>
-            
             {portal === 'student' && (
-              <p className="text-[#12372A]/80 font-medium mt-6 max-w-sm leading-relaxed hidden md:block">
-                Enter the arena. Master real-world vulnerabilities, practice offensive security, and defend resilient infrastructures.
-              </p>
+              <div className="text-[#12372A]/80 font-medium max-w-sm leading-relaxed hidden md:block space-y-4">
+                <p className="text-[#12372A] font-bold text-lg border-b border-[#12372A]/20 pb-2 mb-4">Student Portal</p>
+                <p>
+                  Enter the arena. Master real-world vulnerabilities, practice offensive security, and defend resilient infrastructures in dynamically generated vulnerable environments.
+                </p>
+                <ul className="space-y-2 mt-4 text-sm">
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#33503C]"></span> Complete Interactive Labs</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#33503C]"></span> Participate in intense PvP matchups</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#33503C]"></span> Track your mastery on the leaderboards</li>
+                </ul>
+              </div>
             )}
             {portal === 'admin' && (
-              <p className="text-[#12372A]/80 font-medium mt-6 max-w-sm leading-relaxed hidden md:block">
-                Command center. Oversee student progress, manage vulnerable labs, and orchestrate complex cybersecurity scenarios.
-              </p>
+              <div className="text-[#12372A]/80 font-medium max-w-sm leading-relaxed hidden md:block space-y-4">
+                <p className="text-[#12372A] font-bold text-lg border-b border-[#12372A]/20 pb-2 mb-4">Admin Portal</p>
+                <p>
+                  Command center. Oversee student progress, manage vulnerable labs, and orchestrate complex cybersecurity scenarios.
+                </p>
+                <ul className="space-y-2 mt-4 text-sm">
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#33503C]"></span> Monitor live student sessions</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#33503C]"></span> Provision & orchestrate environments</li>
+                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[#33503C]"></span> Analyze performance metrics</li>
+                </ul>
+              </div>
             )}
           </div>
         </motion.div>
