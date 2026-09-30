@@ -52,12 +52,11 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onNavigateToLogin })
 
       <div className="w-full max-w-[440px] relative z-10 flex flex-col gap-8">
         
-        {/* Branding Area */}
-        <div className="flex flex-col items-center text-center space-y-2">
-          <div className="bg-transparent drop-shadow-[0_0_20px_rgba(251,250,218,0.15)]">
-            <img src="/logo-nobg.png" alt="SecArena Logo" className="w-48 h-48 sm:w-64 sm:h-64 object-contain" />
+        <div className="flex flex-col items-center text-center">
+          <div className="bg-transparent drop-shadow-[0_0_20px_rgba(251,250,218,0.15)] -mb-8">
+            <img src="/logo-nobg.png" alt="SecArena Logo" className="w-64 h-64 sm:w-96 sm:h-96 object-contain" />
           </div>
-          <div>
+          <div className="z-10 relative">
             <p className="text-sm font-bold tracking-[0.3em] text-[#12372A] uppercase">Student Portal</p>
           </div>
         </div>

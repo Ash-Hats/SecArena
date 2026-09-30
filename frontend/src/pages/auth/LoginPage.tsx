@@ -54,12 +54,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex flex-col items-center text-center space-y-2"
+          className="flex flex-col items-center text-center"
         >
-          <div className="bg-transparent drop-shadow-[0_0_20px_rgba(251,250,218,0.15)]">
-            <img src="/logo-nobg.png" alt="SecArena Logo" className="w-48 h-48 sm:w-64 sm:h-64 object-contain" />
+          <div className="bg-transparent drop-shadow-[0_0_20px_rgba(251,250,218,0.15)] -mb-8">
+            <img src="/logo-nobg.png" alt="SecArena Logo" className="w-64 h-64 sm:w-96 sm:h-96 object-contain" />
           </div>
-          <div>
+          <div className="z-10 relative">
             <p className="text-sm font-bold tracking-[0.3em] text-[#12372A] uppercase">{portalName} Portal</p>
           </div>
         </motion.div>
