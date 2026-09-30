@@ -50,111 +50,119 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onNavigateToLogin })
         <div className="w-[40vw] h-[40vw] bg-[#12372A]/10 rounded-full blur-[120px] absolute bottom-[-10%] right-[-10%]"></div>
       </div>
 
-      <div className="w-full max-w-[440px] relative z-10 flex flex-col gap-8">
+      <div className="w-full max-w-[960px] relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center px-4">
         
-        <div className="flex flex-col items-center text-center">
-          <div className="bg-transparent drop-shadow-[0_0_20px_rgba(251,250,218,0.15)] -mb-8">
-            <img src="/logo-nobg.png" alt="SecArena Logo" className="w-64 h-64 sm:w-96 sm:h-96 object-contain" />
+        {/* Left Side: Branding */}
+        <div className="flex flex-col items-center md:items-start text-center md:text-left">
+          <div className="bg-transparent drop-shadow-[0_0_30px_rgba(251,250,218,0.2)] -mb-8 md:-mb-12 md:-ml-6">
+            <img src="/logo-nobg.png" alt="SecArena Logo" className="w-64 h-64 sm:w-80 sm:h-80 md:w-[400px] md:h-[400px] object-contain hover:scale-105 transition-transform duration-700 ease-out" />
           </div>
-          <div className="z-10 relative">
-            <p className="text-sm font-bold tracking-[0.3em] text-[#12372A] uppercase">Student Portal</p>
+          <div className="z-10 relative md:ml-6 mt-4">
+            <h1 className="text-3xl md:text-5xl font-black text-[#12372A] tracking-tighter uppercase mb-2">SecArena</h1>
+            <p className="text-sm md:text-base font-bold tracking-[0.3em] text-[#33503C] uppercase">Student Portal</p>
+            <p className="text-[#12372A]/80 font-medium mt-6 max-w-sm leading-relaxed hidden md:block">
+              Begin your journey into cybersecurity. Create your student account to access hands-on vulnerable labs and real-world scenarios.
+            </p>
           </div>
         </div>
 
-        {/* Form Card */}
-        <div className="glass-panel p-8 sm:p-10 rounded-3xl border border-[#FBFADA]/30 bg-[#33503C]/40 backdrop-blur-xl shadow-2xl relative">
-          {/* Subtle Top Accent */}
-          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#12372A] to-[#33503C] opacity-80 rounded-t-3xl"></div>
-          
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-[#FBFADA] mb-1.5">Create Account</h2>
-            <p className="text-sm text-[#FBFADA]/80 font-medium">Join SecArena to access cyber training scenarios.</p>
+        {/* Right Side: Form & Actions */}
+        <div className="flex flex-col gap-6 w-full max-w-[440px] mx-auto md:max-w-none">
+          {/* Form Card */}
+          <div className="glass-panel p-8 sm:p-10 rounded-3xl border border-[#FBFADA]/30 bg-[#33503C]/40 backdrop-blur-xl shadow-2xl relative">
+            {/* Subtle Top Accent */}
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#12372A] to-[#33503C] opacity-80 rounded-t-3xl"></div>
+            
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-[#FBFADA] mb-1.5">Create Account</h2>
+              <p className="text-sm text-[#FBFADA]/80 font-medium">Join SecArena to access cyber training scenarios.</p>
+            </div>
+
+            {error && (
+              <div className="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-sm font-medium flex gap-3 items-start">
+                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                <p>{error}</p>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <label className="block text-[11px] font-bold text-[#FBFADA]/90 uppercase tracking-wider">Username</label>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="student_alex"
+                  className="input-modern"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-[11px] font-bold text-[#FBFADA]/90 uppercase tracking-wider">Email Address</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="student@example.com"
+                  className="input-modern"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-[11px] font-bold text-[#FBFADA]/90 uppercase tracking-wider">Password</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="input-modern"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-[11px] font-bold text-[#FBFADA]/90 uppercase tracking-wider">Confirm Password</label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="input-modern"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3.5 px-4 font-bold rounded-xl text-sm transition-all flex justify-center items-center gap-2 active:scale-[0.98] shadow-lg disabled:opacity-70 disabled:cursor-not-allowed bg-gradient-to-r from-cyan-700 to-blue-700 hover:from-cyan-600 hover:to-blue-600 text-white shadow-blue-900/20"
+              >
+                {loading ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <>
+                    <UserPlus className="w-5 h-5" />
+                    <span>Register Account</span>
+                  </>
+                )}
+              </button>
+            </form>
           </div>
 
-          {error && (
-            <div className="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-sm font-medium flex gap-3 items-start">
-              <AlertCircle className="w-5 h-5 flex-shrink-0" />
-              <p>{error}</p>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <label className="block text-[11px] font-bold text-[#FBFADA]/90 uppercase tracking-wider">Username</label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="student_alex"
-                className="input-modern"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="block text-[11px] font-bold text-[#FBFADA]/90 uppercase tracking-wider">Email Address</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="student@example.com"
-                className="input-modern"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="block text-[11px] font-bold text-[#FBFADA]/90 uppercase tracking-wider">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="input-modern"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="block text-[11px] font-bold text-[#FBFADA]/90 uppercase tracking-wider">Confirm Password</label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="••••••••"
-                className="input-modern"
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3.5 px-4 font-bold rounded-xl text-sm transition-all flex justify-center items-center gap-2 active:scale-[0.98] shadow-lg disabled:opacity-70 disabled:cursor-not-allowed bg-gradient-to-r from-cyan-700 to-blue-700 hover:from-cyan-600 hover:to-blue-600 text-white shadow-blue-900/20"
-            >
-              {loading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <>
-                  <UserPlus className="w-5 h-5" />
-                  <span>Register Account</span>
-                </>
-              )}
-            </button>
-          </form>
-        </div>
-
-        {/* Footer Actions */}
-        <div className="text-center">
-          <p className="text-sm text-[#12372A] font-medium">
-            Already registered?{' '}
-            <button
-              onClick={onNavigateToLogin}
-              className="font-bold underline decoration-[#12372A]/30 underline-offset-4 hover:decoration-[#12372A] transition-all"
-            >
-              Back to Login
-            </button>
-          </p>
+          {/* Footer Actions */}
+          <div className="text-center md:text-right">
+            <p className="text-sm text-[#12372A] font-medium">
+              Already registered?{' '}
+              <button
+                onClick={onNavigateToLogin}
+                className="font-bold underline decoration-[#12372A]/30 underline-offset-4 hover:decoration-[#12372A] transition-all"
+              >
+                Back to Login
+              </button>
+            </p>
+          </div>
         </div>
       </div>
     </div>
