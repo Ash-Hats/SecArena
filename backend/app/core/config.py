@@ -46,6 +46,11 @@ class Settings(BaseSettings):
         return value
 
     def model_post_init(self, __context) -> None:
+        if self.DATABASE_URL.startswith("postgres://"):
+            self.DATABASE_URL = self.DATABASE_URL.replace("postgres://", "postgresql+psycopg2://", 1)
+        elif self.DATABASE_URL.startswith("postgresql://"):
+            self.DATABASE_URL = self.DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://", 1)
+
         if self.ENVIRONMENT.lower() in {"production", "prod"}:
             required = {"SECRET_KEY": self.SECRET_KEY, "JWT_SECRET_KEY": self.JWT_SECRET_KEY, "CORS_ORIGINS": self.CORS_ORIGINS}
             missing = [
