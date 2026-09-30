@@ -57,10 +57,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
           className="flex flex-col items-center text-center space-y-4"
         >
           <div className="p-3 bg-transparent rounded-2xl drop-shadow-[0_0_15px_rgba(251,250,218,0.2)]">
-            <img src="/logo-nobg.png" alt="SecArena Logo" className="w-20 h-20 object-contain" />
+            <img src="/logo-nobg.png" alt="SecArena Logo" className="w-40 h-40 sm:w-48 sm:h-48 object-contain" />
           </div>
           <div>
-            <h1 className="text-3xl font-black text-[#12372A] tracking-tighter uppercase">SecArena</h1>
             <p className="text-xs font-semibold tracking-[0.25em] text-[#33503C] uppercase mt-1">{portalName} Portal</p>
           </div>
         </motion.div>
