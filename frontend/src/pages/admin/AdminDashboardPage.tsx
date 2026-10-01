@@ -65,7 +65,7 @@ export const AdminDashboardPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#33503C] text-[#FBFADA] p-5 md:p-8">
-      <div className="max-w-6xl mx-auto space-y-6">
+      <div className="max-w-[90rem] mx-auto space-y-6">
         <header className="flex flex-col sm:flex-row justify-between gap-4 border-b border-[#FBFADA]/20 pb-5">
           <div>
             <p className="text-xs text-rose-400 font-mono uppercase tracking-widest mb-1">Restricted · /admin</p>

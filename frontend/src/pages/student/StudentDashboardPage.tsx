@@ -58,7 +58,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = () => {
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 max-w-7xl mx-auto">
+    <div className="space-y-8 animate-in fade-in duration-500 max-w-[90rem] mx-auto">
       {}
       <motion.div 
         initial={{ opacity: 0, y: 15 }}

@@ -61,7 +61,7 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 max-w-7xl mx-auto">
+    <div className="space-y-8 animate-in fade-in duration-500 max-w-[90rem] mx-auto">
       {}
       <div className="glass-panel rounded-3xl p-8 relative overflow-hidden bg-[#33503C]/80 border-none shadow-xl">
         <div className="absolute top-0 right-0 w-full h-1/2 bg-gradient-to-b from-[#FBFADA]/10 to-transparent pointer-events-none" />
