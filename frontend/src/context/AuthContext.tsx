@@ -19,7 +19,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
   
   
-  const [token, setToken] = useState<string | null>(() => sessionStorage.getItem('secarena_token'));
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem('secarena_token'));
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsLoading(true);
     try {
       const response = await loginApi(credentials);
-      sessionStorage.setItem('secarena_token', response.access_token);
+      localStorage.setItem('secarena_token', response.access_token);
       setToken(response.access_token);
       setUser(response.user);
       return response.user;
@@ -72,7 +72,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (e) {
       console.error(e);
     } finally {
-      sessionStorage.removeItem('secarena_token');
+      localStorage.removeItem('secarena_token');
       setToken(null);
       setUser(null);
     }
