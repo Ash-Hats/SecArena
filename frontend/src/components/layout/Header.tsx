@@ -13,7 +13,7 @@ export const Header: React.FC<HeaderProps> = () => {
       { }
       <div className="flex items-center space-x-3.5">
         <div className="flex items-center justify-center p-1 rounded-xl bg-transparent border border-transparent">
-          <img src="/logo-nobg.png" alt="SecArena Logo" className="w-18 h-18 object-contain drop-shadow-[0_0_8px_rgba(251,250,218,0.3)]" />
+          <img src="/logo-nobg.png" alt="SecArena Logo" className="w-15 h-15 object-contain drop-shadow-[0_0_8px_rgba(251,250,218,0.3)]" />
         </div>
         <div className="flex items-center">
           <span className="text-2xl font-black tracking-tighter text-[#FBFADA]">SecArena</span>
