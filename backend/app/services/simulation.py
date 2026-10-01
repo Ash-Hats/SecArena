@@ -35,11 +35,24 @@ class SimulationService:
             
         is_pvp = bool(getattr(session, "is_pvp", False))
         pvp_flags = session.state.get("pvp_flags", {})
-        public_flags = {
-            f"flag_{index + 1}": {"found": bool(flag.get("found")), "points": flag.get("points", 0)}
-            for index, flag in enumerate(pvp_flags.values())
-        } if is_pvp else {}
-        discovered_flags = [] if is_pvp else session.state.get("discovered_flags", [])
+        
+        participants_data = [{"user_id": str(p.user_id), "username": p.user.username if p.user else "Unknown", "team": p.team.value, "is_approved": getattr(p, "is_approved", False)} for p in getattr(session, "participants", [])]
+        is_blue = False
+        if is_pvp and user_id:
+            is_blue = any(p["user_id"] == str(user_id) and p["team"] == "BLUE" for p in participants_data)
+
+        if is_pvp:
+            if is_blue:
+                public_flags = pvp_flags
+            else:
+                public_flags = {
+                    f"flag_{index + 1}": {"found": bool(flag.get("found")), "points": flag.get("points", 0)}
+                    for index, flag in enumerate(pvp_flags.values())
+                }
+        else:
+            public_flags = {}
+
+        discovered_flags = session.state.get("discovered_flags", [])
         return {
             "id": session.id, "scenario_slug": session.scenario_slug, "status": session.status.value,
             "score": session.score, "progress": session.progress, "started_at": session.started_at,
@@ -51,7 +64,7 @@ class SimulationService:
             "supported_commands": SCENARIOS.get(session.scenario_slug, {}).get("supported_commands", []),
             "student_id": session.student_id,
             "terminal_history": terminal_history,
-            "participants": [{"user_id": p.user_id, "username": p.user.username if p.user else "Unknown", "team": p.team.value, "is_approved": getattr(p, "is_approved", False)} for p in getattr(session, "participants", [])],
+            "participants": participants_data,
         }
 
     @staticmethod
@@ -274,6 +287,12 @@ class SimulationService:
         if not participant or participant.team != SimulationTeam.BLUE:
             raise HTTPException(status_code=403, detail="Only Blue Team can create and hide flags.")
             
+        flag_format = session.state.get("flag_format", "SEC_ARENA{...}")
+        if "..." in flag_format:
+            prefix, suffix = flag_format.split("...", 1)
+            if not content.startswith(prefix) or not content.endswith(suffix) or len(content) <= len(prefix) + len(suffix):
+                raise HTTPException(status_code=400, detail=f"Flag does not match the required format: {flag_format}")
+
         if "pvp_flags" not in session.state:
             session.state["pvp_flags"] = {}
             

@@ -382,7 +382,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
                   Object.entries(session?.pvp_flags || {}).map(([flag, info]: [string, any], idx) => (
                     <div key={idx} className={`p-3 rounded-lg border ${info.found ? 'bg-rose-500/10 border-rose-500/30' : 'bg-[#8E9F7C] border-[#FBFADA]/30'}`}>
                       <div className="text-xs font-bold text-[#FBFADA] mb-1 flex items-center justify-between">
-                         <span>{info.found ? 'Captured by Red Team' : 'Hidden'}</span>
+                         <span>{info.found ? `Captured by Red Team (${info.found_by || 'Unknown'})` : 'Hidden'}</span>
                          {info.found ? (
                            <span className="text-[10px] text-rose-300 bg-rose-500/20 px-1.5 rounded">Compromised</span>
                          ) : (
@@ -390,7 +390,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
                          )}
                        </div>
                        <div className="text-[10px] font-mono text-[#FBFADA]/80 truncate">Flag: {flag}</div>
-                       <div className="text-[10px] font-mono text-[#FBFADA]/60 truncate mt-1">Location: protected</div>
+                       <div className="text-[10px] font-mono text-[#FBFADA]/60 truncate mt-1">Location: {info.path || 'protected'}</div>
                      </div>
                    ))
                  )

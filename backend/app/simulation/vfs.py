@@ -219,6 +219,13 @@ class VirtualShell:
                 return "hideflag: permission denied"
             if len(args) < 2: return "Usage: hideflag <path> <content>"
             path, content = args[0], " ".join(args[1:])
+            
+            flag_format = self.state.get("flag_format", "SEC_ARENA{...}")
+            if "..." in flag_format:
+                prefix, suffix = flag_format.split("...", 1)
+                if not content.startswith(prefix) or not content.endswith(suffix) or len(content) <= len(prefix) + len(suffix):
+                    return f"hideflag: error: flag does not match the required format '{flag_format}'"
+
             self.vfs.write_file(path, content)
             
             if "pvp_flags" not in self.state:
