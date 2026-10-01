@@ -10,10 +10,10 @@ export const Header: React.FC<HeaderProps> = () => {
 
   return (
     <header className="h-20 border-b border-[#12372A]/20 bg-[#33503C]/60 backdrop-blur-xl px-6 flex items-center justify-between sticky top-0 z-30 shadow-sm">
-      {}
+      { }
       <div className="flex items-center space-x-3.5">
         <div className="flex items-center justify-center p-1 rounded-xl bg-transparent border border-transparent">
-          <img src="/logo-nobg.png" alt="SecArena Logo" className="w-12 h-12 object-contain drop-shadow-[0_0_8px_rgba(251,250,218,0.3)]" />
+          <img src="/logo-nobg.png" alt="SecArena Logo" className="w-18 h-18 object-contain drop-shadow-[0_0_8px_rgba(251,250,218,0.3)]" />
         </div>
         <div className="flex items-center">
           <span className="text-2xl font-black tracking-tighter text-[#FBFADA]">SecArena</span>
@@ -23,7 +23,7 @@ export const Header: React.FC<HeaderProps> = () => {
         </div>
       </div>
 
-      {}
+      { }
       <div className="flex items-center space-x-4">
         {user && (
           <div className="flex items-center space-x-3 bg-[#12372A]/20 hover:bg-[#12372A]/30 transition-colors duration-200 border border-[#12372A]/30 px-3 py-1.5 rounded-xl shadow-inner cursor-default group">
