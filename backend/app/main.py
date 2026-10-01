@@ -28,7 +28,6 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
-    # Configure CORS Middleware
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins_list,
@@ -37,7 +36,6 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    # Root Endpoint
     @app.get(
         "/",
         summary="Platform Root",
@@ -50,7 +48,6 @@ def create_app() -> FastAPI:
             "status": "running",
         }
 
-    # Mount API v1 Router
     app.include_router(api_v1_router, prefix="/api/v1")
 
     return app

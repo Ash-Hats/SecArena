@@ -74,7 +74,7 @@ export const StudentLabDetailPage: React.FC<StudentLabDetailPageProps> = ({ slug
 
   return (
     <div className="space-y-8">
-      {/* Navigation Top Bar */}
+      {}
       <button
         onClick={onBack}
         className="inline-flex items-center space-x-2 text-xs font-semibold text-slate-400 hover:text-cyan-400 transition-colors"
@@ -83,7 +83,7 @@ export const StudentLabDetailPage: React.FC<StudentLabDetailPageProps> = ({ slug
         <span>Back to Lab Catalog</span>
       </button>
 
-      {/* Lab Header Hero */}
+      {}
       <div className="bg-[#0d1322] border border-slate-800 rounded-2xl p-6 md:p-8 space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center space-x-3">
@@ -108,7 +108,7 @@ export const StudentLabDetailPage: React.FC<StudentLabDetailPageProps> = ({ slug
           </p>
         </div>
 
-        {/* Start Lab Action */}
+        {}
         <div className="pt-4 border-t border-slate-800/80 space-y-3">
           <button
             onClick={onStartSimulation}
@@ -125,11 +125,11 @@ export const StudentLabDetailPage: React.FC<StudentLabDetailPageProps> = ({ slug
         </div>
       </div>
 
-      {/* Main Content Grid */}
+      {}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column: Description & Hints */}
+        {}
         <div className="lg:col-span-2 space-y-8">
-          {/* Detailed Description */}
+          {}
           <div className="bg-[#0d1322] border border-slate-800 rounded-xl p-6 space-y-4">
             <h2 className="text-base font-bold text-white flex items-center space-x-2">
               <BookOpen className="w-4 h-4 text-cyan-400" />
@@ -140,7 +140,7 @@ export const StudentLabDetailPage: React.FC<StudentLabDetailPageProps> = ({ slug
             </div>
           </div>
 
-          {/* Hints Accordion */}
+          {}
           {lab.hints && lab.hints.length > 0 && (
             <div className="bg-[#0d1322] border border-slate-800 rounded-xl p-6 space-y-4">
               <h2 className="text-base font-bold text-white flex items-center space-x-2">
@@ -170,9 +170,9 @@ export const StudentLabDetailPage: React.FC<StudentLabDetailPageProps> = ({ slug
           )}
         </div>
 
-        {/* Right Column: Learning Objectives & Required Tools */}
+        {}
         <div className="space-y-8">
-          {/* Learning Objectives */}
+          {}
           <div className="bg-[#0d1322] border border-slate-800 rounded-xl p-6 space-y-4">
             <h3 className="text-sm font-bold text-white flex items-center space-x-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
@@ -188,7 +188,7 @@ export const StudentLabDetailPage: React.FC<StudentLabDetailPageProps> = ({ slug
             </ul>
           </div>
 
-          {/* Required Tools */}
+          {}
           <div className="bg-[#0d1322] border border-slate-800 rounded-xl p-6 space-y-4">
             <h3 className="text-sm font-bold text-white flex items-center space-x-2">
               <Wrench className="w-4 h-4 text-cyan-400" />

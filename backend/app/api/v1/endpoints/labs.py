@@ -19,9 +19,6 @@ from app.services.lab import LabService
 router = APIRouter()
 
 
-# ============================================================================
-# STUDENT ENDPOINTS (Catalog & Details)
-# ============================================================================
 
 @router.get(
     "",
@@ -91,9 +88,6 @@ def get_published_lab_detail(
     return LabService.get_published_lab_detail(db, slug_or_id=slug_or_id)
 
 
-# ============================================================================
-# INSTRUCTOR MANAGEMENT ENDPOINTS
-# ============================================================================
 
 @router.post(
     "",

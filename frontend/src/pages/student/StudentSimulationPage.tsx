@@ -31,7 +31,7 @@ export const StudentSimulationPage: React.FC<Props> = ({ sessionId, onSessionSta
       
       return () => clearInterval(interval);
     } else {
-      // Look for an existing non-pvp running session
+      
       getSimulations().then(sessions => {
         const active = sessions.find(s => !s.is_pvp && s.status === 'RUNNING');
         if (active) {
@@ -91,7 +91,7 @@ export const StudentSimulationPage: React.FC<Props> = ({ sessionId, onSessionSta
     <div className="h-[calc(100vh-8rem)] flex flex-col gap-6">
       
       <div className="flex flex-1 gap-6 min-h-0">
-        {/* Terminal Area (Huge) */}
+        {}
         <div className="flex-[3] min-w-0 bg-[#0d1322] border border-[#FBFADA] rounded-xl overflow-hidden shadow-2xl flex flex-col">
           <div className="px-4 py-2 bg-[#33503C] border-b border-[#FBFADA] flex items-center justify-between shadow-md z-10">
             <div className="flex items-center space-x-2">
@@ -125,7 +125,7 @@ export const StudentSimulationPage: React.FC<Props> = ({ sessionId, onSessionSta
           </div>
         </div>
 
-        {/* Right Panel (Supported Actions & PvP) */}
+        {}
         <div className="flex-1 flex flex-col gap-6 min-w-0 overflow-y-auto">
           {session?.is_pvp && session.status === 'RUNNING' && (
              <div className="bg-[#33503C] border border-[#FBFADA] rounded-xl p-5 shadow-lg">

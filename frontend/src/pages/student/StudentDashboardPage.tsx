@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Terminal, Loader2, AlertCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { getPvpHistory } from '../../services/simulation';
 import { SimulationSession } from '../../types/simulation';
 import { PvPHistoryTable } from '../../components/PvPHistoryTable';
@@ -58,10 +59,16 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500 max-w-7xl mx-auto">
-      {/* Welcome Hero */}
-      <div className="glass-panel rounded-3xl p-8 md:p-10 relative overflow-hidden bg-[#33503C]/80 border-none shadow-xl">
-        <div className="absolute top-0 right-0 w-full h-1/2 bg-gradient-to-b from-[#FBFADA]/10 to-transparent pointer-events-none" />
-        <div className="absolute -right-10 -bottom-10 w-96 h-96 bg-[#8E9F7C]/20 rounded-full blur-3xl pointer-events-none" />
+      {}
+      <motion.div 
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        whileHover={{ y: -2, boxShadow: "0 20px 40px -10px rgba(18,55,42,0.3)" }}
+        className="glass-panel rounded-3xl p-8 md:p-10 relative overflow-hidden bg-[#33503C]/80 border-none shadow-xl group"
+      >
+        <div className="absolute top-0 right-0 w-full h-1/2 bg-gradient-to-b from-[#FBFADA]/10 to-transparent pointer-events-none opacity-50 group-hover:opacity-80 transition-opacity duration-500" />
+        <div className="absolute -right-10 -bottom-10 w-96 h-96 bg-[#8E9F7C]/20 rounded-full blur-3xl pointer-events-none group-hover:bg-[#8E9F7C]/30 transition-colors duration-500" />
         
         <div className="relative z-10 space-y-4">
           <div className="inline-flex items-center space-x-2 text-[11px] font-bold tracking-wider text-[#FBFADA] bg-[#12372A]/40 px-3 py-1.5 rounded-full border border-[#FBFADA]/20 uppercase">
@@ -75,7 +82,7 @@ export const StudentDashboardPage: React.FC<StudentDashboardPageProps> = () => {
             Continue your cybersecurity training journey. Review your past PvP battles and room history below to track your progress.
           </p>
         </div>
-      </div>
+      </motion.div>
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">

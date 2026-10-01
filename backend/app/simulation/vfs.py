@@ -15,7 +15,6 @@ class VirtualFileSystem:
             return self.cwd
         if not path.startswith('/'):
             path = self.cwd.rstrip('/') + '/' + path
-        # Normalize
         parts = []
         for p in path.split('/'):
             if p == '' or p == '.':
@@ -40,7 +39,6 @@ class VirtualFileSystem:
         else:
             self.fs[abs_path] = {'type': 'file', 'content': content}
         
-        # Ensure parent dirs exist
         parts = abs_path.strip('/').split('/')
         for i in range(len(parts) - 1):
             parent = '/' + '/'.join(parts[:i+1])
@@ -98,7 +96,6 @@ class VirtualShell:
         else:
             self.user_state = self.state
         
-        # Initialize VFS from state
         if 'vfs' not in self.state:
             self.state['vfs'] = {}
         
@@ -117,7 +114,6 @@ class VirtualShell:
             if cmd_line and cmd_line.strip():
                 self.user_state["cmd_history"].append(cmd_line.strip())
 
-            # Handle pipes
             pipe_cmds = [c.strip() for c in cmd_line.split('|')]
             
             last_output = ""
@@ -127,11 +123,9 @@ class VirtualShell:
             for i, cmd in enumerate(pipe_cmds):
                 final_cmd = cmd.split()[0] if cmd else ""
                 
-                # Check supported
                 if final_cmd and final_cmd not in self.supported and final_cmd not in self.custom and final_cmd != "cd" and final_cmd != "hideflag":
                     return {"command": final_cmd, "success": False, "output": f"{final_cmd}: command not found"}
                 
-                # Handle redirection in the command
                 redirect_out = None
                 append = False
                 
@@ -215,7 +209,6 @@ class VirtualShell:
                     if c: lines.extend(c.split('\n'))
             return "\n".join([line for line in lines if pattern in line])
         elif prog == "find":
-            # simplified find
             return "\n".join([p for p in self.vfs.fs.keys() if self.vfs.fs[p].get('type') == 'file'])
         elif prog == "whoami":
             return "student"

@@ -44,9 +44,9 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onNavigateToLogin })
   return (
     <div className="min-h-screen bg-[#8E9F7C] text-[#FBFADA] flex flex-col items-center justify-center p-6 sm:p-12 relative overflow-hidden selection:bg-[#33503C]/30">
       
-      {/* Background Decor */}
+      {}
       <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center">
-        {/* Subtle Cybersecurity Grid */}
+        {}
         <div 
           className="absolute inset-0 opacity-[0.03]" 
           style={{ 
@@ -60,7 +60,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onNavigateToLogin })
 
       <div className="w-full max-w-[960px] relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center px-4">
         
-        {/* Left Side: Branding */}
+        {}
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
           <div className="bg-transparent drop-shadow-[0_0_30px_rgba(251,250,218,0.2)] -mb-8 md:-mb-12 md:-ml-6">
             <img src="/logo-nobg.png" alt="SecArena Logo" className="w-64 h-64 sm:w-80 sm:h-80 md:w-[400px] md:h-[400px] object-contain hover:scale-105 transition-transform duration-700 ease-out" />
@@ -83,11 +83,11 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onNavigateToLogin })
           </div>
         </div>
 
-        {/* Right Side: Form & Actions */}
+        {}
         <div className="flex flex-col gap-6 w-full max-w-[440px] mx-auto md:max-w-none">
-          {/* Form Card */}
+          {}
           <div className="glass-panel p-8 sm:p-10 rounded-3xl border border-[#FBFADA]/30 bg-[#33503C]/40 backdrop-blur-xl shadow-2xl relative">
-            {/* Subtle Top Accent */}
+            {}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#12372A] to-[#33503C] opacity-80 rounded-t-3xl"></div>
             
             <div className="mb-8 border-b border-[#FBFADA]/10 pb-6">
@@ -175,7 +175,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ onNavigateToLogin })
             </form>
           </div>
 
-          {/* Footer Actions */}
+          {}
           <div className="text-center md:text-right">
             <p className="text-sm text-[#12372A] font-medium">
               Already registered?{' '}

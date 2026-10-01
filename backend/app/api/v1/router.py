@@ -5,7 +5,6 @@ from app.api.v1.endpoints import health, auth, dashboard, labs, admin, events, s
 
 api_v1_router = APIRouter()
 
-# Include endpoint routers
 api_v1_router.include_router(health.router, tags=["Health"])
 api_v1_router.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 api_v1_router.include_router(dashboard.router, prefix="/dashboard", tags=["Dashboard"])

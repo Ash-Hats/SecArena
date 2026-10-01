@@ -61,7 +61,7 @@ const [simulationId, setSimulationId] = useState<string | undefined>(undefined);
     );
   }
 
-  // Public Unauthenticated Pages
+  
   if (!isAuthenticated) {
     if (currentPath === '/register') {
       return <RegisterPage onNavigateToLogin={() => navigateTo('/login')} />;
@@ -87,7 +87,7 @@ const [simulationId, setSimulationId] = useState<string | undefined>(undefined);
     );
   }
 
-  // Authenticated Main Application Views
+  
   return (
     <AppLayout currentPath={currentPath} onNavigate={navigateTo}>
       {currentPath === '/student/dashboard' && (

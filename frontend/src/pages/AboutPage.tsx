@@ -71,7 +71,7 @@ export const AboutPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Watermark */}
+      {}
       <div className="pt-12 pb-4 text-center">
         <p className="text-[#FBFADA]/20 text-xs font-mono tracking-widest uppercase font-bold">
           made by Ash-Hats

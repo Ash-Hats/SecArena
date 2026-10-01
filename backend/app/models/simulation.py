@@ -37,7 +37,6 @@ class SimulationSession(Base):
     completed_at = Column(DateTime(timezone=True), nullable=True)
     stopped_at = Column(DateTime(timezone=True), nullable=True)
     
-    # PvP fields
     is_pvp = Column(Boolean, nullable=False, default=False)
     join_code = Column(String(20), unique=True, index=True, nullable=True)
     time_limit_minutes = Column(Integer, nullable=True)

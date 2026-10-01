@@ -62,7 +62,7 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500 max-w-7xl mx-auto">
-      {/* Header */}
+      {}
       <div className="glass-panel rounded-3xl p-8 relative overflow-hidden bg-[#33503C]/80 border-none shadow-xl">
         <div className="absolute top-0 right-0 w-full h-1/2 bg-gradient-to-b from-[#FBFADA]/10 to-transparent pointer-events-none" />
         <div className="relative z-10 space-y-3">
@@ -77,10 +77,10 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* Actions Sidebar */}
+        {}
         <div className="lg:col-span-1 space-y-6">
           
-          {/* Join Match Card */}
+          {}
           <div className="glass-panel rounded-2xl p-6 md:p-8 space-y-6 shadow-lg border border-[#FBFADA]/20 bg-[#33503C]/60">
             <div>
               <h2 className="text-xl font-black text-[#FBFADA] tracking-tight">Join a Match</h2>
@@ -142,7 +142,7 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
             </form>
           </div>
 
-          {/* Create Match Card */}
+          {}
           <div className="glass-panel rounded-2xl p-6 md:p-8 space-y-6 shadow-lg border border-[#FBFADA]/20 bg-[#33503C]/60">
             <div>
               <h2 className="text-xl font-black text-[#FBFADA] tracking-tight">Create a Match</h2>
@@ -211,7 +211,7 @@ export const StudentLabCatalogPage: React.FC<StudentLabCatalogPageProps> = ({ on
           </div>
         </div>
 
-        {/* Public Lobbies List */}
+        {}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between pb-2">
             <h2 className="text-xl font-black text-[#12372A] tracking-tight">Live Public Lobbies</h2>

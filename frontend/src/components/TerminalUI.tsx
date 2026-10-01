@@ -33,7 +33,7 @@ export function TerminalUI({ onCommand, history, currentUser }: TerminalUIProps)
       cursorBlink: true,
       theme: {
         background: 'transparent',
-        foreground: '#FBFADA', // Coffee pastel
+        foreground: '#FBFADA', 
         cursor: '#FBFADA',
       },
       fontFamily: 'monospace',
@@ -82,7 +82,7 @@ export function TerminalUI({ onCommand, history, currentUser }: TerminalUIProps)
 
     term.current.onData((e) => {
       switch (e) {
-        case '\r': // Enter
+        case '\r': 
           const command = inputBuffer.current.trim();
           if (historyRef.current === undefined) {
              term.current?.write('\r\n');
@@ -112,14 +112,14 @@ export function TerminalUI({ onCommand, history, currentUser }: TerminalUIProps)
           }
           inputBuffer.current = '';
           break;
-        case '\u007F': // Backspace
+        case '\u007F': 
           if (inputBuffer.current.length > 0) {
             inputBuffer.current = inputBuffer.current.slice(0, -1);
             term.current?.write('\b \b');
           }
           break;
         default:
-          // Handle multi-character strings (like pastes) or single characters
+          
           let printable = '';
           for (let i = 0; i < e.length; i++) {
             const char = e[i];
@@ -154,7 +154,7 @@ export function TerminalUI({ onCommand, history, currentUser }: TerminalUIProps)
     }, 50);
 
     if (history.length > renderedCount.current) {
-        term.current.write('\x1b[2K\r'); // clear current line
+        term.current.write('\x1b[2K\r'); 
         
         for (let i = renderedCount.current; i < history.length; i++) {
             const item = history[i];
@@ -176,7 +176,7 @@ export function TerminalUI({ onCommand, history, currentUser }: TerminalUIProps)
 
 
   return (
-    <div className="w-full h-full bg-transparent relative p-2">
+    <div className="w-full h-full bg-transparent relative p-2 rounded-xl transition-all duration-300 focus-within:ring-2 focus-within:ring-[#FBFADA]/20">
       <div ref={terminalRef} className="w-full h-full text-left" />
     </div>
   );

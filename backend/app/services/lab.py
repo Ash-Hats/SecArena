@@ -38,10 +38,8 @@ class LabService:
         """Create a new Lab blueprint in DRAFT state."""
         slug_str = payload.slug or generate_slug(payload.title)
         
-        # Ensure slug uniqueness
         existing_slug = LabRepository.get_by_slug(db, slug_str)
         if existing_slug:
-            # Append short random suffix if slug collides
             slug_str = f"{slug_str}-{datetime.now().strftime('%M%S')}"
 
         hints_dicts = [h.model_dump() for h in payload.hints] if payload.hints else []
@@ -112,7 +110,6 @@ class LabService:
                 detail="Archived labs cannot be published.",
             )
 
-        # Strict Publish Content Validation
         missing_requirements = []
         if not lab.title or not lab.title.strip():
             missing_requirements.append("title")

@@ -10,7 +10,6 @@ from alembic import op
 import sqlalchemy as sa
 
 
-# revision identifiers, used by Alembic.
 revision = '001_initial_schema'
 down_revision = None
 branch_labels = None
@@ -18,7 +17,6 @@ depends_on = None
 
 
 def upgrade() -> None:
-    # Users table
     op.create_table(
         'users',
         sa.Column('id', sa.String(length=36), nullable=False),
@@ -34,7 +32,6 @@ def upgrade() -> None:
     op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
     op.create_index(op.f('ix_users_username'), 'users', ['username'], unique=True)
 
-    # Labs table
     op.create_table(
         'labs',
         sa.Column('id', sa.String(length=36), nullable=False),
@@ -59,7 +56,6 @@ def upgrade() -> None:
     op.create_index(op.f('ix_labs_slug'), 'labs', ['slug'], unique=True)
     op.create_index(op.f('ix_labs_title'), 'labs', ['title'], unique=False)
 
-    # Lab Hints table
     op.create_table(
         'lab_hints',
         sa.Column('id', sa.String(length=36), nullable=False),

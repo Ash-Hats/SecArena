@@ -11,10 +11,8 @@ branch_labels = None
 depends_on = None
 
 def upgrade() -> None:
-    # SQLite stores SQLAlchemy enums as strings and has no ALTER TYPE syntax.
     if op.get_bind().dialect.name == "postgresql":
         op.execute("ALTER TYPE userrole ADD VALUE IF NOT EXISTS 'ADMIN'")
 
 def downgrade() -> None:
-    # PostgreSQL cannot safely remove values from an enum in place.
     pass

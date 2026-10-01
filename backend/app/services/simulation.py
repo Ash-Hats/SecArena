@@ -35,8 +35,6 @@ class SimulationService:
             
         is_pvp = bool(getattr(session, "is_pvp", False))
         pvp_flags = session.state.get("pvp_flags", {})
-        # Flag values and paths are internal state.  The public model exposes
-        # only opaque per-flag status needed by the existing scoreboard.
         public_flags = {
             f"flag_{index + 1}": {"found": bool(flag.get("found")), "points": flag.get("points", 0)}
             for index, flag in enumerate(pvp_flags.values())
@@ -281,7 +279,6 @@ class SimulationService:
             
         session.state["pvp_flags"][content] = {"path": path, "found": False, "points": 50, "hidden_by": user.username}
         
-        # We need to inject this file into the virtual filesystem
         if "vfs" not in session.state:
             session.state["vfs"] = {}
         

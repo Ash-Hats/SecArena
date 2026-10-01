@@ -21,10 +21,8 @@ SAMPLE_LABS = [
         "short_description": "Learn how unsafe database queries can expose sensitive application data and bypass login controls.",
         "description": """# SQL Injection Fundamentals
 
-## Objective
 Analyze how unsanitized user inputs concat directly into SQL queries, leading to unauthorized database access.
 
-## Scenario
 You are assigned to audit a vulnerable web authentication portal. Analyze the login parameter handling, construct an authentication bypass payload, and retrieve hidden database records.
 
 > [!NOTE]
@@ -58,10 +56,8 @@ You are assigned to audit a vulnerable web authentication portal. Analyze the lo
         "short_description": "Understand Reflected and Stored XSS attack vectors and payload execution contexts.",
         "description": """# Cross-Site Scripting (XSS) Basics
 
-## Objective
 Identify reflected input parameters that render directly into the DOM without HTML entity escaping.
 
-## Scenario
 Analyze a vulnerable comment submission form, inject a script payload, and observe client-side execution boundaries.
 """,
         "category": LabCategory.WEB,
@@ -87,10 +83,8 @@ Analyze a vulnerable comment submission form, inject a script payload, and obser
         "short_description": "Explore Linux file permissions, misconfigured SUID binaries, and escalation paths to root.",
         "description": """# Linux Privilege Escalation via SUID
 
-## Objective
 Locate binaries with the SUID bit enabled and leverage misconfigurations to elevate system privileges.
 
-## Scenario
 You have gained low-privilege SSH access to a Linux target server. Enumerate system binaries, identify misconfigurations, and elevate to root.
 """,
         "category": LabCategory.LINUX,
@@ -116,10 +110,8 @@ You have gained low-privilege SSH access to a Linux target server. Enumerate sys
         "short_description": "Audit RESTful API endpoints for Broken Object Level Authorization (BOLA/IDOR) vulnerabilities.",
         "description": """# API Authentication Bypass & BOLA
 
-## Objective
 Analyze REST API resource identifiers and bypass authorization controls to access unauthorized user objects.
 
-## Scenario
 Audit a user profile API endpoint. Test whether modifying resource IDs in JSON request payloads exposes data belonging to other accounts.
 """,
         "category": LabCategory.API,
@@ -145,7 +137,6 @@ Audit a user profile API endpoint. Test whether modifying resource IDs in JSON r
 def seed_labs():
     db = SessionLocal()
     try:
-        # Find or create seed instructor
         instructor = (
             UserRepository.get_by_username(db, "instructor_seed")
             or UserRepository.get_by_email(db, "instructor@secarena.local")

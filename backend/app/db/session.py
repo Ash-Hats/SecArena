@@ -5,8 +5,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from app.core.config import settings
 
-# Create SQLAlchemy engine configured for PostgreSQL / SQLite fallback
-# connect_args is only passed for sqlite if needed in testing
 engine_args = {"pool_pre_ping": True}
 if settings.DATABASE_URL.startswith("sqlite"):
     engine_args["connect_args"] = {"check_same_thread": False}
@@ -27,7 +25,6 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
         cursor.close()
 
 
-# Create session factory
 SessionLocal = sessionmaker(
     autocommit=False,
     autoflush=False,

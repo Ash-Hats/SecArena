@@ -50,7 +50,6 @@ class LabRepository:
         lab.updated_at = datetime.now(timezone.utc)
         
         if hints_data is not None:
-            # Clear old hints and re-add updated list
             db.query(LabHint).filter(LabHint.lab_id == lab.id).delete()
             for h_data in hints_data:
                 hint = LabHint(

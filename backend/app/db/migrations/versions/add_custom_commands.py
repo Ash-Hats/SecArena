@@ -8,15 +8,11 @@ Create Date: 2026-09-14 20:00:00.000000
 from alembic import op
 import sqlalchemy as sa
 
-# revision identifiers, used by Alembic.
 revision = 'add_custom_commands'
 down_revision = '09d5ee5e26c1'
 depends_on = None
 
 def upgrade() -> None:
-    # Get the current state to find the latest revision to chain to, 
-    # but since this is a manual migration and we might not know the exact previous one,
-    # we'll just run the DDL. Ideally down_revision should be set to the previous.
     op.create_table('custom_commands',
         sa.Column('id', sa.String(length=36), nullable=False),
         sa.Column('command_name', sa.String(length=100), nullable=False),

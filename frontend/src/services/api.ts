@@ -31,7 +31,7 @@ export async function apiRequest<T>(
         }
       }
     } catch (e) {
-      // Ignore JSON parse errors
+      
     }
     throw new Error(errorMsg);
   }

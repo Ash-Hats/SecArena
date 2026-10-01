@@ -10,7 +10,7 @@ export const Header: React.FC<HeaderProps> = () => {
 
   return (
     <header className="h-16 border-b border-[#12372A]/20 bg-[#33503C]/60 backdrop-blur-xl px-6 flex items-center justify-between sticky top-0 z-30 shadow-sm">
-      {/* Brand Identification */}
+      {}
       <div className="flex items-center space-x-3.5">
         <div className="flex items-center justify-center p-1 rounded-xl bg-transparent border border-transparent">
           <img src="/logo-nobg.png" alt="SecArena Logo" className="w-9 h-9 object-contain drop-shadow-[0_0_8px_rgba(251,250,218,0.3)]" />
@@ -23,15 +23,15 @@ export const Header: React.FC<HeaderProps> = () => {
         </div>
       </div>
 
-      {/* User Information & Actions */}
+      {}
       <div className="flex items-center space-x-4">
         {user && (
-          <div className="flex items-center space-x-3 bg-[#12372A]/20 border border-[#12372A]/30 px-3 py-1.5 rounded-xl shadow-inner">
-            <div className="w-8 h-8 rounded-lg bg-[#12372A]/80 border border-[#FBFADA]/20 flex items-center justify-center text-[#FBFADA] font-black uppercase text-sm shadow-md">
+          <div className="flex items-center space-x-3 bg-[#12372A]/20 hover:bg-[#12372A]/30 transition-colors duration-200 border border-[#12372A]/30 px-3 py-1.5 rounded-xl shadow-inner cursor-default group">
+            <div className="w-8 h-8 rounded-lg bg-[#12372A]/80 border border-[#FBFADA]/20 group-hover:border-[#FBFADA]/40 transition-colors duration-200 flex items-center justify-center text-[#FBFADA] font-black uppercase text-sm shadow-[0_2px_8px_rgba(18,55,42,0.4)]">
               {user.username.substring(0, 2)}
             </div>
             <div className="hidden sm:flex flex-col text-left pr-2">
-              <span className="text-[#FBFADA] font-bold text-[13px] leading-tight">{user.username}</span>
+              <span className="text-[#FBFADA] font-bold text-[13px] leading-tight group-hover:text-white transition-colors">{user.username}</span>
               <span className="text-[9px] font-bold font-mono uppercase tracking-widest text-[#FBFADA]/60 leading-tight">{user.role}</span>
             </div>
           </div>
@@ -39,11 +39,11 @@ export const Header: React.FC<HeaderProps> = () => {
 
         <button
           onClick={logout}
-          className="p-2.5 text-[#FBFADA]/60 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl border border-transparent hover:border-rose-500/30 transition-all flex items-center space-x-2 text-xs font-bold active:scale-95"
+          className="p-2.5 text-[#FBFADA]/60 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl border border-transparent hover:border-rose-500/30 transition-all duration-200 ease-out flex items-center space-x-2 text-xs font-bold active:scale-95 outline-none focus-visible:ring-2 focus-visible:ring-rose-500/50 group"
           title="Sign Out"
         >
-          <LogOut className="w-4 h-4" />
-          <span className="hidden sm:inline">Logout</span>
+          <LogOut className="w-4 h-4 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
+          <span className="hidden sm:inline transition-opacity duration-200">Logout</span>
         </button>
       </div>
     </header>

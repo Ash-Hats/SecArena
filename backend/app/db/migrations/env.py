@@ -7,22 +7,17 @@ from sqlalchemy import pool
 
 from alembic import context
 
-# Prepend application root directory to sys.path
 sys.path.insert(0, os.path.realpath(os.path.join(os.path.dirname(__file__), "../../../")))
 
 from app.core.config import settings
 from app.db.base import Base
 import app.models  # Import all ORM models for Alembic metadata
 
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
 config = context.config
 
-# Interpret the config file for Python logging.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Set database URL dynamically from app settings
 config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
 
 target_metadata = Base.metadata

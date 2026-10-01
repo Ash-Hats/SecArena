@@ -168,7 +168,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col gap-6">
       
-      {/* Header Bar */}
+      {}
       <div className="flex items-center justify-between glass-panel border-none bg-[#33503C]/80 rounded-2xl px-6 py-4 shadow-lg">
         <div className="flex items-center gap-6">
           <div className="bg-rose-500/20 p-3 rounded-xl border border-rose-500/30 shadow-[0_0_15px_rgba(244,63,94,0.3)]">
@@ -204,9 +204,9 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
 
       <div className="flex flex-1 gap-6 min-h-0">
         
-        {/* Left Panel (Dashboard & Stats) */}
+        {}
         <div className="flex-1 flex flex-col gap-6 min-w-0 overflow-y-auto">
-          {/* Score Graph */}
+          {}
           <div className="glass-panel bg-[#33503C]/60 border border-[#FBFADA]/20 rounded-2xl p-6 shadow-lg flex-none h-64">
             <h3 className="text-sm font-bold text-[#FBFADA] mb-4 flex items-center gap-2">
               <Activity className="w-4 h-4 text-[#FBFADA]/70" /> Live Score
@@ -224,13 +224,13 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
             </ResponsiveContainer>
           </div>
 
-          {/* Members List */}
+          {}
           <div className="glass-panel bg-[#33503C]/60 border border-[#FBFADA]/20 rounded-2xl p-6 shadow-lg flex-1 overflow-hidden flex flex-col">
             <h3 className="text-sm font-bold text-[#FBFADA] mb-4 flex items-center gap-2">
               <Users className="w-4 h-4 text-[#FBFADA]/70" /> Active Roster
             </h3>
             <div className="grid grid-cols-2 gap-4 flex-1 overflow-y-auto pr-2">
-              {/* Red Team */}
+              {}
               <div className="space-y-3">
                 <div className="flex items-center gap-2 text-rose-400 font-bold border-b border-rose-500/20 pb-2">
                   <Crosshair className="w-4 h-4" /> RED TEAM
@@ -248,7 +248,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
                 ))}
                 {redTeam.length === 0 && <div className="text-xs text-[#FBFADA]/40 italic">Waiting...</div>}
               </div>
-              {/* Blue Team */}
+              {}
               <div className="space-y-3">
                 <div className="flex items-center gap-2 text-blue-400 font-bold border-b border-blue-500/20 pb-2">
                   <Shield className="w-4 h-4" /> BLUE TEAM
@@ -270,7 +270,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
           </div>
         </div>
 
-        {/* Center Panel (Terminal) */}
+        {}
         <div className="flex-[2] min-w-0 bg-[#0a0e17] border border-[#FBFADA]/20 rounded-2xl overflow-hidden shadow-2xl flex flex-col">
           <div className="px-5 py-3 bg-[#12372A]/80 border-b border-[#FBFADA]/10 flex items-center justify-between shadow-md z-10">
             <div className="flex items-center space-x-2">
@@ -295,7 +295,7 @@ export const PvpDashboardPage: React.FC<Props> = ({ sessionId, onLeave }) => {
           </div>
         </div>
 
-        {/* Right Panel (Actions & Flags) */}
+        {}
         <div className="flex-1 flex flex-col gap-6 min-w-0 overflow-y-auto">
           {session?.status === 'RUNNING' && myTeam === 'BLUE' && (
              <div className="glass-panel bg-[#33503C]/60 border border-[#FBFADA]/20 rounded-2xl p-6 shadow-lg">

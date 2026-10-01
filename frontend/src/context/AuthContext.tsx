@@ -17,8 +17,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  // Keep each browser tab independent so an instructor and a student can work
-  // side-by-side without one login replacing the other's credentials.
+  
+  
   const [token, setToken] = useState<string | null>(() => sessionStorage.getItem('secarena_token'));
   const [isLoading, setIsLoading] = useState<boolean>(true);
 

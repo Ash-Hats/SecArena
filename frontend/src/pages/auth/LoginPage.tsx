@@ -41,9 +41,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
   return (
     <div className="min-h-screen bg-[#8E9F7C] text-[#FBFADA] flex flex-col items-center justify-center p-6 sm:p-12 relative overflow-hidden selection:bg-[#33503C]/30">
       
-      {/* Background Decor */}
+      {}
       <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center">
-        {/* Subtle Cybersecurity Grid */}
+        {}
         <div 
           className="absolute inset-0 opacity-[0.03]" 
           style={{ 
@@ -57,7 +57,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
 
       <div className="w-full max-w-[960px] relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center px-4">
         
-        {/* Left Side: Branding */}
+        {}
         <motion.div 
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
@@ -106,16 +106,16 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
           </div>
         </motion.div>
 
-        {/* Right Side: Form & Actions */}
+        {}
         <div className="flex flex-col gap-6 w-full max-w-[440px] mx-auto md:max-w-none">
-          {/* Form Card */}
+          {}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="glass-panel p-8 sm:p-10 rounded-3xl border border-[#FBFADA]/30 bg-[#33503C]/40 backdrop-blur-xl shadow-2xl relative"
           >
-            {/* Subtle Top Accent */}
+            {}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#12372A] to-[#33503C] opacity-80 rounded-t-3xl"></div>
 
             <div className="mb-8 border-b border-[#FBFADA]/10 pb-6">
@@ -189,7 +189,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ portal, onNavigateToRegist
             </form>
           </motion.div>
           
-          {/* Footer Actions */}
+          {}
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

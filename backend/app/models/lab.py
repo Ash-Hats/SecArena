@@ -67,7 +67,6 @@ class Lab(Base):
     published_at = Column(DateTime(timezone=True), nullable=True)
     archived_at = Column(DateTime(timezone=True), nullable=True)
 
-    # Relationships
     author = relationship("User", backref=backref("created_labs", cascade="all, delete-orphan"))
     hints = relationship("LabHint", back_populates="lab", cascade="all, delete-orphan", order_by="LabHint.hint_order")
 
@@ -94,7 +93,6 @@ class LabHint(Base):
         onupdate=lambda: datetime.now(timezone.utc),
     )
 
-    # Relationships
     lab = relationship("Lab", back_populates="hints")
 
     def __repr__(self) -> str:

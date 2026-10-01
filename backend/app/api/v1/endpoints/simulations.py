@@ -125,7 +125,6 @@ def create_pvp_flag(session_id: str, payload: PvpCreateFlagRequest, current_user
 
 @router.post("/{session_id}/submit_flag", response_model=SimulationSessionResponse)
 def submit_pvp_flag(session_id: str, payload: PvpCreateFlagRequest, current_user: User = Depends(require_role(UserRole.STUDENT)), db: Session = Depends(get_db)):
-    # Re-using PvpCreateFlagRequest just for flag_content field
     session = SimulationService.get_session(db, session_id, current_user, require_approved=True)
     return SimulationService.response(SimulationService.submit_flag(db, session, payload.flag_content, current_user), str(current_user.id))
 

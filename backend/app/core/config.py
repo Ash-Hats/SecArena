@@ -19,22 +19,18 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    # General Application Settings
     APP_NAME: str = "SecArena"
     ENVIRONMENT: str = "development"
     DEBUG: bool = True
 
-    # Database Configuration
     DATABASE_URL: str = "sqlite:///./secarena.db"
 
-    # Security Configuration
     SECRET_KEY: str = ""
     JWT_SECRET_KEY: str = ""
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     ALGORITHM: str = "HS256"
     JWT_ALGORITHM: str = "HS256"
 
-    # CORS / Frontend Integration
     FRONTEND_URL: str = "http://localhost:5173"
     CORS_ORIGINS: str = "http://localhost:5173,http://127.0.0.1:5173"
 
@@ -72,5 +68,4 @@ class Settings(BaseSettings):
 
 
 
-# Instantiate global settings singleton
 settings = Settings()

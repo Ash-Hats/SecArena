@@ -1,6 +1,24 @@
 import React from 'react';
 import { SimulationSession } from '../types/simulation';
 import { Shield, Crosshair } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.05 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  show: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { type: 'spring' as const, stiffness: 300, damping: 24 } 
+  },
+};
 
 interface PvPHistoryTableProps {
   history: SimulationSession[];
@@ -32,7 +50,12 @@ export const PvPHistoryTable: React.FC<PvPHistoryTableProps> = ({ history, curre
             <th className="px-6 py-4 font-bold whitespace-nowrap">Score</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-[#12372A]/30">
+        <motion.tbody 
+          className="divide-y divide-[#12372A]/30"
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+        >
           {history.map((session) => {
             const blueTeam = session.participants?.filter(p => p.team === 'BLUE') || [];
             const redTeam = session.participants?.filter(p => p.team === 'RED') || [];
@@ -60,7 +83,11 @@ export const PvPHistoryTable: React.FC<PvPHistoryTableProps> = ({ history, curre
             }
 
             return (
-              <tr key={session.id} className="hover:bg-[#12372A]/20 transition-colors group">
+              <motion.tr 
+                key={session.id} 
+                variants={itemVariants}
+                className="hover:bg-[#12372A]/10 transition-colors duration-200 ease-out group cursor-default"
+              >
                 <td className="px-6 py-4 font-bold truncate max-w-[200px]">
                   {session.lobby_name || session.scenario_slug}
                   <div className="text-[10px] text-[#FBFADA]/40 font-mono mt-1 opacity-0 group-hover:opacity-100 transition-opacity">ID: {session.id.split('-')[0]}</div>
@@ -110,10 +137,10 @@ export const PvPHistoryTable: React.FC<PvPHistoryTableProps> = ({ history, curre
                     )}
                   </div>
                 </td>
-              </tr>
+              </motion.tr>
             );
           })}
-        </tbody>
+        </motion.tbody>
       </table>
     </div>
   );

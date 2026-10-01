@@ -32,7 +32,6 @@ class AuthService:
 
         pwd_hash = hash_password(payload.password)
         
-        # Explicitly enforce Student role for public registrations
         user = UserRepository.create(
             db=db,
             username=payload.username,
@@ -69,7 +68,6 @@ class AuthService:
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-        # Automatically upgrade password hash if settings have changed (e.g., to lower the cost)
         from app.core.security import pwd_context
         if pwd_context.needs_update(user.password_hash):
             user.password_hash = hash_password(payload.password)
