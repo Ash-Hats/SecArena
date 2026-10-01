@@ -19,7 +19,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
   
   
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem('secarena_token'));
+  const [token, setToken] = useState<string | null>(() => sessionStorage.getItem('secarena_token'));
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -43,25 +43,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [token]);
 
   const login = async (credentials: LoginCredentials): Promise<User> => {
-    setIsLoading(true);
-    try {
-      const response = await loginApi(credentials);
-      localStorage.setItem('secarena_token', response.access_token);
-      setToken(response.access_token);
-      setUser(response.user);
-      return response.user;
-    } finally {
-      setIsLoading(false);
-    }
+    const response = await loginApi(credentials);
+    sessionStorage.setItem('secarena_token', response.access_token);
+    setToken(response.access_token);
+    setUser(response.user);
+    return response.user;
   };
 
   const register = async (data: RegisterData) => {
-    setIsLoading(true);
-    try {
-      await registerApi(data);
-    } finally {
-      setIsLoading(false);
-    }
+    await registerApi(data);
   };
 
   const logout = async () => {
@@ -72,7 +62,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (e) {
       console.error(e);
     } finally {
-      localStorage.removeItem('secarena_token');
+      sessionStorage.removeItem('secarena_token');
       setToken(null);
       setUser(null);
     }

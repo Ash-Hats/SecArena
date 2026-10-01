@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Loader2, ShieldCheck, Trash2, UserPlus, TerminalSquare } from 'lucide-react';
+import { Loader2, ShieldCheck, Trash2, UserPlus, TerminalSquare, LogOut } from 'lucide-react';
 import { createAdminUser, deleteAdminUser, getAdminUsers, updateAdminUser } from '../../services/admin';
+import { useAuth } from '../../context/AuthContext';
 import { getCustomCommands, createCustomCommand, deleteCustomCommand, CustomCommand } from '../../services/customCommands';
 import { User, UserRole } from '../../types/auth';
 
 
 
 export const AdminDashboardPage: React.FC = () => {
+  const { logout } = useAuth();
   const [users, setUsers] = useState<User[]>([]); 
   const [commands, setCommands] = useState<CustomCommand[]>([]);
   
@@ -72,7 +74,12 @@ export const AdminDashboardPage: React.FC = () => {
             <h1 className="text-3xl font-black tracking-tight">SecArena Administration</h1>
             <p className="text-sm text-[#FBFADA]/70 mt-2 font-medium">Manage accounts, lab records, custom commands, and resources.</p>
           </div>
-          <ShieldCheck className="w-10 h-10 text-rose-400" />
+          <div className="flex items-center gap-4">
+            <button onClick={logout} className="flex items-center gap-2 px-4 py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 rounded-lg text-sm font-bold transition-all shadow-md">
+              <LogOut className="w-4 h-4" /> Logout
+            </button>
+            <ShieldCheck className="w-10 h-10 text-rose-400" />
+          </div>
         </header>
         
         <div className="flex gap-2 border-b border-[#FBFADA]/20">
