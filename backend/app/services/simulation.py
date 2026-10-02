@@ -149,7 +149,8 @@ class SimulationService:
         session.state["terminal_history"].append({"user": user.username, "user_id": str(user.id), "command": cls.history_input(session, action_input), "output": result.get("output", "")})
         flag_modified(session, "state")
         if not result["success"]:
-            result["score"] = -2
+            if not is_pvp or (participant and participant.team == SimulationTeam.RED):
+                result["score"] = -2
         session.score = max(0, session.score + result["score"])
 
         if result["flag_found"]:
